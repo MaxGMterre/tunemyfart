@@ -29,6 +29,9 @@ export interface RecordingPayload {
   freq_max?: number | null;
   freq_min?: number | null;
   notes_count?: number;
+  humeur?: string;
+  social?: boolean;
+  chercheur_note?: string;
 }
 
 export async function saveRecording(payload: RecordingPayload) {
@@ -360,11 +363,15 @@ export async function fetchUserRecordings(
   Array<{
     note_principale: string | null;
     sequence_notes: { note: string; frequency: number; t: number }[] | null;
+    db_max: number | null;
+    lieu: string | null;
+    alimentation: string | null;
+    created_at: string | null;
   }>
 > {
   const { data, error } = await supabase
     .from("recordings")
-    .select("note_principale, sequence_notes")
+    .select("note_principale, sequence_notes, db_max, lieu, alimentation, created_at")
     .eq("user_id", userId);
   if (error) throw error;
   return data ?? [];
@@ -387,6 +394,9 @@ export interface FullRecording {
   freq_max: number | null;
   freq_min: number | null;
   notes_count: number | null;
+  humeur: string | null;
+  social: boolean | null;
+  chercheur_note: string | null;
 }
 
 export async function fetchFullUserRecordings(
@@ -395,7 +405,7 @@ export async function fetchFullUserRecordings(
   const { data, error } = await supabase
     .from("recordings")
     .select(
-      "id, created_at, db_max, db_avg, note_principale, sequence_notes, duree_ms, audio_url, alimentation, lieu, odeur, freq_max, freq_min, notes_count"
+      "id, created_at, db_max, db_avg, note_principale, sequence_notes, duree_ms, audio_url, alimentation, lieu, odeur, freq_max, freq_min, notes_count, humeur, social, chercheur_note"
     )
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
@@ -405,5 +415,65 @@ export async function fetchFullUserRecordings(
 
 export async function deleteRecording(id: string): Promise<void> {
   const { error } = await supabase.from("recordings").delete().eq("id", id);
+  if (error) throw error;
+}
+
+// ── Compositions ───────────────────────────────────────────────────────────────
+
+export interface CompositionNote {
+  note: string;
+  frequency: number;
+  duration_ms: number;
+  t: number;
+}
+
+export interface Composition {
+  id: string;
+  user_id: string | null;
+  pseudo: string | null;
+  title: string;
+  notes: CompositionNote[];
+  duration_ms: number;
+  bpm: number | null;
+  audio_url: string | null;
+  created_at: string;
+}
+
+export interface CompositionPayload {
+  user_id?: string;
+  pseudo?: string;
+  title: string;
+  notes: CompositionNote[];
+  duration_ms: number;
+  bpm?: number;
+  audio_url?: string | null;
+}
+
+export async function saveComposition(
+  payload: CompositionPayload
+): Promise<Composition> {
+  const { data, error } = await supabase
+    .from("compositions")
+    .insert(payload)
+    .select()
+    .single();
+  if (error) throw error;
+  return data as Composition;
+}
+
+export async function fetchUserCompositions(
+  userId: string
+): Promise<Composition[]> {
+  const { data, error } = await supabase
+    .from("compositions")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as Composition[];
+}
+
+export async function deleteComposition(id: string): Promise<void> {
+  const { error } = await supabase.from("compositions").delete().eq("id", id);
   if (error) throw error;
 }

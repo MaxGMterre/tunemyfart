@@ -229,3 +229,33 @@
   display: flex;
   gap: 0.75rem;
 }
+
+.settings-row--theme {
+  align-items: center;
+}
+
+.settings-theme-buttons {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.settings-theme-btn {
+  background: none;
+  border: 1.5px solid var(--color-ink-soft);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-ink-soft);
+  padding: 0.3rem 0.55rem;
+  cursor: pointer;
+  transition: all 0.12s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.settings-theme-btn.active {
+  border-color: var(--color-ink);
+  color: var(--color-ink);
+  background: var(--color-paper-dark);
+}

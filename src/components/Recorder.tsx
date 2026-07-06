@@ -3,6 +3,19 @@ import { useRecorder } from "../lib/useRecorder";
 import { saveRecording, uploadAudio } from "../lib/supabase";
 import { useAuth } from "../lib/useAuth";
 import { ShareCard } from "./ShareCard";
+import { LabTableDecor } from "./LabTableDecor";
+import { PutoisMascot } from "./PutoisMascot";
+import type { PutoisState } from "./PutoisMascot";
+import {
+  ProutDialogue,
+  useProutDialogue,
+  DIALOGUE_IDLE,
+  DIALOGUE_RECORDING,
+  DIALOGUE_RESULT,
+  DIALOGUE_ERROR,
+  pickRandom,
+} from "./ProutDialogue";
+import { SFX } from "../lib/soundEffects";
 
 // ── Helpers ──────────────────────────────────────────────
 
@@ -26,6 +39,8 @@ async function triggerHaptic(type: "light" | "heavy" | "victory") {
     else await Haptics.notification({ type: NotificationType.Success });
   } catch {}
 }
+
+const HUMEUR_EMOJIS = ["😊", "😤", "😂", "😴", "🤔", "😐", "🥴", "😌"];
 
 // ── Component ────────────────────────────────────────────
 
@@ -73,19 +88,29 @@ export function Recorder() {
   } = useRecorder(handleLiveFrame);
   const { user } = useAuth();
 
+  // Metadata
   const [alimentation, setAlimentation] = useState("");
   const [lieu, setLieu] = useState("");
   const [odeur, setOdeur] = useState("");
+  const [humeur, setHumeur] = useState("");
+  const [social, setSocial] = useState(false);
+  const [chercheurNote, setChercheurNote] = useState("");
+
   const [saved, setSaved] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [noteKey, setNoteKey] = useState(0);
   const prevNoteRef = useRef<string | null>(null);
+  const [resetConfirm, setResetConfirm] = useState(false);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+
+  // Putois mascot & dialogue
+  const [putoisState, setPutoisState] = useState<PutoisState>("idle");
+  const { dialogue, speak, dismiss } = useProutDialogue();
 
   const isRecording = status === "recording";
 
@@ -102,7 +127,7 @@ export function Recorder() {
     }
   }, [liveNote]);
 
-  // Idle flat line on dark canvas
+  // Idle flat line
   useEffect(() => {
     if (status !== "idle") return;
     const canvas = canvasRef.current;
@@ -119,7 +144,7 @@ export function Recorder() {
     ctx.stroke();
   }, [status]);
 
-  // Result waveform — phosphor green on dark screen
+  // Result waveform
   useEffect(() => {
     if (!result || !canvasRef.current) return;
     const canvas = canvasRef.current;
@@ -144,6 +169,32 @@ export function Recorder() {
     ctx.stroke();
     ctx.shadowBlur = 0;
   }, [result]);
+
+  // Putois + dialogue reactions to status changes
+  useEffect(() => {
+    if (status === "idle") {
+      setPutoisState("idle");
+    } else if (status === "recording") {
+      setPutoisState("listening");
+      speak(pickRandom(DIALOGUE_RECORDING), "center");
+    } else if (status === "done") {
+      setPutoisState("surprised");
+      setTimeout(() => setPutoisState("idle"), 1200);
+      speak(pickRandom(DIALOGUE_RESULT), "center");
+    } else if (status === "error") {
+      speak(pickRandom(DIALOGUE_ERROR), "center");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
+
+  // Idle dialogue on mount
+  useEffect(() => {
+    const t = setTimeout(() => {
+      speak(pickRandom(DIALOGUE_IDLE), "center");
+    }, 1400);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Audio player events
   useEffect(() => {
@@ -188,11 +239,13 @@ export function Recorder() {
 
   const handleStart = useCallback(async () => {
     triggerHaptic("light");
+    SFX.recordStart();
     await start();
   }, [start]);
 
   const handleStop = useCallback(async () => {
     triggerHaptic("heavy");
+    SFX.recordStop();
     await stop();
   }, [stop]);
 
@@ -220,7 +273,8 @@ export function Recorder() {
     if (!audio || !duration) return;
     const rect = e.currentTarget.getBoundingClientRect();
     audio.currentTime =
-      Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)) * duration;
+      Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)) *
+      duration;
   };
 
   const handleSave = async () => {
@@ -259,24 +313,43 @@ export function Recorder() {
         freq_max: freqs.length ? Math.max(...freqs) : null,
         freq_min: freqs.length ? Math.min(...freqs) : null,
         notes_count: result.sequenceNotes.length,
+        humeur: humeur || undefined,
+        social,
+        chercheur_note: chercheurNote || undefined,
       });
       setSaved(true);
+      SFX.success();
+      speak("Relevé certifié — versé au corpus.", "center");
     } catch {
       setSaveError(
         "Sauvegarde impossible — vérifie ta configuration Supabase (.env) et que tu es connecté."
       );
+      speak(pickRandom(DIALOGUE_ERROR), "center");
     }
   };
 
   const handleReset = () => {
+    if (result && !saved) {
+      setResetConfirm(true);
+      return;
+    }
+    doReset();
+  };
+
+  const doReset = () => {
     reset();
     setSaved(false);
     setSaveError(null);
     setAlimentation("");
     setLieu("");
     setOdeur("");
+    setHumeur("");
+    setSocial(false);
+    setChercheurNote("");
     setShowShare(false);
     setPlayError(null);
+    setResetConfirm(false);
+    dismiss();
   };
 
   return (
@@ -321,7 +394,7 @@ export function Recorder() {
           </div>
         </div>
 
-        {/* Oscilloscope screen — waveform + note readout */}
+        {/* Oscilloscope screen */}
         <div className="scope-screen">
           <canvas
             ref={canvasRef}
@@ -340,7 +413,7 @@ export function Recorder() {
           </div>
         </div>
 
-        {/* VU meter — needle style */}
+        {/* VU meter */}
         <div className="vu-section">
           <div className="vu-meter">
             <div className="vu-arc-bg" />
@@ -360,7 +433,7 @@ export function Recorder() {
           <span className="vu-label">dB SPL</span>
         </div>
 
-        {/* Decorative cables — behind everything */}
+        {/* Decorative cables */}
         <svg
           className="cables-svg"
           viewBox="0 0 320 90"
@@ -405,8 +478,27 @@ export function Recorder() {
           <circle cx="308" cy="52" r="4" fill="#C99A3D" opacity="0.65" />
         </svg>
 
-        {/* Nameplate */}
         <div className="instr-nameplate">TUNEMYFART LABS — MK.II</div>
+      </div>
+
+      {/* ── Lab table decoration ── */}
+      <div className="lab-table-wrap" aria-hidden="true">
+        <LabTableDecor height={90} />
+      </div>
+
+      {/* ── Putois mascot + dialogue ── */}
+      <div className="putois-zone">
+        <div className="putois-anchor">
+          {dialogue && (
+            <ProutDialogue
+              key={dialogue.key}
+              message={dialogue.message}
+              align={dialogue.align}
+              onDismiss={dismiss}
+            />
+          )}
+          <PutoisMascot state={putoisState} size={64} />
+        </div>
       </div>
 
       {/* ── Record / Stop buttons ── */}
@@ -497,7 +589,9 @@ export function Recorder() {
               <div
                 className="audio-progress-bar"
                 style={{
-                  width: duration ? `${(currentTime / duration) * 100}%` : "0%",
+                  width: duration
+                    ? `${(currentTime / duration) * 100}%`
+                    : "0%",
                 }}
               />
             </div>
@@ -517,6 +611,25 @@ export function Recorder() {
           {!saved && (
             <div className="tags-form">
               <p className="tags-form-title">Métadonnées du spécimen</p>
+
+              {/* Humeur */}
+              <div className="tags-form-field">
+                <span className="tags-form-label">Humeur</span>
+                <div className="humeur-picker">
+                  {HUMEUR_EMOJIS.map((e) => (
+                    <button
+                      key={e}
+                      className={`humeur-btn${humeur === e ? " selected" : ""}`}
+                      onClick={() => setHumeur(humeur === e ? "" : e)}
+                      aria-label={e}
+                      aria-pressed={humeur === e}
+                    >
+                      {e}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <label className="tags-form-field">
                 Alimentation
                 <input
@@ -541,6 +654,38 @@ export function Recorder() {
                   placeholder="ex: discret, dévastateur"
                 />
               </label>
+
+              {/* Social */}
+              <div className="tags-form-field tags-form-field--toggle">
+                <div>
+                  <span className="tags-form-label">En présence de témoins</span>
+                  <span className="tags-form-hint">
+                    Collecte socialement contextualisée
+                  </span>
+                </div>
+                <button
+                  className={`social-toggle${social ? " on" : ""}`}
+                  onClick={() => setSocial((v) => !v)}
+                  role="switch"
+                  aria-checked={social}
+                  aria-label="En présence de témoins"
+                >
+                  <span className="toggle-knob" />
+                </button>
+              </div>
+
+              {/* Note du chercheur */}
+              <label className="tags-form-field">
+                Note du chercheur
+                <textarea
+                  className="chercheur-note-area"
+                  value={chercheurNote}
+                  onChange={(e) => setChercheurNote(e.target.value)}
+                  placeholder="Observations libres sur ce spécimen…"
+                  rows={2}
+                />
+              </label>
+
               {uploading && (
                 <p className="status-text">Transmission de l'échantillon…</p>
               )}
@@ -561,9 +706,26 @@ export function Recorder() {
             </p>
           )}
 
-          <button className="reset-btn" onClick={handleReset}>
-            Nouvelle analyse
-          </button>
+          {/* Confirm before discard */}
+          {resetConfirm ? (
+            <div className="reset-confirm">
+              <p className="reset-confirm-text">
+                Ce relevé n'a pas été certifié. L'abandonner ?
+              </p>
+              <div className="reset-confirm-actions">
+                <button className="reset-confirm-cancel" onClick={() => setResetConfirm(false)}>
+                  Annuler
+                </button>
+                <button className="reset-confirm-ok" onClick={doReset}>
+                  Abandonner
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button className="reset-btn" onClick={handleReset}>
+              Nouvelle analyse
+            </button>
+          )}
         </div>
       )}
 

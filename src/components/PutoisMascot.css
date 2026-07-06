@@ -1,0 +1,55 @@
+.putois-mascot {
+  position: relative;
+  display: inline-block;
+}
+
+.putois-mascot svg {
+  display: block;
+}
+
+/* Idle — gentle breathing bob */
+.putois-mascot--idle svg {
+  animation: putois-idle 3s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+/* Listening — slight lean + ear perk */
+.putois-mascot--listening svg {
+  animation: putois-listen 1.2s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+/* Surprised — quick jump */
+.putois-mascot--surprised svg {
+  animation: putois-surprised 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  transform-origin: bottom center;
+}
+
+/* Sleeping — slow sway */
+.putois-mascot--sleeping svg {
+  animation: putois-sleep 4s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+@keyframes putois-idle {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%       { transform: translateY(-3px) rotate(0.5deg); }
+}
+
+@keyframes putois-listen {
+  0%, 100% { transform: translateY(0) scaleX(1); }
+  25%       { transform: translateY(-2px) scaleX(1.03); }
+  75%       { transform: translateY(1px) scaleX(0.98); }
+}
+
+@keyframes putois-surprised {
+  0%   { transform: translateY(0) scale(1); }
+  40%  { transform: translateY(-10px) scale(1.08); }
+  70%  { transform: translateY(-5px) scale(1.04); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes putois-sleep {
+  0%, 100% { transform: rotate(-1deg); }
+  50%       { transform: rotate(1deg); }
+}

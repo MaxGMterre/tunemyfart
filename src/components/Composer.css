@@ -186,3 +186,266 @@
   color: var(--color-brass);
   background: rgba(201, 154, 61, 0.08);
 }
+
+/* ── View mode toggle ────────────────────────────── */
+.composer-view-toggle {
+  display: flex;
+  gap: 0;
+  border: 1.5px solid rgba(27, 42, 65, 0.2);
+  border-radius: 6px;
+  overflow: hidden;
+  align-self: flex-start;
+}
+
+.composer-view-btn {
+  background: none;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-soft);
+  padding: 0.4rem 0.9rem;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+  min-height: 36px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.composer-view-btn.active {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+/* ── Circle view ─────────────────────────────────── */
+.composer-circle-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.circle-collected-hint {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-ink-soft);
+  margin: 0;
+}
+
+.circle-collected-dots {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 200px;
+}
+
+.circle-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(27, 42, 65, 0.15);
+  border: 1px solid rgba(27, 42, 65, 0.2);
+}
+
+.circle-dot.collected {
+  background: var(--color-brass);
+  border-color: var(--color-brass);
+}
+
+/* ── Composition recording ───────────────────────── */
+.composition-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.composition-recording {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  background: rgba(217, 96, 59, 0.06);
+  border: 1.5px solid rgba(217, 96, 59, 0.3);
+  border-radius: 6px;
+}
+
+.composition-timer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.comp-timer-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-coral);
+  animation: rec-dot-blink 0.85s ease-in-out infinite;
+}
+
+@keyframes rec-dot-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.25; }
+}
+
+.comp-timer-value {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-coral);
+}
+
+.comp-timer-notes {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--color-ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.composition-stop-btn {
+  background: var(--color-coral);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+  min-height: 36px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Composition preview ─────────────────────────── */
+.composition-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(27, 42, 65, 0.03);
+  border: 1px dashed rgba(27, 42, 65, 0.14);
+  border-radius: 4px;
+}
+
+.composition-preview-title {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-brass);
+  margin: 0;
+}
+
+.composition-note-sequence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.comp-note-chip {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  font-weight: 700;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  background: var(--color-paper-dark);
+  border: 1px solid rgba(27, 42, 65, 0.15);
+  color: var(--color-ink);
+  text-transform: uppercase;
+}
+
+.comp-note-more {
+  color: var(--color-ink-soft);
+  border-style: dashed;
+}
+
+.composition-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.composition-discard-btn,
+.composition-save-btn {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.55rem;
+  border-radius: 4px;
+  cursor: pointer;
+  min-height: 44px;
+  transition: opacity 0.12s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.composition-discard-btn {
+  background: var(--color-paper-dark);
+  border: 1.5px solid rgba(27, 42, 65, 0.2);
+  color: var(--color-ink-soft);
+}
+
+.composition-save-btn {
+  background: linear-gradient(180deg, #7a9e82 0%, #6b8f71 100%);
+  border: 2px solid var(--color-brass);
+  color: white;
+  font-weight: 700;
+}
+
+.composition-save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Saved compositions list ─────────────────────── */
+.compositions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.compositions-list-title {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-ink-soft);
+  margin: 0 0 0.2rem;
+}
+
+.composition-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.5rem 0.65rem;
+  background: var(--color-paper-dark);
+  border: 1px solid rgba(27, 42, 65, 0.08);
+  border-radius: 4px;
+}
+
+.composition-row-title {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--color-ink);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.composition-row-meta {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-soft);
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+}

@@ -1,0 +1,22 @@
+.note-circle-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.note-circle-wrapper svg {
+  display: block;
+}
+
+.note-circle-sector {
+  cursor: pointer;
+  transition: opacity 0.1s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.note-circle-sector:active {
+  opacity: 0.75;
+}

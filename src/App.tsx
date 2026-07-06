@@ -1,4 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useSwipeable } from "react-swipeable";
 import { AuthProvider, useAuth } from "./lib/useAuth";
 import { useNetwork } from "./lib/useNetwork";
@@ -10,7 +17,7 @@ import { Leaderboard } from "./components/Leaderboard";
 import { Missions } from "./components/Missions";
 import { Composer } from "./components/Composer";
 import { Profile } from "./components/Profile";
-import { History } from "./components/History";
+import { SplashScreen } from "./components/SplashScreen";
 import { WelcomeModal } from "./components/WelcomeModal";
 import "./styles/tokens.css";
 import "./components/Auth.css";
@@ -24,22 +31,56 @@ import "./components/WelcomeModal.css";
 import "./components/History.css";
 import "./components/Settings.css";
 
-type Tab =
-  | "analyser"
-  | "classement"
-  | "missions"
-  | "profil"
-  | "composer"
-  | "corpus";
+// ── Dark mode ─────────────────────────────────────────────────────────────────
 
-const TABS: Tab[] = [
-  "analyser",
-  "classement",
-  "missions",
-  "profil",
-  "composer",
-  "corpus",
-];
+export type ThemeMode = "system" | "light" | "dark";
+const THEME_KEY = "tmf_theme";
+
+interface ThemeContextValue {
+  theme: ThemeMode;
+  setTheme: (t: ThemeMode) => void;
+}
+
+const ThemeContext = createContext<ThemeContextValue>({
+  theme: "system",
+  setTheme: () => {},
+});
+
+export function useTheme() {
+  return useContext(ThemeContext);
+}
+
+function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setThemeState] = useState<ThemeMode>(
+    () => (localStorage.getItem(THEME_KEY) as ThemeMode) ?? "system"
+  );
+
+  const setTheme = useCallback((t: ThemeMode) => {
+    setThemeState(t);
+    localStorage.setItem(THEME_KEY, t);
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === "system") {
+      root.removeAttribute("data-theme");
+    } else {
+      root.setAttribute("data-theme", theme);
+    }
+  }, [theme]);
+
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
+// ── Tabs ───────────────────────────────────────────────────────────────────────
+
+type Tab = "analyser" | "classement" | "missions" | "profil" | "composer";
+
+const BASE_TABS: Tab[] = ["analyser", "classement", "missions", "profil"];
 
 const TAB_META: Record<Tab, { emoji: string; label: string }> = {
   analyser: { emoji: "🎙️", label: "Anal-yser" },
@@ -47,8 +88,9 @@ const TAB_META: Record<Tab, { emoji: string; label: string }> = {
   missions: { emoji: "🎯", label: "Missions" },
   profil: { emoji: "🧑‍🔬", label: "Spécimen" },
   composer: { emoji: "🎹", label: "Clavier" },
-  corpus: { emoji: "📜", label: "Corpus" },
 };
+
+// ── Network watcher ────────────────────────────────────────────────────────────
 
 function NetworkWatcher() {
   const isOnline = useNetwork();
@@ -68,19 +110,33 @@ function NetworkWatcher() {
   return null;
 }
 
+// ── App shell ─────────────────────────────────────────────────────────────────
+
 function AppShell() {
   const { session, loading } = useAuth();
   const [tab, setTab] = useState<Tab>("analyser");
   const [showWelcome, setShowWelcome] = useState(
     () => !localStorage.getItem(ONBOARDING_KEY)
   );
+  // Unlock composer once full_octave mission is complete
+  const [composerUnlocked, setComposerUnlocked] = useState(
+    () => localStorage.getItem("tmf_composer_unlocked") === "true"
+  );
+
+  const TABS: Tab[] = composerUnlocked
+    ? [...BASE_TABS, "composer"]
+    : BASE_TABS;
+  const tabIndex = TABS.indexOf(tab);
 
   const handleWelcomeClose = () => {
     localStorage.setItem(ONBOARDING_KEY, "true");
     setShowWelcome(false);
   };
 
-  const tabIndex = TABS.indexOf(tab);
+  const handleComposerUnlock = () => {
+    localStorage.setItem("tmf_composer_unlocked", "true");
+    setComposerUnlocked(true);
+  };
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
@@ -96,7 +152,7 @@ function AppShell() {
     preventScrollOnSwipe: false,
   });
 
-  const header = SCREEN_HEADERS[tab];
+  const header = SCREEN_HEADERS[tab] ?? SCREEN_HEADERS.analyser;
 
   if (loading) {
     return (
@@ -123,12 +179,13 @@ function AppShell() {
         <main className="panel-content" {...swipeHandlers}>
           {tab === "analyser" && <Recorder />}
           {tab === "classement" && <Leaderboard />}
-          {tab === "missions" && <Missions />}
-          {tab === "profil" && <Profile />}
-          {tab === "composer" && <Composer />}
-          {tab === "corpus" && (
-            <History onTabChange={(t) => setTab(t as Tab)} />
+          {tab === "missions" && (
+            <Missions onComposerUnlocked={handleComposerUnlock} />
           )}
+          {tab === "profil" && (
+            <Profile onTabChange={(t) => setTab(t as Tab)} />
+          )}
+          {tab === "composer" && <Composer />}
         </main>
 
         <nav className="tab-bar" aria-label="Navigation principale">
@@ -159,13 +216,37 @@ function AppShell() {
   );
 }
 
+// ── Splash wrapper ────────────────────────────────────────────────────────────
+
+function AppWithSplash() {
+  const [splashDone, setSplashDone] = useState(
+    () => sessionStorage.getItem("tmf_splash_shown") === "true"
+  );
+
+  const handleSplashDone = () => {
+    sessionStorage.setItem("tmf_splash_shown", "true");
+    setSplashDone(true);
+  };
+
+  return (
+    <>
+      {!splashDone && <SplashScreen onDone={handleSplashDone} />}
+      <AppShell />
+    </>
+  );
+}
+
+// ── Root ───────────────────────────────────────────────────────────────────────
+
 function App() {
   return (
-    <AuthProvider>
-      <ToastProvider>
-        <AppShell />
-      </ToastProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <ToastProvider>
+          <AppWithSplash />
+        </ToastProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

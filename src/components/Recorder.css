@@ -773,3 +773,190 @@
 .save-btn:active {
   transform: translateY(1px);
 }
+
+/* ── Lab table decoration ─────────────────────────────── */
+.lab-table-wrap {
+  margin: -0.6rem -1.25rem 0;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.lab-table-wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ── Putois zone ──────────────────────────────────────── */
+.putois-zone {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 0.5rem;
+  margin-top: -0.25rem;
+}
+
+.putois-anchor {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── Humeur picker ────────────────────────────────────── */
+.humeur-picker {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.humeur-btn {
+  font-size: 1.3rem;
+  line-height: 1;
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  padding: 0.2rem;
+  cursor: pointer;
+  transition: border-color 0.12s, transform 0.1s;
+  -webkit-tap-highlight-color: transparent;
+  min-width: 36px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.humeur-btn.selected {
+  border-color: var(--color-brass);
+  background: rgba(201, 154, 61, 0.1);
+  transform: scale(1.12);
+}
+
+/* ── Social toggle ────────────────────────────────────── */
+.tags-form-field--toggle {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tags-form-label {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-ink-soft);
+  display: block;
+}
+
+.tags-form-hint {
+  font-family: var(--font-mono);
+  font-size: 0.45rem;
+  color: var(--color-ink-soft);
+  opacity: 0.6;
+  display: block;
+  margin-top: 0.1rem;
+}
+
+.social-toggle {
+  width: 40px;
+  height: 22px;
+  border-radius: 11px;
+  border: none;
+  background: rgba(27, 42, 65, 0.18);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.social-toggle.on {
+  background: var(--color-brass);
+}
+
+.social-toggle .toggle-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.social-toggle.on .toggle-knob {
+  transform: translateX(18px);
+}
+
+/* ── Chercheur note textarea ──────────────────────────── */
+.chercheur-note-area {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  padding: 0.5rem;
+  border: 1.5px solid rgba(27, 42, 65, 0.2);
+  border-radius: 3px;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  resize: vertical;
+  outline: none;
+  line-height: 1.4;
+  min-height: 60px;
+}
+
+.chercheur-note-area:focus {
+  border-color: rgba(27, 42, 65, 0.45);
+}
+
+/* ── Reset confirm ────────────────────────────────────── */
+.reset-confirm {
+  border: 1.5px solid rgba(217, 96, 59, 0.35);
+  border-radius: 4px;
+  padding: 0.75rem;
+  background: rgba(217, 96, 59, 0.05);
+}
+
+.reset-confirm-text {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--color-coral);
+  margin: 0 0 0.6rem;
+  letter-spacing: 0.02em;
+}
+
+.reset-confirm-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.reset-confirm-cancel,
+.reset-confirm-ok {
+  flex: 1;
+  padding: 0.55rem;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  min-height: 44px;
+  transition: opacity 0.1s;
+}
+
+.reset-confirm-cancel {
+  background: var(--color-paper-dark);
+  border: 1px solid rgba(27, 42, 65, 0.2);
+  color: var(--color-ink-soft);
+}
+
+.reset-confirm-ok {
+  background: var(--color-coral);
+  border: none;
+  color: white;
+}
+
+.reset-confirm-cancel:active,
+.reset-confirm-ok:active {
+  opacity: 0.8;
+}

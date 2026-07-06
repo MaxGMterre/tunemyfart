@@ -5,9 +5,14 @@ export type MissionCondition =
   | { type: "note_collected"; value: string }
   | { type: "notes_collected"; value: number }
   | { type: "db_max"; value: number }
+  | { type: "db_below"; value: number; count: number }
   | { type: "duration_ms"; value: number }
   | { type: "melody_min_notes"; value: number; count: number }
-  | { type: "streak_days"; value: number };
+  | { type: "streak_days"; value: number }
+  | { type: "distinct_locations"; value: number }
+  | { type: "distinct_alimentations"; value: number }
+  | { type: "dominant_note_count"; value: number }
+  | { type: "night_recordings"; value: number };
 
 export interface Mission {
   id: string;
@@ -83,11 +88,55 @@ export const MISSIONS: Mission[] = [
     condition: { type: "streak_days", value: 7 },
     recompense: "Badge Régularité Exemplaire",
   },
+  {
+    id: "silence_radio",
+    titre: "Silence Radio",
+    description: "Soumettre 3 spécimens d'une discrétion exemplaire (< -45 dB)",
+    emoji: "🤫",
+    condition: { type: "db_below", value: -45, count: 3 },
+    recompense: "Certificat de Discrétion Absolue",
+  },
+  {
+    id: "explorateur",
+    titre: "Explorateur",
+    description: "Cataloguer des spécimens provenant de 5 lieux distincts",
+    emoji: "🗺️",
+    condition: { type: "distinct_locations", value: 5 },
+    recompense: "Badge Terrain & Lieux Multiples",
+  },
+  {
+    id: "gastronome",
+    titre: "Gastronome",
+    description: "Documenter l'influence de 4 régimes alimentaires différents",
+    emoji: "🍽️",
+    condition: { type: "distinct_alimentations", value: 4 },
+    recompense: "Titre de Chercheur Nutritionnel",
+  },
+  {
+    id: "signature_etablie",
+    titre: "Signature Établie",
+    description: "Produire 5 relevés sur la même note dominante",
+    emoji: "✍️",
+    condition: { type: "dominant_note_count", value: 5 },
+    recompense: "Signature Acoustique Certifiée",
+  },
+  {
+    id: "notturne",
+    titre: "Notturne",
+    description: "Soumettre 3 spécimens entre 22h et 6h du matin",
+    emoji: "🌙",
+    condition: { type: "night_recordings", value: 3 },
+    recompense: "Badge Chercheur de Nuit",
+  },
 ];
 
 interface RecordingRow {
   note_principale: string | null;
   sequence_notes: { note: string; frequency: number; t: number }[] | null;
+  db_max?: number | null;
+  lieu?: string | null;
+  alimentation?: string | null;
+  created_at?: string | null;
 }
 
 export function checkMissions(
@@ -166,6 +215,69 @@ export function checkMissions(
         completed = current >= target;
         prog = Math.min(1, target > 0 ? current / target : 1);
         break;
+
+      case "db_below": {
+        const belowThreshold = mission.condition.value;
+        current = recordings.filter(
+          (r) => r.db_max != null && r.db_max < belowThreshold
+        ).length;
+        target = mission.condition.count;
+        completed = current >= target;
+        prog = Math.min(1, target > 0 ? current / target : 1);
+        break;
+      }
+
+      case "distinct_locations": {
+        const lieux = new Set(
+          recordings
+            .map((r) => r.lieu)
+            .filter((l): l is string => Boolean(l))
+        );
+        current = lieux.size;
+        target = mission.condition.value;
+        completed = current >= target;
+        prog = Math.min(1, target > 0 ? current / target : 1);
+        break;
+      }
+
+      case "distinct_alimentations": {
+        const alims = new Set(
+          recordings
+            .map((r) => r.alimentation)
+            .filter((a): a is string => Boolean(a))
+        );
+        current = alims.size;
+        target = mission.condition.value;
+        completed = current >= target;
+        prog = Math.min(1, target > 0 ? current / target : 1);
+        break;
+      }
+
+      case "dominant_note_count": {
+        const noteMap: Record<string, number> = {};
+        for (const r of recordings) {
+          if (r.note_principale) {
+            noteMap[r.note_principale] = (noteMap[r.note_principale] ?? 0) + 1;
+          }
+        }
+        current = Math.max(0, ...Object.values(noteMap));
+        target = mission.condition.value;
+        completed = current >= target;
+        prog = Math.min(1, target > 0 ? current / target : 1);
+        break;
+      }
+
+      case "night_recordings": {
+        current = recordings.filter((r) => {
+          if (!r.created_at) return false;
+          const h = new Date(r.created_at).getHours();
+          return h >= 22 || h < 6;
+        }).length;
+        target = mission.condition.value;
+        completed = current >= target;
+        prog = Math.min(1, target > 0 ? current / target : 1);
+        break;
+      }
     }
 
     return { mission, completed, progress: prog, current, target };

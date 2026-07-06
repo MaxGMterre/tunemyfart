@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../lib/useAuth";
 import { useToast } from "./ui/Toast";
+import { useTheme } from "../App";
+import type { ThemeMode } from "../App";
 import { SOUNDS_PREF_KEY, HAPTICS_PREF_KEY } from "../lib/constants";
 
 interface Props {
@@ -18,6 +20,7 @@ export function Settings({ onClose }: Props) {
     () => localStorage.getItem(HAPTICS_PREF_KEY) !== "false"
   );
   const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   // Persist prefs immediately on change
   useEffect(() => {
@@ -125,6 +128,26 @@ export function Settings({ onClose }: Props) {
               >
                 <span className="toggle-knob" />
               </button>
+            </div>
+          </section>
+
+          {/* Apparence */}
+          <section className="settings-section">
+            <div className="settings-section-title">Apparence</div>
+            <div className="settings-row settings-row--theme">
+              <span className="settings-row-label">Thème</span>
+              <div className="settings-theme-buttons">
+                {(["system", "light", "dark"] as ThemeMode[]).map((t) => (
+                  <button
+                    key={t}
+                    className={`settings-theme-btn${theme === t ? " active" : ""}`}
+                    onClick={() => setTheme(t)}
+                    aria-pressed={theme === t}
+                  >
+                    {t === "system" ? "Auto" : t === "light" ? "Clair" : "Sombre"}
+                  </button>
+                ))}
+              </div>
             </div>
           </section>
 

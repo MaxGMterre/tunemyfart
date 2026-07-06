@@ -18,6 +18,27 @@
   --radius-panel: 6px;
 }
 
+/* Dark mode overrides */
+[data-theme="dark"] {
+  --color-paper: #1a1610;
+  --color-paper-dark: #252018;
+  --color-ink: #e8dfc8;
+  --color-ink-soft: rgba(232, 223, 200, 0.5);
+  --color-brass: #d4aa4a;
+  --color-coral: #e06840;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-paper: #1a1610;
+    --color-paper-dark: #252018;
+    --color-ink: #e8dfc8;
+    --color-ink-soft: rgba(232, 223, 200, 0.5);
+    --color-brass: #d4aa4a;
+    --color-coral: #e06840;
+  }
+}
+
 * {
   box-sizing: border-box;
 }

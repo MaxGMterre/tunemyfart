@@ -55,7 +55,11 @@ const WORLD_RANKS = [
   { emoji: "🔢", label: "Actif", category: "total" },
 ];
 
-export function Profile() {
+interface ProfileProps {
+  onTabChange?: (tab: string) => void;
+}
+
+export function Profile({ onTabChange: _onTabChange }: ProfileProps = {}) {
   const { user, signOut, linkEmail } = useAuth();
   const userId = user?.id ?? getUserId();
   const [editing, setEditing] = useState(false);
