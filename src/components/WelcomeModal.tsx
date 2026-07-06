@@ -11,26 +11,38 @@ interface Props {
 const PAGES = [
   {
     logo: "🦨",
-    title: "Bienvenue sur Tunemyfart",
-    sub: "L'instrument scientifique du pet",
-    body: "L'app qui mesure, analyse et classe tes exploits acoustiques avec la rigueur d'un laboratoire des années 70.",
+    title: "Bienvenue au Laboratoire",
+    sub: "Instrument scientifique du phénomène gazeux",
+    body: "Tunemyfart mesure, analyse et classe tes exploits acoustiques avec la rigueur d'un laboratoire des années 70.",
   },
   {
     logo: null,
-    title: "Trois fonctions clés",
-    sub: "Tout ce dont tu as besoin",
+    title: "Protocoles disponibles",
+    sub: "Équipements du laboratoire",
     body: null,
     features: [
-      { icon: "🎙️", label: "Analyser", desc: "Oscilloscope live, détection de note et mesure en dB" },
-      { icon: "🏆", label: "Classer", desc: "Classements mondiaux par intensité, durée, fréquence" },
-      { icon: "🎹", label: "Composer", desc: "Rejoue tes meilleurs enregistrements en séquence" },
+      {
+        icon: "🎙️",
+        label: "L'Anal-yser",
+        desc: "Oscilloscope live, détection de note et mesure en dB SPL",
+      },
+      {
+        icon: "📊",
+        label: "Les Registres",
+        desc: "Classements des confrères par intensité, durée, fréquence",
+      },
+      {
+        icon: "🎹",
+        label: "Le Clavier",
+        desc: "Rejoue tes meilleurs relevés en séquence chromatique",
+      },
     ],
   },
   {
-    logo: "🏆",
-    title: "Prêt à sonner ?",
-    sub: "Crée un compte pour sauvegarder tes records",
-    body: "Ou continue sans compte — tu pourras t'inscrire plus tard depuis ton profil.",
+    logo: "🔬",
+    title: "Prêt à contribuer à la science ?",
+    sub: "Crée un compte pour préserver ton corpus",
+    body: "Ou continue sans compte — tu pourras t'inscrire depuis ta fiche spécimen.",
   },
 ];
 
@@ -69,8 +81,8 @@ export function WelcomeModal({ onClose }: Props) {
     const dx = e.changedTouches[0].clientX - touchStartX;
     setTouchStartX(null);
     if (Math.abs(dx) < 50) return;
-    if (dx < 0 && page < PAGES.length - 1) setPage(p => p + 1);
-    if (dx > 0 && page > 0) setPage(p => p - 1);
+    if (dx < 0 && page < PAGES.length - 1) setPage((p) => p + 1);
+    if (dx > 0 && page > 0) setPage((p) => p - 1);
   };
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -81,16 +93,40 @@ export function WelcomeModal({ onClose }: Props) {
     return (
       <div className="welcome-overlay" onClick={handleOverlayClick}>
         <div className="welcome-modal">
-          <button className="welcome-close" onClick={onClose} aria-label="Fermer">✕</button>
-          <button className="welcome-back" onClick={() => { setMode("onboarding"); setError(null); }}>
+          <button
+            className="welcome-close"
+            onClick={onClose}
+            aria-label="Fermer"
+          >
+            ✕
+          </button>
+          <button
+            className="welcome-back"
+            onClick={() => {
+              setMode("onboarding");
+              setError(null);
+            }}
+          >
             ← Retour
           </button>
           <div className="welcome-logo welcome-logo--sm">🦨</div>
           <div className="welcome-auth-tabs">
-            <button className={authTab === "signup" ? "active" : ""} onClick={() => { setAuthTab("signup"); setError(null); }}>
+            <button
+              className={authTab === "signup" ? "active" : ""}
+              onClick={() => {
+                setAuthTab("signup");
+                setError(null);
+              }}
+            >
               Inscription
             </button>
-            <button className={authTab === "login" ? "active" : ""} onClick={() => { setAuthTab("login"); setError(null); }}>
+            <button
+              className={authTab === "login" ? "active" : ""}
+              onClick={() => {
+                setAuthTab("login");
+                setError(null);
+              }}
+            >
               Connexion
             </button>
           </div>
@@ -100,7 +136,7 @@ export function WelcomeModal({ onClose }: Props) {
               <input
                 type="email"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="exemple@email.com"
                 autoCapitalize="none"
                 autoComplete="email"
@@ -111,10 +147,14 @@ export function WelcomeModal({ onClose }: Props) {
               <input
                 type="password"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                autoComplete={authTab === "login" ? "current-password" : "new-password"}
-                onKeyDown={e => { if (e.key === "Enter") handleAuth(); }}
+                autoComplete={
+                  authTab === "login" ? "current-password" : "new-password"
+                }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleAuth();
+                }}
               />
             </label>
             {error && <p className="welcome-error">{error}</p>}
@@ -123,7 +163,11 @@ export function WelcomeModal({ onClose }: Props) {
               onClick={handleAuth}
               disabled={loading || !email || !password}
             >
-              {loading ? "…" : authTab === "login" ? "Se connecter" : "Créer mon compte"}
+              {loading
+                ? "Identification…"
+                : authTab === "login"
+                ? "Accéder au laboratoire"
+                : "Créer mon dossier"}
             </button>
           </div>
         </div>
@@ -140,7 +184,9 @@ export function WelcomeModal({ onClose }: Props) {
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <button className="welcome-close" onClick={onClose} aria-label="Fermer">✕</button>
+        <button className="welcome-close" onClick={onClose} aria-label="Fermer">
+          ✕
+        </button>
 
         <div className="welcome-page" key={page}>
           {currentPage.logo && (
@@ -153,7 +199,7 @@ export function WelcomeModal({ onClose }: Props) {
           )}
           {currentPage.features && (
             <div className="welcome-features">
-              {currentPage.features.map(f => (
+              {currentPage.features.map((f) => (
                 <div key={f.label} className="welcome-feature">
                   <span className="welcome-feature-icon">{f.icon}</span>
                   <div className="welcome-feature-text">
@@ -180,16 +226,22 @@ export function WelcomeModal({ onClose }: Props) {
 
         {/* Navigation / CTA */}
         {page < PAGES.length - 1 ? (
-          <button className="welcome-btn-primary" onClick={() => setPage(p => p + 1)}>
+          <button
+            className="welcome-btn-primary"
+            onClick={() => setPage((p) => p + 1)}
+          >
             Suivant →
           </button>
         ) : (
           <>
-            <button className="welcome-btn-primary" onClick={() => setMode("auth")}>
-              Créer un compte / Se connecter
+            <button
+              className="welcome-btn-primary"
+              onClick={() => setMode("auth")}
+            >
+              Ouvrir un dossier au laboratoire
             </button>
             <button className="welcome-btn-anon" onClick={onClose}>
-              Continuer sans compte →
+              Entrer comme observateur →
             </button>
           </>
         )}

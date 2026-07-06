@@ -10,7 +10,11 @@ interface ShareCardProps {
 const W = 360;
 const H = 540;
 
-function drawCard(ctx: CanvasRenderingContext2D, result: RecordingResult, worldRank?: number) {
+function drawCard(
+  ctx: CanvasRenderingContext2D,
+  result: RecordingResult,
+  worldRank?: number
+) {
   // Dark background
   ctx.fillStyle = "#1B2A41";
   ctx.fillRect(0, 0, W, H);
@@ -23,7 +27,9 @@ function drawCard(ctx: CanvasRenderingContext2D, result: RecordingResult, worldR
   ctx.strokeRect(16, 16, W - 32, H - 32);
 
   // Serial number (top-right)
-  const serialNum = String(Math.abs(Math.round(result.dbMax * 100 + result.durationMs)) % 9000 + 1000);
+  const serialNum = String(
+    (Math.abs(Math.round(result.dbMax * 100 + result.durationMs)) % 9000) + 1000
+  );
   const serial = `TMF-2026-${serialNum}`;
   ctx.font = `8px "IBM Plex Mono", "Courier New", monospace`;
   ctx.fillStyle = "rgba(201, 154, 61, 0.5)";
@@ -48,7 +54,10 @@ function drawCard(ctx: CanvasRenderingContext2D, result: RecordingResult, worldR
   // Rule
   ctx.strokeStyle = "#C99A3D";
   ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(22, 72); ctx.lineTo(W - 22, 72); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(22, 72);
+  ctx.lineTo(W - 22, 72);
+  ctx.stroke();
 
   // Big note — 6rem (~96px)
   const noteText = result.notePrincipale ?? "—";
@@ -88,13 +97,19 @@ function drawCard(ctx: CanvasRenderingContext2D, result: RecordingResult, worldR
   // Column dividers
   ctx.strokeStyle = "rgba(201, 154, 61, 0.3)";
   ctx.lineWidth = 1;
-  [1, 2].forEach(i => {
+  [1, 2].forEach((i) => {
     const x = 22 + i * colW;
-    ctx.beginPath(); ctx.moveTo(x, 294); ctx.lineTo(x, 330); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, 294);
+    ctx.lineTo(x, 330);
+    ctx.stroke();
   });
 
   // Waveform
-  const wy = 352, wh = 60, wx = 22, ww = W - 44;
+  const wy = 352,
+    wh = 60,
+    wx = 22,
+    ww = W - 44;
   const step = ww / result.waveform.length;
   const mid = wy + wh / 2;
 
@@ -148,7 +163,10 @@ function drawCard(ctx: CanvasRenderingContext2D, result: RecordingResult, worldR
   // Bottom rule + URL
   ctx.strokeStyle = "#C99A3D";
   ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(22, H - 38); ctx.lineTo(W - 22, H - 38); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(22, H - 38);
+  ctx.lineTo(W - 22, H - 38);
+  ctx.stroke();
 
   ctx.font = `8px "IBM Plex Mono", "Courier New", monospace`;
   ctx.fillStyle = "rgba(201, 154, 61, 0.45)";
@@ -182,7 +200,10 @@ export function ShareCard({ result, worldRank, onClose }: ShareCardProps) {
 
   const getBlob = (): Promise<Blob> =>
     new Promise((resolve, reject) => {
-      canvasRef.current?.toBlob(b => (b ? resolve(b) : reject(new Error("Canvas export failed"))), "image/png");
+      canvasRef.current?.toBlob(
+        (b) => (b ? resolve(b) : reject(new Error("Canvas export failed"))),
+        "image/png"
+      );
     });
 
   const handleShare = async () => {
@@ -192,7 +213,9 @@ export function ShareCard({ result, worldRank, onClose }: ShareCardProps) {
       const file = new File([blob], "tunemyfart.png", { type: "image/png" });
       await navigator.share({
         title: "Mon pet analysé 🦨",
-        text: `Note : ${result.notePrincipale ?? "—"} | ${result.dbMax.toFixed(1)} dB | ${(result.durationMs / 1000).toFixed(2)}s`,
+        text: `Note : ${result.notePrincipale ?? "—"} | ${result.dbMax.toFixed(
+          1
+        )} dB | ${(result.durationMs / 1000).toFixed(2)}s`,
         files: [file],
       } as ShareData);
     } catch {
@@ -216,13 +239,22 @@ export function ShareCard({ result, worldRank, onClose }: ShareCardProps) {
   };
 
   return (
-    <div className="share-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+    <div
+      className="share-overlay"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
       <div className="share-modal">
-        <button className="share-close-btn" onClick={onClose}>✕</button>
+        <button className="share-close-btn" onClick={onClose}>
+          ✕
+        </button>
         <canvas ref={canvasRef} className="share-canvas" />
         <div className="share-actions">
           {canShareFiles ? (
-            <button className="share-action-btn primary" onClick={handleShare} disabled={sharing}>
+            <button
+              className="share-action-btn primary"
+              onClick={handleShare}
+              disabled={sharing}
+            >
               {sharing ? "Envoi…" : "Partager 🦨"}
             </button>
           ) : (
@@ -230,7 +262,9 @@ export function ShareCard({ result, worldRank, onClose }: ShareCardProps) {
               {copied ? "Copié !" : "Copier l'image"}
             </button>
           )}
-          <button className="share-action-btn" onClick={onClose}>Fermer</button>
+          <button className="share-action-btn" onClick={onClose}>
+            Fermer
+          </button>
         </div>
       </div>
     </div>

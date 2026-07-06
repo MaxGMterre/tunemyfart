@@ -1,5 +1,10 @@
 import { useCallback, useRef, useState } from "react";
-import { autoCorrelate, computeDecibels, downsampleWaveform, frequencyToNote } from "../lib/pitchDetect";
+import {
+  autoCorrelate,
+  computeDecibels,
+  downsampleWaveform,
+  frequencyToNote,
+} from "../lib/pitchDetect";
 import type { NoteResult } from "../lib/pitchDetect";
 
 export interface NoteEvent extends NoteResult {
@@ -17,7 +22,13 @@ export interface RecordingResult {
   waveform: number[];
 }
 
-type Status = "idle" | "requesting" | "recording" | "processing" | "done" | "error";
+type Status =
+  | "idle"
+  | "requesting"
+  | "recording"
+  | "processing"
+  | "done"
+  | "error";
 
 export function useRecorder(onLiveFrame?: (buffer: Float32Array) => void) {
   const [status, setStatus] = useState<Status>("idle");
@@ -68,7 +79,10 @@ export function useRecorder(onLiveFrame?: (buffer: Float32Array) => void) {
 
     if (note) {
       setLiveNote(note);
-      sequenceRef.current.push({ ...note, t: performance.now() - startTimeRef.current });
+      sequenceRef.current.push({
+        ...note,
+        t: performance.now() - startTimeRef.current,
+      });
     }
 
     rafRef.current = requestAnimationFrame(analyseLoop);
@@ -131,7 +145,9 @@ export function useRecorder(onLiveFrame?: (buffer: Float32Array) => void) {
 
     const dbHistory = dbHistoryRef.current.filter((v) => v > -100);
     const dbMax = dbHistory.length ? Math.max(...dbHistory) : -100;
-    const dbAvg = dbHistory.length ? dbHistory.reduce((a, b) => a + b, 0) / dbHistory.length : -100;
+    const dbAvg = dbHistory.length
+      ? dbHistory.reduce((a, b) => a + b, 0) / dbHistory.length
+      : -100;
 
     const sequence = sequenceRef.current;
     const noteCounts: Record<string, number> = {};
@@ -173,5 +189,15 @@ export function useRecorder(onLiveFrame?: (buffer: Float32Array) => void) {
     setStatus("idle");
   }, []);
 
-  return { status, liveNote, liveDb, liveFrequency, result, error, start, stop, reset };
+  return {
+    status,
+    liveNote,
+    liveDb,
+    liveFrequency,
+    result,
+    error,
+    start,
+    stop,
+    reset,
+  };
 }

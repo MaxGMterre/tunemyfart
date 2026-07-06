@@ -32,7 +32,11 @@ export interface RecordingPayload {
 }
 
 export async function saveRecording(payload: RecordingPayload) {
-  const { data, error } = await supabase.from("recordings").insert(payload).select().single();
+  const { data, error } = await supabase
+    .from("recordings")
+    .insert(payload)
+    .select()
+    .single();
   if (error) throw error;
   return data;
 }
@@ -51,7 +55,12 @@ export async function uploadAudio(blob: Blob, userId: string): Promise<string> {
 
 // ── Leaderboard ────────────────────────────────────────────────────────────
 
-export type LeaderboardCategory = "db_max" | "duree_ms" | "freq_max" | "freq_min" | "notes_count";
+export type LeaderboardCategory =
+  | "db_max"
+  | "duree_ms"
+  | "freq_max"
+  | "freq_min"
+  | "notes_count";
 export type LeaderboardPeriod = "day" | "week" | "month" | "year" | "all";
 export type LeaderboardScope = "global" | "country" | "city" | "personal";
 
@@ -71,7 +80,11 @@ export async function fetchLeaderboard(
   scope: "global" | "perso",
   userId?: string
 ) {
-  let query = supabase.from("recordings").select("*").order(category, { ascending: false }).limit(50);
+  let query = supabase
+    .from("recordings")
+    .select("*")
+    .order(category, { ascending: false })
+    .limit(50);
   if (scope === "perso" && userId) query = query.eq("user_id", userId);
   const { data, error } = await query;
   if (error) throw error;
@@ -85,12 +98,17 @@ export async function fetchLeaderboardByPeriod(
   filters: { country?: string; city?: string; userId?: string }
 ): Promise<LeaderboardRow[]> {
   // freq_max / freq_min / notes_count need client-side sort: fetch more rows with db_max ordering
-  const needsClientSort = category === "freq_max" || category === "freq_min" || category === "notes_count";
+  const needsClientSort =
+    category === "freq_max" ||
+    category === "freq_min" ||
+    category === "notes_count";
   const dbColumn = needsClientSort ? "db_max" : category;
 
   let query = supabase
     .from("recordings")
-    .select("id, user_id, pseudo, db_max, duree_ms, note_principale, sequence_notes, created_at")
+    .select(
+      "id, user_id, pseudo, db_max, duree_ms, note_principale, sequence_notes, created_at"
+    )
     .order(dbColumn, { ascending: false, nullsFirst: false })
     .limit(needsClientSort ? 200 : 50);
 
@@ -99,13 +117,16 @@ export async function fetchLeaderboardByPeriod(
     const now = new Date();
     let from: Date;
     if (period === "day") {
-      from = new Date(now); from.setHours(0, 0, 0, 0);
+      from = new Date(now);
+      from.setHours(0, 0, 0, 0);
     } else if (period === "week") {
       from = new Date(now.getTime() - 7 * 86400000);
     } else if (period === "month") {
-      from = new Date(now); from.setMonth(now.getMonth() - 1);
+      from = new Date(now);
+      from.setMonth(now.getMonth() - 1);
     } else {
-      from = new Date(now); from.setFullYear(now.getFullYear() - 1);
+      from = new Date(now);
+      from.setFullYear(now.getFullYear() - 1);
     }
     query = query.gte("created_at", from.toISOString());
   }
@@ -123,16 +144,26 @@ export async function fetchLeaderboardByPeriod(
   if (category === "freq_max") {
     rows = [...rows]
       .sort((a, b) => {
-        const fA = Math.max(0, ...(a.sequence_notes ?? []).map(n => n.frequency));
-        const fB = Math.max(0, ...(b.sequence_notes ?? []).map(n => n.frequency));
+        const fA = Math.max(
+          0,
+          ...(a.sequence_notes ?? []).map((n) => n.frequency)
+        );
+        const fB = Math.max(
+          0,
+          ...(b.sequence_notes ?? []).map((n) => n.frequency)
+        );
         return fB - fA;
       })
       .slice(0, 50);
   } else if (category === "freq_min") {
     rows = [...rows]
       .sort((a, b) => {
-        const notesA = (a.sequence_notes ?? []).map(n => n.frequency).filter(f => isFinite(f));
-        const notesB = (b.sequence_notes ?? []).map(n => n.frequency).filter(f => isFinite(f));
+        const notesA = (a.sequence_notes ?? [])
+          .map((n) => n.frequency)
+          .filter((f) => isFinite(f));
+        const notesB = (b.sequence_notes ?? [])
+          .map((n) => n.frequency)
+          .filter((f) => isFinite(f));
         const fA = notesA.length ? Math.min(...notesA) : Infinity;
         const fB = notesB.length ? Math.min(...notesB) : Infinity;
         return fA - fB;
@@ -140,17 +171,24 @@ export async function fetchLeaderboardByPeriod(
       .slice(0, 50);
   } else if (category === "notes_count") {
     rows = [...rows]
-      .sort((a, b) => (b.sequence_notes?.length ?? 0) - (a.sequence_notes?.length ?? 0))
+      .sort(
+        (a, b) =>
+          (b.sequence_notes?.length ?? 0) - (a.sequence_notes?.length ?? 0)
+      )
       .slice(0, 50);
   }
 
   return rows;
 }
 
-export async function fetchLeaderboardCategories(userId?: string): Promise<LeaderboardRow[]> {
+export async function fetchLeaderboardCategories(
+  userId?: string
+): Promise<LeaderboardRow[]> {
   let query = supabase
     .from("recordings")
-    .select("id, pseudo, db_max, duree_ms, note_principale, sequence_notes, created_at")
+    .select(
+      "id, pseudo, db_max, duree_ms, note_principale, sequence_notes, created_at"
+    )
     .order("db_max", { ascending: false })
     .limit(100);
   if (userId) query = query.eq("user_id", userId);
@@ -194,7 +232,9 @@ export async function saveProfile(profile: ProfilePayload) {
   return data;
 }
 
-export async function getProfile(userId: string): Promise<ProfilePayload | null> {
+export async function getProfile(
+  userId: string
+): Promise<ProfilePayload | null> {
   const { data, error } = await supabase
     .from("profiles")
     .select("*")
@@ -210,7 +250,9 @@ export interface WorldRank {
 }
 
 export async function getWorldRanks(userId: string): Promise<WorldRank[]> {
-  const { data, error } = await supabase.rpc("get_world_ranks", { p_user_id: userId });
+  const { data, error } = await supabase.rpc("get_world_ranks", {
+    p_user_id: userId,
+  });
   if (error) throw error;
   return (data ?? []) as WorldRank[];
 }
@@ -225,8 +267,14 @@ interface RecordingRow {
 
 export async function getPersonalStats(userId: string): Promise<PersonalStats> {
   const empty: PersonalStats = {
-    db_max: null, duree_max_ms: null, freq_max: null, freq_min: null,
-    notes_max: null, total: 0, note_frequente: null, streak: 0,
+    db_max: null,
+    duree_max_ms: null,
+    freq_max: null,
+    freq_min: null,
+    notes_max: null,
+    total: 0,
+    note_frequente: null,
+    streak: 0,
   };
   try {
     const { data, error } = await supabase
@@ -238,31 +286,55 @@ export async function getPersonalStats(userId: string): Promise<PersonalStats> {
     const rows = data as RecordingRow[];
     const total = rows.length;
 
-    const db_max = rows.reduce((m, r) => Math.max(m, r.db_max ?? -Infinity), -Infinity);
+    const db_max = rows.reduce(
+      (m, r) => Math.max(m, r.db_max ?? -Infinity),
+      -Infinity
+    );
     const duree_max_ms = rows.reduce((m, r) => Math.max(m, r.duree_ms ?? 0), 0);
 
-    const allNotes = rows.flatMap(r => (Array.isArray(r.sequence_notes) ? r.sequence_notes : []));
-    const freq_max = allNotes.length ? allNotes.reduce((m, n) => Math.max(m, n.frequency), -Infinity) : null;
-    const freq_min = allNotes.length ? allNotes.reduce((m, n) => Math.min(m, n.frequency), Infinity) : null;
+    const allNotes = rows.flatMap((r) =>
+      Array.isArray(r.sequence_notes) ? r.sequence_notes : []
+    );
+    const freq_max = allNotes.length
+      ? allNotes.reduce((m, n) => Math.max(m, n.frequency), -Infinity)
+      : null;
+    const freq_min = allNotes.length
+      ? allNotes.reduce((m, n) => Math.min(m, n.frequency), Infinity)
+      : null;
     const notes_max = rows.reduce(
-      (m, r) => Math.max(m, Array.isArray(r.sequence_notes) ? r.sequence_notes.length : 0),
+      (m, r) =>
+        Math.max(
+          m,
+          Array.isArray(r.sequence_notes) ? r.sequence_notes.length : 0
+        ),
       0
     );
 
     const noteCount: Record<string, number> = {};
     for (const n of allNotes) noteCount[n.note] = (noteCount[n.note] ?? 0) + 1;
-    const note_frequente = Object.entries(noteCount).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+    const note_frequente =
+      Object.entries(noteCount).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
 
-    const dateSet = new Set(rows.map(r => r.created_at?.split("T")[0]).filter((d): d is string => Boolean(d)));
+    const dateSet = new Set(
+      rows
+        .map((r) => r.created_at?.split("T")[0])
+        .filter((d): d is string => Boolean(d))
+    );
     const today = new Date().toISOString().split("T")[0];
-    const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
+    const yesterday = new Date(Date.now() - 86400000)
+      .toISOString()
+      .split("T")[0];
     let streak = 0;
     if (dateSet.has(today) || dateSet.has(yesterday)) {
       let current = new Date(dateSet.has(today) ? today : yesterday);
       for (const date of [...dateSet].sort().reverse()) {
-        const diff = Math.round((current.getTime() - new Date(date).getTime()) / 86400000);
-        if (diff <= 1) { streak++; current = new Date(date); }
-        else break;
+        const diff = Math.round(
+          (current.getTime() - new Date(date).getTime()) / 86400000
+        );
+        if (diff <= 1) {
+          streak++;
+          current = new Date(date);
+        } else break;
       }
     }
 
@@ -284,11 +356,54 @@ export async function getPersonalStats(userId: string): Promise<PersonalStats> {
 // Fetch minimal recording data for mission checking
 export async function fetchUserRecordings(
   userId: string
-): Promise<Array<{ note_principale: string | null; sequence_notes: { note: string; frequency: number; t: number }[] | null }>> {
+): Promise<
+  Array<{
+    note_principale: string | null;
+    sequence_notes: { note: string; frequency: number; t: number }[] | null;
+  }>
+> {
   const { data, error } = await supabase
     .from("recordings")
     .select("note_principale, sequence_notes")
     .eq("user_id", userId);
   if (error) throw error;
   return data ?? [];
+}
+
+// ── Full recording for History ─────────────────────────────────────────────
+
+export interface FullRecording {
+  id: string;
+  created_at: string;
+  db_max: number | null;
+  db_avg: number | null;
+  note_principale: string | null;
+  sequence_notes: { note: string; frequency: number; t: number }[] | null;
+  duree_ms: number | null;
+  audio_url: string | null;
+  alimentation: string | null;
+  lieu: string | null;
+  odeur: string | null;
+  freq_max: number | null;
+  freq_min: number | null;
+  notes_count: number | null;
+}
+
+export async function fetchFullUserRecordings(
+  userId: string
+): Promise<FullRecording[]> {
+  const { data, error } = await supabase
+    .from("recordings")
+    .select(
+      "id, created_at, db_max, db_avg, note_principale, sequence_notes, duree_ms, audio_url, alimentation, lieu, odeur, freq_max, freq_min, notes_count"
+    )
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as FullRecording[];
+}
+
+export async function deleteRecording(id: string): Promise<void> {
+  const { error } = await supabase.from("recordings").delete().eq("id", id);
+  if (error) throw error;
 }

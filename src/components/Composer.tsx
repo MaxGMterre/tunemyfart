@@ -11,7 +11,18 @@ const BLACK_NOTE_POSITIONS: { note: string; pos: number }[] = [
   { note: "La#", pos: 5.67 },
 ];
 const ALL_NOTES_CHROMATIC = [
-  "Do", "Do#", "Ré", "Ré#", "Mi", "Fa", "Fa#", "Sol", "Sol#", "La", "La#", "Si",
+  "Do",
+  "Do#",
+  "Ré",
+  "Ré#",
+  "Mi",
+  "Fa",
+  "Fa#",
+  "Sol",
+  "Sol#",
+  "La",
+  "La#",
+  "Si",
 ];
 const WHITE_KEY_PCT = 100 / 7;
 const OCTAVES = [2, 3] as const;
@@ -26,7 +37,14 @@ interface PianoKeyProps {
   onClick: () => void;
 }
 
-function PianoKey({ note, isBlack, unlocked, active, style, onClick }: PianoKeyProps) {
+function PianoKey({
+  note,
+  isBlack,
+  unlocked,
+  active,
+  style,
+  onClick,
+}: PianoKeyProps) {
   return (
     <button
       className={[
@@ -34,7 +52,9 @@ function PianoKey({ note, isBlack, unlocked, active, style, onClick }: PianoKeyP
         isBlack ? "black-key" : "white-key",
         unlocked ? "unlocked" : "locked",
         active ? "playing" : "",
-      ].filter(Boolean).join(" ")}
+      ]
+        .filter(Boolean)
+        .join(" ")}
       onClick={onClick}
       style={style}
       title={`${note} — ${unlocked ? "Jouer" : "Non collectée"}`}
@@ -61,7 +81,9 @@ export function Composer() {
       .not("note_principale", "is", null)
       .then(({ data }) => {
         if (data) {
-          setCollectedNotes(new Set(data.map(r => r.note_principale as string)));
+          setCollectedNotes(
+            new Set(data.map((r) => r.note_principale as string))
+          );
         }
       });
   }, [user]);
@@ -101,24 +123,23 @@ export function Composer() {
     }
   };
 
-  const hasFullOctave = ALL_NOTES_CHROMATIC.every(n => collectedNotes.has(n));
+  const hasFullOctave = ALL_NOTES_CHROMATIC.every((n) => collectedNotes.has(n));
 
   return (
     <div className="composer-panel">
-      <h2 className="composer-title">Mode Compositeur</h2>
       <p className="composer-subtitle">
-        {collectedNotes.size} / 12 notes collectées
+        {collectedNotes.size} / 12 notes au corpus
       </p>
 
       {!hasFullOctave && (
         <div className="composer-unlock-hint">
-          🎹 Collecte les 12 notes pour débloquer le mode Compositeur complet
+          🎹 Collecte les 12 notes chromatiques pour débloquer l'organum complet
         </div>
       )}
 
       <div className="piano-wrapper">
         <div className="piano-keyboard">
-          {OCTAVES.map(octave => (
+          {OCTAVES.map((octave) => (
             <div key={octave} className="piano-octave-wrap">
               <div className="piano-octave">
                 {WHITE_NOTES.map((note, i) => (
@@ -161,15 +182,23 @@ export function Composer() {
       <button
         className={`composer-record-btn${hasFullOctave ? " active" : ""}`}
         disabled={!hasFullOctave}
+        aria-label="Enregistrer la composition"
+        title={
+          hasFullOctave
+            ? "Enregistrer la mélodie"
+            : "Collecte d'abord les 12 notes"
+        }
       >
-        🎼 Enregistrer la mélodie
+        🎼 Enregistrer la composition
       </button>
 
       <div className="composer-note-grid">
-        {ALL_NOTES_CHROMATIC.map(note => (
+        {ALL_NOTES_CHROMATIC.map((note) => (
           <div
             key={note}
-            className={`composer-note-chip${collectedNotes.has(note) ? " collected" : ""}`}
+            className={`composer-note-chip${
+              collectedNotes.has(note) ? " collected" : ""
+            }`}
           >
             {collectedNotes.has(note) ? "✓" : "○"} {note}
           </div>

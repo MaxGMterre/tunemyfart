@@ -112,8 +112,13 @@
   line-height: 1;
 }
 
-.white-key .key-icon { color: var(--color-ink); }
-.black-key .key-icon { color: var(--color-paper); font-size: 0.45rem; }
+.white-key .key-icon {
+  color: var(--color-ink);
+}
+.black-key .key-icon {
+  color: var(--color-paper);
+  font-size: 0.45rem;
+}
 
 .key-label {
   font-family: var(--font-mono);

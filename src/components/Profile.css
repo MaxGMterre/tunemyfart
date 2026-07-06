@@ -87,6 +87,13 @@
   color: var(--color-brass);
 }
 
+.profile-header-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
 /* ── Edit form ─────────────────────────────────── */
 .profile-form {
   display: flex;

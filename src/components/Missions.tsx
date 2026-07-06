@@ -11,13 +11,15 @@ export function Missions() {
 
   useEffect(() => {
     if (!user) {
-      setProgressList(MISSIONS.map(m => ({
-        mission: m,
-        completed: false,
-        progress: 0,
-        current: 0,
-        target: "value" in m.condition ? (m.condition.value as number) : 1,
-      })));
+      setProgressList(
+        MISSIONS.map((m) => ({
+          mission: m,
+          completed: false,
+          progress: 0,
+          current: 0,
+          target: "value" in m.condition ? (m.condition.value as number) : 1,
+        }))
+      );
       setLoading(false);
       return;
     }
@@ -28,56 +30,67 @@ export function Missions() {
         setProgressList(progress);
       })
       .catch(() => {
-        setProgressList(MISSIONS.map(m => ({
-          mission: m,
-          completed: false,
-          progress: 0,
-          current: 0,
-          target: 0,
-        })));
+        setProgressList(
+          MISSIONS.map((m) => ({
+            mission: m,
+            completed: false,
+            progress: 0,
+            current: 0,
+            target: 0,
+          }))
+        );
       })
       .finally(() => setLoading(false));
   }, [user]);
 
-  if (loading) return <p className="status-text">Chargement des missions…</p>;
+  if (loading)
+    return <p className="status-text">Consultation du programme d'étude…</p>;
 
-  const completed = progressList.filter(p => p.completed).length;
+  const completed = progressList.filter((p) => p.completed).length;
 
   return (
     <div className="missions-panel">
-      <h2 className="missions-title">Missions</h2>
       <p className="missions-progress-hint">
-        {completed} / {progressList.length} accomplies
+        {completed} / {progressList.length} protocoles accomplis
       </p>
 
       <div className="missions-list">
-        {progressList.map(({ mission, completed: done, progress, current, target }) => (
-          <div key={mission.id} className={`mission-card${done ? " completed" : ""}`}>
-            <div className="mission-header">
-              <span className="mission-emoji">{mission.emoji}</span>
-              <div className="mission-info">
-                <div className="mission-titre">{mission.titre}</div>
-                <div className="mission-description">{mission.description}</div>
+        {progressList.map(
+          ({ mission, completed: done, progress, current, target }) => (
+            <div
+              key={mission.id}
+              className={`mission-card${done ? " completed" : ""}`}
+            >
+              <div className="mission-header">
+                <span className="mission-emoji">{mission.emoji}</span>
+                <div className="mission-info">
+                  <div className="mission-titre">{mission.titre}</div>
+                  <div className="mission-description">
+                    {mission.description}
+                  </div>
+                </div>
+                {done && <span className="mission-check">✓</span>}
               </div>
-              {done && <span className="mission-check">✓</span>}
-            </div>
 
-            <div className="mission-progress-track">
-              <div
-                className="mission-progress-bar"
-                style={{ width: `${progress * 100}%` }}
-              />
-            </div>
-
-            {done ? (
-              <div className="mission-recompense">🏅 {mission.recompense}</div>
-            ) : (
-              <div className="mission-counter">
-                {current} / {target}
+              <div className="mission-progress-track">
+                <div
+                  className="mission-progress-bar"
+                  style={{ width: `${progress * 100}%` }}
+                />
               </div>
-            )}
-          </div>
-        ))}
+
+              {done ? (
+                <div className="mission-recompense">
+                  🏅 {mission.recompense}
+                </div>
+              ) : (
+                <div className="mission-counter">
+                  Progression : {current} / {target}
+                </div>
+              )}
+            </div>
+          )
+        )}
       </div>
     </div>
   );

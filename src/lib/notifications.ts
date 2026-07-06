@@ -22,7 +22,9 @@ export async function scheduleStreakReminder(): Promise<void> {
   });
 }
 
-export async function scheduleMissionUnlocked(missionTitle: string): Promise<void> {
+export async function scheduleMissionUnlocked(
+  missionTitle: string
+): Promise<void> {
   await LocalNotifications.schedule({
     notifications: [
       {

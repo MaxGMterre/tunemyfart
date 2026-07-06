@@ -29,59 +29,59 @@ export interface MissionProgress {
 export const MISSIONS: Mission[] = [
   {
     id: "first_recording",
-    titre: "Premier souffle",
-    description: "Enregistre ton premier pet",
+    titre: "Protocole inaugural",
+    description: "Certifie ton premier relevé acoustique",
     emoji: "🥚",
     condition: { type: "recording_count", value: 1 },
-    recompense: "Badge Novice débloqué",
+    recompense: "Grade Novice du Laboratoire",
   },
   {
     id: "collector_do",
-    titre: "Collectionneur de Do",
-    description: "Enregistre un pet sur la note Do",
+    titre: "Collecteur de Do",
+    description: "Enregistre un spécimen sur la fréquence Do",
     emoji: "🎵",
     condition: { type: "note_collected", value: "Do" },
-    recompense: "Touche Do du clavier",
+    recompense: "Touche Do de l'organum",
   },
   {
     id: "full_octave",
-    titre: "Gamme complète",
-    description: "Enregistre les 12 notes de la gamme chromatique",
+    titre: "Gamme chromatique complète",
+    description: "Recenser les 12 notes de la gamme dans le corpus",
     emoji: "🎹",
     condition: { type: "notes_collected", value: 12 },
-    recompense: "Clavier des pets débloqué",
+    recompense: "Organum complet débloqué",
   },
   {
     id: "thunder",
     titre: "Tonnerre de Zeus",
-    description: "Dépasse -10 dB",
+    description: "Franchir le seuil critique de -10 dB",
     emoji: "⚡",
     condition: { type: "db_max", value: -10 },
-    recompense: "Badge Légende du Son",
+    recompense: "Titre de Légende Acoustique",
   },
   {
     id: "marathon",
-    titre: "Le Marathonien",
-    description: "Enregistre un pet de plus de 5 secondes",
+    titre: "Protocole d'endurance",
+    description: "Soumettre un spécimen de durée supérieure à 5 secondes",
     emoji: "⏱️",
     condition: { type: "duration_ms", value: 5000 },
-    recompense: "Badge Endurance",
+    recompense: "Badge Endurance Certifiée",
   },
   {
     id: "composer",
-    titre: "Le Compositeur",
-    description: "Enregistre 5 pets avec une séquence de 3 notes ou plus",
+    titre: "Richesse harmonique",
+    description: "Cinq relevés présentant une séquence de 3 notes ou plus",
     emoji: "🎼",
     condition: { type: "melody_min_notes", value: 3, count: 5 },
     recompense: "Mode Compositeur débloqué",
   },
   {
     id: "streak_7",
-    titre: "La Semaine Musicale",
-    description: "Enregistre au moins un pet 7 jours de suite",
+    titre: "Assiduité scientifique",
+    description: "Contribuer au corpus 7 jours consécutifs",
     emoji: "🔥",
     condition: { type: "streak_days", value: 7 },
-    recompense: "Badge Régularité",
+    recompense: "Badge Régularité Exemplaire",
   },
 ];
 
@@ -96,10 +96,12 @@ export function checkMissions(
   previouslyCompleted: string[] = []
 ): { progress: MissionProgress[]; newlyCompleted: string[] } {
   const collectedNotes = new Set(
-    recordings.map(r => r.note_principale).filter((n): n is string => Boolean(n))
+    recordings
+      .map((r) => r.note_principale)
+      .filter((n): n is string => Boolean(n))
   );
 
-  const progress: MissionProgress[] = MISSIONS.map(mission => {
+  const progress: MissionProgress[] = MISSIONS.map((mission) => {
     let current = 0;
     let target = 0;
     let completed = false;
@@ -134,7 +136,7 @@ export function checkMissions(
         target = dbTarget;
         completed = db >= dbTarget;
         // Progress along -60…target scale
-        prog = Math.min(1, Math.max(0, (db - (-60)) / (dbTarget - (-60))));
+        prog = Math.min(1, Math.max(0, (db - -60) / (dbTarget - -60)));
         break;
       }
 
@@ -148,7 +150,9 @@ export function checkMissions(
       case "melody_min_notes": {
         const minNotes = mission.condition.value;
         current = recordings.filter(
-          r => Array.isArray(r.sequence_notes) && r.sequence_notes.length >= minNotes
+          (r) =>
+            Array.isArray(r.sequence_notes) &&
+            r.sequence_notes.length >= minNotes
         ).length;
         target = mission.condition.count;
         completed = current >= target;
@@ -168,8 +172,8 @@ export function checkMissions(
   });
 
   const newlyCompleted = progress
-    .filter(p => p.completed && !previouslyCompleted.includes(p.mission.id))
-    .map(p => p.mission.id);
+    .filter((p) => p.completed && !previouslyCompleted.includes(p.mission.id))
+    .map((p) => p.mission.id);
 
   return { progress, newlyCompleted };
 }

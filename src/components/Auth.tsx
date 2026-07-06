@@ -48,10 +48,16 @@ export function Auth() {
         <p className="auth-subtitle">Instrument de mesure acoustique</p>
 
         <div className="auth-mode-tabs">
-          <button className={mode === "login" ? "active" : ""} onClick={() => setMode("login")}>
+          <button
+            className={mode === "login" ? "active" : ""}
+            onClick={() => setMode("login")}
+          >
             Connexion
           </button>
-          <button className={mode === "signup" ? "active" : ""} onClick={() => setMode("signup")}>
+          <button
+            className={mode === "signup" ? "active" : ""}
+            onClick={() => setMode("signup")}
+          >
             Inscription
           </button>
         </div>
@@ -62,7 +68,7 @@ export function Auth() {
             <input
               type="email"
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               onKeyDown={handleKey}
               placeholder="exemple@email.com"
               autoCapitalize="none"
@@ -74,10 +80,12 @@ export function Auth() {
             <input
               type="password"
               value={password}
-              onChange={e => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               onKeyDown={handleKey}
               placeholder="••••••••"
-              autoComplete={mode === "login" ? "current-password" : "new-password"}
+              autoComplete={
+                mode === "login" ? "current-password" : "new-password"
+              }
             />
           </label>
 
@@ -88,12 +96,22 @@ export function Auth() {
             onClick={handle}
             disabled={loading || !email || !password}
           >
-            {loading ? "…" : mode === "login" ? "Se connecter" : "Créer un compte"}
+            {loading
+              ? "…"
+              : mode === "login"
+              ? "Se connecter"
+              : "Créer un compte"}
           </button>
 
-          <div className="auth-divider"><span>ou</span></div>
+          <div className="auth-divider">
+            <span>ou</span>
+          </div>
 
-          <button className="auth-btn-anon" onClick={handleAnon} disabled={loading}>
+          <button
+            className="auth-btn-anon"
+            onClick={handleAnon}
+            disabled={loading}
+          >
             Continuer sans compte →
           </button>
         </div>

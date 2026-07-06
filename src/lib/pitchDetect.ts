@@ -1,7 +1,20 @@
 // Coeur d'analyse audio — détection de fréquence fondamentale par autocorrélation
 // Pas de dépendance UI : peut être testé/réutilisé indépendamment de l'apparence.
 
-const NOTE_NAMES = ["Do", "Do#", "Ré", "Ré#", "Mi", "Fa", "Fa#", "Sol", "Sol#", "La", "La#", "Si"];
+const NOTE_NAMES = [
+  "Do",
+  "Do#",
+  "Ré",
+  "Ré#",
+  "Mi",
+  "Fa",
+  "Fa#",
+  "Sol",
+  "Sol#",
+  "La",
+  "La#",
+  "Si",
+];
 
 export interface NoteResult {
   frequency: number; // Hz
@@ -16,7 +29,10 @@ export interface NoteResult {
  * Plus robuste que la FFT brute pour un signal court et bruité comme un pet.
  * Retourne 0 si aucun pitch fiable n'est détecté (signal trop faible/bruité).
  */
-export function autoCorrelate(buffer: Float32Array, sampleRate: number): number {
+export function autoCorrelate(
+  buffer: Float32Array,
+  sampleRate: number
+): number {
   const SIZE = buffer.length;
   let rms = 0;
   for (let i = 0; i < SIZE; i++) {
@@ -116,7 +132,10 @@ export function computeDecibels(buffer: Float32Array): number {
 }
 
 /** Réduit un grand tableau d'amplitudes à N points pour stockage/affichage de la courbe. */
-export function downsampleWaveform(buffer: Float32Array, targetPoints = 200): number[] {
+export function downsampleWaveform(
+  buffer: Float32Array,
+  targetPoints = 200
+): number[] {
   const blockSize = Math.floor(buffer.length / targetPoints);
   if (blockSize <= 0) return Array.from(buffer);
   const result: number[] = [];

@@ -1,14 +1,14 @@
 :root {
   /* Palette — instrument scientifique vintage */
-  --color-paper: #F2ECE0;
-  --color-paper-dark: #E8E0CC;
-  --color-ink: #1B2A41;
+  --color-paper: #f2ece0;
+  --color-paper-dark: #e8e0cc;
+  --color-ink: #1b2a41;
   --color-ink-soft: rgba(27, 42, 65, 0.5);
-  --color-brass: #C99A3D;
-  --color-coral: #D9603B;
-  --color-mint: #2ECC71;
-  --color-violet: #9B59B6;
-  --color-blue: #3498DB;
+  --color-brass: #c99a3d;
+  --color-coral: #d9603b;
+  --color-mint: #2ecc71;
+  --color-violet: #9b59b6;
+  --color-blue: #3498db;
 
   /* Typo */
   --font-display: "Fraunces", "Georgia", serif;
@@ -95,12 +95,12 @@ body {
 
 .tab-bar button {
   flex: 1;
-  padding: 0.65rem 0.15rem;
+  padding: 0.6rem 0.1rem;
   background: none;
   border: none;
   font-family: var(--font-mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.03em;
+  font-size: 0.52rem;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--color-ink-soft);
   cursor: pointer;
@@ -108,8 +108,10 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.1rem;
+  gap: 0.08rem;
   min-height: 44px;
+  transition: color 0.15s;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .tab-bar button .tab-emoji {
@@ -127,17 +129,50 @@ body {
   overflow-y: auto;
 }
 
-/* Fade-in when switching tabs */
+/* Fade-in + slide-up when switching tabs */
 .panel-content > * {
-  animation: panel-fade-in 0.22s ease;
+  animation: panel-slide-up 0.22s ease;
 }
 
-@keyframes panel-fade-in {
-  from { opacity: 0; transform: translateY(5px); }
-  to   { opacity: 1; transform: translateY(0); }
+@keyframes panel-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Cascade animation for list items */
+.mission-card,
+.leaderboard-row,
+.history-entry {
+  animation: card-cascade 0.25s ease both;
+}
+
+@keyframes card-cascade {
+  from {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 /* ── Scrollbar hiding ───────────────────────────────────── */
-::-webkit-scrollbar { display: none; }
-* { -ms-overflow-style: none; scrollbar-width: none; }
-html, body { overscroll-behavior: none; -webkit-overflow-scrolling: touch; }
+::-webkit-scrollbar {
+  display: none;
+}
+* {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+html,
+body {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+}
