@@ -3,128 +3,176 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding-top: 1.5rem;
+  padding-top: 0.5rem;
 }
 
-/* ── Instrument frame ─────────────────────────────────── */
-.instr-frame {
-  background: #E8E0CC;
-  border: 2px solid #1B2A41;
-  border-radius: 6px;
-  padding: 1rem 0.9rem 0.85rem;
+/* ── Lab instrument frame ─────────────────────────────── */
+.instrument-frame {
+  background: linear-gradient(145deg, #3D4D63 0%, #2A3548 45%, #1B2A41 100%);
+  border: 4px solid #C99A3D;
+  border-radius: 14px;
+  padding: 1rem 0.9rem 0.9rem;
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
-}
-
-.instr-frame::before {
-  content: "fig. 1 — relevé acoustique";
-  position: absolute;
-  top: -0.65rem;
-  left: 0.75rem;
-  padding: 0 0.3rem;
-  background: #F2ECE0;
-  color: #3D4D63;
-  font-family: var(--font-mono);
-  font-size: 0.48rem;
-  text-transform: lowercase;
-  letter-spacing: 0.1em;
-  pointer-events: none;
-}
-
-/* ── Oscilloscope canvas ──────────────────────────────── */
-.scope-canvas {
-  display: block;
-  width: 100%;
-  height: 80px;
-  border: 1px solid rgba(27, 42, 65, 0.2);
-  border-radius: 3px;
-  background: #F2ECE0;
-}
-
-@keyframes scope-breathe {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.72; }
-}
-
-.instr-frame--recording .scope-canvas {
-  animation: scope-breathe 1.4s ease-in-out infinite;
-}
-
-/* ── Horizontal dB gauge ──────────────────────────────── */
-.db-gauge-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.db-gauge-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-}
-
-.db-gauge-label {
-  font-family: var(--font-mono);
-  font-size: 0.44rem;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: rgba(27, 42, 65, 0.5);
-}
-
-.db-gauge-value {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  font-weight: 700;
-  color: #1B2A41;
-  letter-spacing: 0.04em;
-}
-
-.db-gauge-track {
-  height: 14px;
-  background: rgba(27, 42, 65, 0.08);
-  border: 1px solid rgba(27, 42, 65, 0.16);
-  border-radius: 2px;
+  gap: 0.7rem;
   overflow: hidden;
+  box-shadow:
+    0 6px 28px rgba(0, 0, 0, 0.5),
+    0 2px 8px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.25);
 }
 
-.db-gauge-fill {
-  height: 100%;
-  background: linear-gradient(to right, #6B8F71 0%, #C99A3D 55%, #D9603B 100%);
-  border-radius: 2px;
-  transition: width 0.06s linear;
+/* Corner screws */
+.screw {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #D4AF37 0%, #8B6914 55%, #704A0A 100%);
+  border: 1px solid #5C4614;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.7), 0 1px 2px rgba(255, 255, 255, 0.1);
+  z-index: 4;
 }
 
-/* ── Note readout ─────────────────────────────────────── */
-.note-section {
-  border-top: 1px dashed rgba(27, 42, 65, 0.22);
-  padding-top: 0.55rem;
+.screw::before {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  width: 8px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 1px;
+}
+
+.screw--tl { top: 9px;  left: 9px; }
+.screw--tr { top: 9px;  right: 9px; }
+.screw--bl { bottom: 9px; left: 9px; }
+.screw--br { bottom: 9px; right: 9px; }
+
+/* ── LED indicator row ────────────────────────────────── */
+.led-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.1rem 0.4rem 0;
+  position: relative;
+  z-index: 2;
+}
+
+.led-item {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0.2rem;
 }
 
-.note-readout-label {
+.led {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.45);
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.55) 100%);
+}
+
+/* POWER: always on green */
+.led--power {
+  background: radial-gradient(circle at 35% 30%, #A8FF80 0%, #39FF14 50%, #1A8000 100%);
+  box-shadow: 0 0 6px rgba(57, 255, 20, 0.75), 0 0 14px rgba(57, 255, 20, 0.28);
+}
+
+/* READY */
+.led--ready { background: radial-gradient(circle at 35% 30%, rgba(201,154,61,0.15) 0%, rgba(80,50,0,0.5) 100%); }
+.led--on-ready {
+  background: radial-gradient(circle at 35% 30%, #FFD77A 0%, #C99A3D 50%, #8B6914 100%);
+  box-shadow: 0 0 5px rgba(201, 154, 61, 0.75), 0 0 12px rgba(201, 154, 61, 0.28);
+}
+
+/* REC */
+.led--rec { background: radial-gradient(circle at 35% 30%, rgba(200,50,50,0.15) 0%, rgba(80,0,0,0.5) 100%); }
+.led--on-rec {
+  background: radial-gradient(circle at 35% 30%, #FF9090 0%, #FF3B30 50%, #8B0000 100%);
+  box-shadow: 0 0 6px rgba(255, 59, 48, 0.85), 0 0 14px rgba(255, 59, 48, 0.3);
+  animation: led-blink 0.7s ease-in-out infinite;
+}
+
+/* SIG */
+.led--sig { background: radial-gradient(circle at 35% 30%, rgba(57,255,20,0.08) 0%, rgba(0,60,0,0.5) 100%); }
+.led--on-sig {
+  background: radial-gradient(circle at 35% 30%, #A8FF80 0%, #39FF14 50%, #1A8000 100%);
+  box-shadow: 0 0 5px rgba(57, 255, 20, 0.65), 0 0 12px rgba(57, 255, 20, 0.22);
+}
+
+@keyframes led-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.2; }
+}
+
+.led-label {
   font-family: var(--font-mono);
-  font-size: 0.44rem;
+  font-size: 0.38rem;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: rgba(27, 42, 65, 0.5);
+  letter-spacing: 0.1em;
+  color: rgba(201, 154, 61, 0.5);
 }
 
-.note-readout-row {
+/* ── Oscilloscope screen ──────────────────────────────── */
+.scope-screen {
+  position: relative;
+  height: 110px;
+  background: #0A0F1A;
+  border: 2px solid #C99A3D;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow:
+    0 0 18px rgba(201, 154, 61, 0.14),
+    inset 0 0 32px rgba(0, 0, 0, 0.65),
+    inset 0 0 0 2px rgba(0, 0, 0, 0.25);
+  z-index: 2;
+}
+
+.scope-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.scope-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.07) 0px,
+    rgba(0, 0, 0, 0.07) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  z-index: 2;
+}
+
+.note-display {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
   display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
+  flex-direction: column;
+  align-items: flex-end;
+  z-index: 3;
+  pointer-events: none;
 }
 
-.note-readout-value {
+.note-value {
   font-family: var(--font-display);
-  font-size: 2.5rem;
+  font-size: 3rem;
   font-weight: 700;
-  color: #1B2A41;
+  color: #39FF14;
   line-height: 1;
+  text-shadow: 0 0 12px rgba(57, 255, 20, 0.65), 0 0 26px rgba(57, 255, 20, 0.3);
   animation: note-pop 0.15s ease-out;
 }
 
@@ -134,11 +182,156 @@
   100% { transform: scale(1); opacity: 1; }
 }
 
-.note-readout-freq {
+.note-freq {
   font-family: var(--font-mono);
-  font-size: 0.9rem;
+  font-size: 0.72rem;
   color: #C99A3D;
+  letter-spacing: 0.04em;
+}
+
+/* ── VU meter (needle) ────────────────────────────────── */
+.vu-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.vu-meter {
+  position: relative;
+  width: 100%;
+  height: 72px;
+  background: linear-gradient(180deg, #E8DFC8 0%, #D5CAB2 100%);
+  border: 2px solid #C99A3D;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow:
+    inset 0 2px 4px rgba(255, 255, 255, 0.55),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(201, 154, 61, 0.25);
+}
+
+/* Top glare */
+.vu-meter::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 32%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.38) 0%, transparent 100%);
+  border-radius: 3px 3px 0 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.vu-arc-bg {
+  position: absolute;
+  bottom: -78px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 1px solid rgba(27, 42, 65, 0.2);
+  border-bottom: none;
+  z-index: 0;
+}
+
+/* Zone coloring on the arc (behind needle) */
+.vu-arc-bg::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 218deg at 50% 50%,
+    rgba(107, 143, 113, 0.45) 0deg 36deg,
+    rgba(201, 154, 61, 0.45) 36deg 62deg,
+    rgba(217, 96, 59, 0.5)   62deg 103deg,
+    transparent               103deg 360deg
+  );
+}
+
+.vu-scale-marks {
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.vu-mark {
+  font-family: var(--font-mono);
+  font-size: 0.4rem;
+  color: rgba(27, 42, 65, 0.45);
   letter-spacing: 0.02em;
+}
+
+.vu-needle {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  width: 2px;
+  height: 50px;
+  background: linear-gradient(to top, #FF3B30 0%, #FF3B30 80%, rgba(255, 59, 48, 0.25) 100%);
+  transform-origin: bottom center;
+  transition: transform 0.07s linear;
+  border-radius: 1px 1px 0 0;
+  z-index: 2;
+}
+
+.vu-pivot {
+  position: absolute;
+  bottom: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #C99A3D 0%, #704A0A 100%);
+  border: 1px solid #5C4614;
+  z-index: 3;
+}
+
+.vu-label {
+  font-family: var(--font-mono);
+  font-size: 0.44rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #C99A3D;
+  text-shadow: 0 0 6px rgba(201, 154, 61, 0.22);
+}
+
+/* ── Decorative SVG cables ────────────────────────────── */
+.cables-svg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 90px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.55;
+}
+
+/* ── Nameplate ────────────────────────────────────────── */
+.instr-nameplate {
+  font-family: var(--font-mono);
+  font-size: 0.42rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(201, 154, 61, 0.55);
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+  padding-bottom: 0.35rem;
+  position: relative;
+  z-index: 2;
 }
 
 /* ── Record button ────────────────────────────────────── */
@@ -148,44 +341,59 @@
   padding: 0.25rem 0;
 }
 
-.record-btn {
-  width: 120px;
-  height: 120px;
+.rec-btn {
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
-  background: #D9603B;
-  border: none;
+  background: radial-gradient(circle at 40% 28%, #E85D3A 0%, #B84828 52%, #8B3620 100%);
+  border: 3px solid #C99A3D;
   color: #F2ECE0;
   font-family: var(--font-mono);
-  font-size: 0.6rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  white-space: pre-line;
-  text-align: center;
   cursor: pointer;
-  transition: transform 0.1s;
-  box-shadow: 0 3px 16px rgba(217, 96, 59, 0.32);
-  animation: btn-breathe 2.6s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.1s, box-shadow 0.15s;
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.22),
+    0 4px 16px rgba(184, 72, 40, 0.4),
+    0 0 0 1px rgba(201, 154, 61, 0.3);
 }
 
-@keyframes btn-breathe {
-  0%, 100% { box-shadow: 0 3px 16px rgba(217, 96, 59, 0.32); }
-  50%       { box-shadow: 0 4px 24px rgba(217, 96, 59, 0.55); }
+/* Top glare on button */
+.rec-btn::before {
+  content: "";
+  position: absolute;
+  top: 7px; left: 14px; right: 14px;
+  height: 35%;
+  background: radial-gradient(ellipse, rgba(255, 255, 255, 0.22) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
-.record-btn.recording {
-  background: #1B2A41;
-  box-shadow: 0 3px 16px rgba(27, 42, 65, 0.4);
-  animation: btn-pulse 0.9s ease-in-out infinite;
+.rec-btn:active {
+  transform: translateY(2px);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 1px 6px rgba(184, 72, 40, 0.3);
 }
 
-@keyframes btn-pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.8; }
+.rec-btn--stop {
+  background: radial-gradient(circle at 40% 28%, #4A5A73 0%, #2A3548 52%, #1B2A41 100%);
+  border-color: #FF3B30;
+  animation: rec-pulse 0.85s ease-in-out infinite;
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.12),
+    0 0 14px rgba(255, 59, 48, 0.4),
+    0 0 28px rgba(255, 59, 48, 0.15);
 }
 
-.record-btn:active {
-  transform: scale(0.94);
+@keyframes rec-pulse {
+  0%, 100% { box-shadow: inset 0 1px 2px rgba(255,255,255,0.12), 0 0 14px rgba(255,59,48,0.4), 0 0 28px rgba(255,59,48,0.15); }
+  50%       { box-shadow: inset 0 1px 2px rgba(255,255,255,0.12), 0 0 22px rgba(255,59,48,0.65), 0 0 44px rgba(255,59,48,0.25); }
 }
 
 /* ── Status / error texts ─────────────────────────────── */
@@ -234,9 +442,10 @@
   align-items: center;
   gap: 0.15rem;
   padding: 0.6rem 0.4rem;
-  background: #F2ECE0;
-  border: 1px solid rgba(27, 42, 65, 0.14);
+  background: var(--color-paper-dark);
+  border: 1px solid rgba(27, 42, 65, 0.12);
   border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
 .stat-card-emoji {
@@ -248,7 +457,7 @@
   font-family: var(--font-mono);
   font-size: 1rem;
   font-weight: 700;
-  color: #1B2A41;
+  color: var(--color-ink);
   letter-spacing: 0.02em;
 }
 
@@ -257,7 +466,7 @@
   font-size: 0.42rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(27, 42, 65, 0.42);
+  color: var(--color-ink-soft);
 }
 
 .result-stats-secondary {
@@ -280,14 +489,14 @@
   font-size: 0.52rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(27, 42, 65, 0.42);
+  color: var(--color-ink-soft);
 }
 
 .stat-value {
   font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 700;
-  color: #1B2A41;
+  color: var(--color-ink);
 }
 
 /* ── Audio player ─────────────────────────────────────── */
@@ -297,7 +506,7 @@
   gap: 0.65rem;
   padding: 0.55rem 0.65rem;
   background: rgba(27, 42, 65, 0.04);
-  border: 1px dashed rgba(27, 42, 65, 0.16);
+  border: 1px dashed rgba(27, 42, 65, 0.14);
   border-radius: 3px;
 }
 
@@ -305,7 +514,7 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: #C99A3D;
+  background: radial-gradient(circle at 40% 30%, #D4AF37 0%, #C99A3D 50%, #8B6914 100%);
   border: none;
   font-size: 1.1rem;
   cursor: pointer;
@@ -315,6 +524,7 @@
   flex-shrink: 0;
   color: #F2ECE0;
   transition: transform 0.1s;
+  box-shadow: 0 2px 8px rgba(201, 154, 61, 0.35), inset 0 1px 0 rgba(255,255,255,0.2);
 }
 
 .audio-play-btn:active {
@@ -364,7 +574,7 @@
 
 .share-trigger-btn:hover {
   background: rgba(27, 42, 65, 0.05);
-  color: #1B2A41;
+  color: var(--color-ink);
 }
 
 /* ── Tags form ─────────────────────────────────────────── */
@@ -385,7 +595,7 @@
   font-size: 0.52rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(27, 42, 65, 0.48);
+  color: var(--color-ink-soft);
   gap: 0.25rem;
 }
 
@@ -395,8 +605,8 @@
   padding: 0.5rem;
   border: 1.5px solid rgba(27, 42, 65, 0.2);
   border-radius: 3px;
-  background: #F2ECE0;
-  color: #1B2A41;
+  background: var(--color-paper);
+  color: var(--color-ink);
   min-height: 44px;
   outline: none;
 }
@@ -413,7 +623,7 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 0.75rem;
-  border-radius: 3px;
+  border-radius: 4px;
   cursor: pointer;
   min-height: 44px;
   width: 100%;
@@ -421,9 +631,10 @@
 }
 
 .save-btn {
-  background: #6B8F71;
+  background: linear-gradient(180deg, #7A9E82 0%, #6B8F71 100%);
+  border: 2px solid #C99A3D;
   color: #F2ECE0;
-  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .save-btn:disabled {
@@ -432,11 +643,13 @@
 }
 
 .reset-btn {
-  background: #F2ECE0;
-  color: #1B2A41;
-  border: 2px solid #1B2A41;
+  background: linear-gradient(180deg, #3D4D63 0%, #2A3548 100%);
+  border: 2px solid rgba(201, 154, 61, 0.45);
+  color: rgba(201, 154, 61, 0.8);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
-.reset-btn:active {
-  background: #E8E0CC;
+.reset-btn:active,
+.save-btn:active {
+  transform: translateY(1px);
 }

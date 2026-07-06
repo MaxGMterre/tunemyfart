@@ -6,11 +6,6 @@ import { ShareCard } from "./ShareCard";
 
 // ── Helpers ──────────────────────────────────────────────
 
-function dbToGaugePercent(db: number) {
-  const clamped = Math.max(-60, Math.min(0, db));
-  return ((clamped + 60) / 60) * 100;
-}
-
 function formatTime(s: number) {
   if (!isFinite(s) || s < 0) return "0:00";
   const m = Math.floor(s / 60);
@@ -34,8 +29,9 @@ async function triggerHaptic(type: "light" | "heavy" | "victory") {
 export function Recorder() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioRef  = useRef<HTMLAudioElement>(null);
+  const [playError, setPlayError] = useState<string | null>(null);
 
-  // Live waveform — vintage ink on cream
+  // Live waveform — phosphor green on dark screen
   const handleLiveFrame = useCallback((buffer: Float32Array) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -44,10 +40,12 @@ export function Recorder() {
     const w = canvas.width;
     const h = canvas.height;
     const mid = h / 2;
-    ctx.fillStyle = "#F2ECE0";
+    ctx.fillStyle = "#0A0F1A";
     ctx.fillRect(0, 0, w, h);
-    ctx.strokeStyle = "#1B2A41";
+    ctx.strokeStyle = "#39FF14";
     ctx.lineWidth = 1.5;
+    ctx.shadowBlur = 6;
+    ctx.shadowColor = "rgba(57, 255, 20, 0.5)";
     ctx.beginPath();
     const step = buffer.length / w;
     for (let x = 0; x < w; x++) {
@@ -56,6 +54,7 @@ export function Recorder() {
       x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     }
     ctx.stroke();
+    ctx.shadowBlur = 0;
   }, []);
 
   const { status, liveNote, liveDb, liveFrequency, result, error, start, stop, reset } =
@@ -78,6 +77,9 @@ export function Recorder() {
 
   const isRecording = status === "recording";
 
+  // Needle angle: -60° (silence) → +60° (full signal)
+  const needleAngle = ((Math.max(-60, Math.min(0, liveDb)) + 60) / 60) * 120 - 60;
+
   // Note pop animation key
   useEffect(() => {
     const current = liveNote ? `${liveNote.note}${liveNote.octave}` : null;
@@ -87,16 +89,16 @@ export function Recorder() {
     }
   }, [liveNote]);
 
-  // Flat idle line on canvas
+  // Idle flat line on dark canvas
   useEffect(() => {
     if (status !== "idle") return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    ctx.fillStyle = "#F2ECE0";
+    ctx.fillStyle = "#0A0F1A";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = "rgba(27, 42, 65, 0.18)";
+    ctx.strokeStyle = "rgba(57, 255, 20, 0.18)";
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(0, canvas.height / 2);
@@ -104,7 +106,7 @@ export function Recorder() {
     ctx.stroke();
   }, [status]);
 
-  // Result waveform — ink trace + brass mirror
+  // Result waveform — phosphor green on dark screen
   useEffect(() => {
     if (!result || !canvasRef.current) return;
     const canvas = canvasRef.current;
@@ -114,23 +116,12 @@ export function Recorder() {
     const h = canvas.height;
     const mid = h / 2;
     const step = w / result.waveform.length;
-    ctx.fillStyle = "#F2ECE0";
+    ctx.fillStyle = "#0A0F1A";
     ctx.fillRect(0, 0, w, h);
-    // Brass mirror (bottom)
-    ctx.globalAlpha = 0.55;
-    ctx.strokeStyle = "#C99A3D";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    result.waveform.forEach((v, i) => {
-      const x = i * step;
-      const y = mid + v * mid * 1.35;
-      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-    });
-    ctx.stroke();
-    // Ink main trace (top)
-    ctx.globalAlpha = 1;
-    ctx.strokeStyle = "#1B2A41";
+    ctx.strokeStyle = "#39FF14";
     ctx.lineWidth = 1.5;
+    ctx.shadowBlur = 5;
+    ctx.shadowColor = "rgba(57, 255, 20, 0.4)";
     ctx.beginPath();
     result.waveform.forEach((v, i) => {
       const x = i * step;
@@ -138,23 +129,27 @@ export function Recorder() {
       i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     });
     ctx.stroke();
+    ctx.shadowBlur = 0;
   }, [result]);
 
   // Audio player events
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
-    setIsPlaying(false); setCurrentTime(0); setDuration(0);
-    const onTime  = () => setCurrentTime(audio.currentTime);
-    const onMeta  = () => setDuration(audio.duration);
-    const onEnded = () => { setIsPlaying(false); setCurrentTime(0); };
+    setIsPlaying(false); setCurrentTime(0); setDuration(0); setPlayError(null);
+    const onTime     = () => setCurrentTime(audio.currentTime);
+    const onMeta     = () => { if (!isNaN(audio.duration)) setDuration(audio.duration); };
+    const onCanPlay  = () => { if (!isNaN(audio.duration)) setDuration(audio.duration); };
+    const onEnded    = () => { setIsPlaying(false); setCurrentTime(0); };
     audio.addEventListener("timeupdate", onTime);
     audio.addEventListener("loadedmetadata", onMeta);
+    audio.addEventListener("canplaythrough", onCanPlay);
     audio.addEventListener("ended", onEnded);
     if (audio.readyState >= 1 && !isNaN(audio.duration)) setDuration(audio.duration);
     return () => {
       audio.removeEventListener("timeupdate", onTime);
       audio.removeEventListener("loadedmetadata", onMeta);
+      audio.removeEventListener("canplaythrough", onCanPlay);
       audio.removeEventListener("ended", onEnded);
     };
   }, [result]);
@@ -179,8 +174,18 @@ export function Recorder() {
   const togglePlay = () => {
     const audio = audioRef.current;
     if (!audio) return;
-    if (isPlaying) { audio.pause(); setIsPlaying(false); }
-    else { audio.play(); setIsPlaying(true); }
+    setPlayError(null);
+    if (isPlaying) {
+      audio.pause();
+      setIsPlaying(false);
+    } else {
+      audio.play()
+        .then(() => setIsPlaying(true))
+        .catch((e: Error) => {
+          console.error("Play failed:", e);
+          setPlayError("Lecture impossible — " + (e?.message ?? "erreur inconnue"));
+        });
+    }
   };
 
   const seekTo = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -225,56 +230,113 @@ export function Recorder() {
     reset();
     setSaved(false); setSaveError(null);
     setAlimentation(""); setLieu(""); setOdeur("");
-    setShowShare(false);
+    setShowShare(false); setPlayError(null);
   };
 
   return (
     <div className="recorder-panel">
 
-      {/* ── Instrument frame ── */}
-      <div className={`instr-frame${isRecording ? " instr-frame--recording" : ""}`}>
+      {/* ── Dark lab instrument frame ── */}
+      <div className={`instrument-frame${isRecording ? " instrument-frame--recording" : ""}`}>
 
-        {/* Oscilloscope canvas — live during recording, result waveform after */}
-        <canvas ref={canvasRef} className="scope-canvas" width={600} height={100} />
+        {/* Corner screws */}
+        <div className="screw screw--tl" />
+        <div className="screw screw--tr" />
+        <div className="screw screw--bl" />
+        <div className="screw screw--br" />
 
-        {/* Horizontal dB gauge */}
-        <div className="db-gauge-wrap">
-          <div className="db-gauge-header">
-            <span className="db-gauge-label">NIVEAU (dB)</span>
-            <span className="db-gauge-value">{liveDb > -100 ? liveDb.toFixed(0) : "—"}</span>
+        {/* LED indicator row */}
+        <div className="led-row">
+          <div className="led-item">
+            <div className="led led--power" />
+            <span className="led-label">PWR</span>
           </div>
-          <div className="db-gauge-track">
-            <div className="db-gauge-fill" style={{ width: `${dbToGaugePercent(liveDb)}%` }} />
+          <div className="led-item">
+            <div className={`led led--ready${status === "idle" || status === "done" ? " led--on-ready" : ""}`} />
+            <span className="led-label">RDY</span>
+          </div>
+          <div className="led-item">
+            <div className={`led led--rec${isRecording ? " led--on-rec" : ""}`} />
+            <span className="led-label">REC</span>
+          </div>
+          <div className="led-item">
+            <div className={`led led--sig${liveDb > -40 ? " led--on-sig" : ""}`} />
+            <span className="led-label">SIG</span>
           </div>
         </div>
 
-        {/* Note readout */}
-        <div className="note-section">
-          <span className="note-readout-label">NOTE DÉTECTÉE</span>
-          <div className="note-readout-row">
-            <span className="note-readout-value" key={noteKey}>
+        {/* Oscilloscope screen — waveform + note readout */}
+        <div className="scope-screen">
+          <canvas ref={canvasRef} className="scope-canvas" width={600} height={120} />
+          <div className="scope-scanlines" />
+          <div className="note-display">
+            <span className="note-value" key={noteKey}>
               {liveNote ? `${liveNote.note}${liveNote.octave}` : "—"}
             </span>
             {liveFrequency > 0 && (
-              <span className="note-readout-freq">{liveFrequency.toFixed(0)} Hz</span>
+              <span className="note-freq">{liveFrequency.toFixed(0)} Hz</span>
             )}
           </div>
         </div>
+
+        {/* VU meter — needle style */}
+        <div className="vu-section">
+          <div className="vu-meter">
+            <div className="vu-arc-bg" />
+            <div className="vu-scale-marks">
+              <span className="vu-mark vu-mark--lo">-60</span>
+              <span className="vu-mark vu-mark--mid">-30</span>
+              <span className="vu-mark vu-mark--hi">0</span>
+            </div>
+            <div
+              className="vu-needle"
+              style={{ transform: `translateX(-50%) rotate(${needleAngle}deg)` }}
+            />
+            <div className="vu-pivot" />
+          </div>
+          <span className="vu-label">dB SPL</span>
+        </div>
+
+        {/* Decorative cables — behind everything */}
+        <svg
+          className="cables-svg"
+          viewBox="0 0 320 90"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path d="M 15 85 C 70 55, 150 75, 230 45"
+            fill="none" stroke="#111" strokeWidth="7" strokeLinecap="round" />
+          <path d="M 15 85 C 70 55, 150 75, 230 45"
+            fill="none" stroke="#C99A3D" strokeWidth="1.5" strokeLinecap="round"
+            strokeDasharray="5 9" opacity="0.5" />
+          <circle cx="15" cy="85" r="5" fill="#C99A3D" opacity="0.7" />
+          <circle cx="230" cy="45" r="5" fill="#C99A3D" opacity="0.7" />
+          <path d="M 260 12 C 285 32, 302 22, 308 52"
+            fill="none" stroke="#111" strokeWidth="5" strokeLinecap="round" />
+          <path d="M 260 12 C 285 32, 302 22, 308 52"
+            fill="none" stroke="#C99A3D" strokeWidth="1" strokeLinecap="round"
+            strokeDasharray="4 7" opacity="0.45" />
+          <circle cx="260" cy="12" r="4" fill="#C99A3D" opacity="0.65" />
+          <circle cx="308" cy="52" r="4" fill="#C99A3D" opacity="0.65" />
+        </svg>
+
+        {/* Nameplate */}
+        <div className="instr-nameplate">TUNEMYFART LABS — MK.II</div>
       </div>
 
       {/* ── Record / Stop buttons ── */}
       {status === "idle" && (
         <div className="record-btn-wrap">
-          <button className="record-btn" onClick={handleStart} aria-label="Démarrer l'analyse">
-            ● DÉMARRER{"\n"}L'ANALYSE
+          <button className="rec-btn" onClick={handleStart} aria-label="Démarrer l'analyse">
+            REC
           </button>
         </div>
       )}
 
       {isRecording && (
         <div className="record-btn-wrap">
-          <button className="record-btn recording" onClick={handleStop} aria-label="Arrêter l'analyse">
-            ■ ARRÊTER{"\n"}L'ANALYSE
+          <button className="rec-btn rec-btn--stop" onClick={handleStop} aria-label="Arrêter l'analyse">
+            STOP
           </button>
         </div>
       )}
@@ -313,7 +375,7 @@ export function Recorder() {
             </div>
           </div>
 
-          <audio ref={audioRef} src={result.url} />
+          <audio ref={audioRef} src={result.url} preload="metadata" />
           <div className="audio-player-custom">
             <button className="audio-play-btn" onClick={togglePlay} aria-label={isPlaying ? "Pause" : "Lecture"}>
               {isPlaying ? "⏸" : "▶"}
@@ -326,6 +388,7 @@ export function Recorder() {
             </div>
             <span className="audio-time">{formatTime(currentTime)} / {formatTime(duration)}</span>
           </div>
+          {playError && <p className="error-text">{playError}</p>}
 
           <button className="share-trigger-btn" onClick={() => setShowShare(true)}>
             Partager ce relevé 🦨

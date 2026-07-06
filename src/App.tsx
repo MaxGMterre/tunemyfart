@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSwipeable } from "react-swipeable";
 import { AuthProvider, useAuth } from "./lib/useAuth";
 import { Auth } from "./components/Auth";
 import { Recorder } from "./components/Recorder";
@@ -19,6 +20,8 @@ import "./components/WelcomeModal.css";
 
 type Tab = "analyser" | "classement" | "missions" | "profil" | "composer";
 
+const TABS: Tab[] = ["analyser", "classement", "missions", "profil", "composer"];
+
 function AppShell() {
   const { session, loading } = useAuth();
   const [tab, setTab] = useState<Tab>("analyser");
@@ -30,6 +33,22 @@ function AppShell() {
     localStorage.setItem("tmf_onboarding_v2", "true");
     setShowWelcome(false);
   };
+
+  const tabIndex = TABS.indexOf(tab);
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      const next = TABS[tabIndex + 1];
+      if (next) setTab(next);
+    },
+    onSwipedRight: () => {
+      const prev = TABS[tabIndex - 1];
+      if (prev) setTab(prev);
+    },
+    trackMouse: false,
+    delta: 60,
+    preventScrollOnSwipe: false,
+  });
 
   if (loading) {
     return (
@@ -49,7 +68,7 @@ function AppShell() {
           <p className="app-subtitle">Instrument de mesure acoustique — Tunemyfart</p>
         </header>
 
-        <main className="panel-content">
+        <main className="panel-content" {...swipeHandlers}>
           {tab === "analyser"   && <Recorder />}
           {tab === "classement" && <Leaderboard />}
           {tab === "missions"   && <Missions />}
@@ -58,6 +77,13 @@ function AppShell() {
         </main>
 
         <nav className="tab-bar">
+          <div
+            className="tab-indicator-bar"
+            style={{
+              width: `${100 / TABS.length}%`,
+              transform: `translateX(${tabIndex * 100}%)`,
+            }}
+          />
           <button className={tab === "analyser" ? "active" : ""} onClick={() => setTab("analyser")}>
             <span className="tab-emoji">🎙️</span>
             Analyser
