@@ -1,0 +1,121 @@
+:root {
+  /* Palette — instrument scientifique vintage */
+  --color-paper: #F2ECE0;
+  --color-paper-dark: #E8E0CC;
+  --color-ink: #1B2A41;
+  --color-ink-soft: rgba(27, 42, 65, 0.5);
+  --color-brass: #C99A3D;
+  --color-coral: #D9603B;
+  --color-mint: #2ECC71;
+  --color-violet: #9B59B6;
+  --color-blue: #3498DB;
+
+  /* Typo */
+  --font-display: "Fraunces", "Georgia", serif;
+  --font-mono: "IBM Plex Mono", "Courier New", monospace;
+  --font-body: "IBM Plex Sans", system-ui, sans-serif;
+
+  --radius-panel: 6px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
+
+body {
+  padding-top: env(safe-area-inset-top);
+}
+
+.app-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper);
+  border-left: 1px solid rgba(27, 42, 65, 0.08);
+  border-right: 1px solid rgba(27, 42, 65, 0.08);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.app-header {
+  padding: 1.25rem 1.25rem 0.75rem;
+  border-bottom: 1px solid rgba(27, 42, 65, 0.12);
+}
+
+.app-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  margin: 0;
+  color: var(--color-ink);
+}
+
+.app-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-ink-soft);
+  margin: 0.2rem 0 0.75rem;
+}
+
+.tab-bar {
+  display: flex;
+  border-top: 1px solid var(--color-ink);
+  background: var(--color-paper);
+  position: sticky;
+  bottom: 0;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.tab-bar button {
+  flex: 1;
+  padding: 0.65rem 0.15rem;
+  background: none;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+  cursor: pointer;
+  border-top: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  min-height: 44px;
+}
+
+.tab-bar button .tab-emoji {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.tab-bar button.active {
+  color: var(--color-ink);
+  border-top-color: var(--color-coral);
+}
+
+.panel-content {
+  flex: 1;
+  padding: 1rem 1.25rem 1.5rem;
+  overflow-y: auto;
+}
+
+/* ── Scrollbar hiding ───────────────────────────────────── */
+::-webkit-scrollbar { display: none; }
+* { -ms-overflow-style: none; scrollbar-width: none; }
+html, body { overscroll-behavior: none; -webkit-overflow-scrolling: touch; }

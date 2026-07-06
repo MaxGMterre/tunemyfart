@@ -1,0 +1,81 @@
+.share-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(27, 42, 65, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 1rem;
+}
+
+.share-modal {
+  background: var(--color-paper);
+  border-radius: var(--radius-panel);
+  border: 1.5px solid rgba(27, 42, 65, 0.15);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  max-width: 380px;
+  width: 100%;
+}
+
+.share-close-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(27, 42, 65, 0.08);
+  border: none;
+  font-size: 0.85rem;
+  color: var(--color-ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.share-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.share-actions {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-top: 1px solid rgba(27, 42, 65, 0.08);
+}
+
+.share-action-btn {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.65rem;
+  border-radius: var(--radius-panel);
+  cursor: pointer;
+  border: 1px solid rgba(27, 42, 65, 0.2);
+  background: transparent;
+  color: var(--color-ink-soft);
+  min-height: 44px;
+}
+
+.share-action-btn.primary {
+  background: var(--color-coral);
+  color: #fff;
+  border-color: var(--color-coral);
+  font-weight: 700;
+}
+
+.share-action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

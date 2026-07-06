@@ -1,0 +1,183 @@
+.composer-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.composer-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.composer-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-soft);
+  margin: -0.75rem 0 0;
+}
+
+.composer-unlock-hint {
+  background: var(--color-paper-dark);
+  border: 1px solid rgba(27, 42, 65, 0.1);
+  border-left: 3px solid var(--color-brass);
+  border-radius: var(--radius-panel);
+  padding: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-ink-soft);
+}
+
+/* ── Piano ─────────────────────────────────── */
+.piano-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.piano-keyboard {
+  display: flex;
+  gap: 4px;
+  min-width: 300px;
+}
+
+.piano-octave-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.piano-octave {
+  position: relative;
+  height: 110px;
+}
+
+.piano-key {
+  position: absolute;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 0.3rem;
+  gap: 0.1rem;
+  border-radius: 0 0 4px 4px;
+  transition: transform 0.08s, opacity 0.15s;
+}
+
+.piano-key:active {
+  transform: scaleY(0.96) translateY(1px);
+}
+
+.piano-key.playing {
+  opacity: 0.7;
+}
+
+.white-key {
+  height: 100%;
+  background: var(--color-paper);
+  border: 1px solid rgba(27, 42, 65, 0.25);
+  z-index: 1;
+}
+
+.white-key.unlocked {
+  background: #fff;
+  border-color: rgba(27, 42, 65, 0.35);
+}
+
+.white-key.locked {
+  cursor: default;
+  background: var(--color-paper-dark);
+}
+
+.black-key {
+  height: 60%;
+  top: 0;
+  background: var(--color-ink);
+  z-index: 2;
+}
+
+.black-key.locked {
+  cursor: default;
+  background: rgba(27, 42, 65, 0.5);
+}
+
+.key-icon {
+  font-size: 0.55rem;
+  line-height: 1;
+}
+
+.white-key .key-icon { color: var(--color-ink); }
+.black-key .key-icon { color: var(--color-paper); font-size: 0.45rem; }
+
+.key-label {
+  font-family: var(--font-mono);
+  font-size: 0.4rem;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+  letter-spacing: 0.02em;
+}
+
+.piano-octave-label {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-soft);
+  text-align: center;
+}
+
+/* ── Record button ─────────────────────────────────── */
+.composer-record-btn {
+  background: rgba(27, 42, 65, 0.15);
+  color: var(--color-ink-soft);
+  border: 1.5px dashed rgba(27, 42, 65, 0.2);
+  border-radius: var(--radius-panel);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.85rem;
+  cursor: not-allowed;
+  min-height: 44px;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.composer-record-btn.active {
+  background: var(--color-coral);
+  color: #fff;
+  border-color: var(--color-coral);
+  border-style: solid;
+  cursor: pointer;
+}
+
+/* ── Note grid ─────────────────────────────────── */
+.composer-note-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.4rem;
+}
+
+.composer-note-chip {
+  background: var(--color-paper-dark);
+  border: 1px solid rgba(27, 42, 65, 0.1);
+  border-radius: 4px;
+  padding: 0.3rem 0.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+  text-align: center;
+}
+
+.composer-note-chip.collected {
+  border-color: var(--color-brass);
+  color: var(--color-brass);
+  background: rgba(201, 154, 61, 0.08);
+}

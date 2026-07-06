@@ -1,0 +1,286 @@
+.leaderboard-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+/* ── Period selector ─────────────────────────────── */
+.leaderboard-periods {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.leaderboard-periods button {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.4rem 0.2rem;
+  border: 1px solid rgba(27, 42, 65, 0.2);
+  background: var(--color-paper);
+  color: var(--color-ink-soft);
+  cursor: pointer;
+  border-radius: var(--radius-panel);
+  min-height: 36px;
+}
+
+.leaderboard-periods button.active {
+  background: var(--color-ink);
+  color: var(--color-paper);
+  border-color: var(--color-ink);
+}
+
+/* ── 5 Category tabs ─────────────────────────────── */
+.leaderboard-categories {
+  display: flex;
+  gap: 0.3rem;
+  overflow-x: auto;
+}
+
+.leaderboard-categories button {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  padding: 0.45rem 0.5rem;
+  border: 1px solid rgba(27, 42, 65, 0.15);
+  background: var(--color-paper-dark);
+  color: var(--color-ink-soft);
+  cursor: pointer;
+  border-radius: var(--radius-panel);
+  min-width: 52px;
+  min-height: 44px;
+}
+
+.leaderboard-categories button.active {
+  border-color: var(--color-coral);
+  color: var(--color-coral);
+  background: rgba(217, 96, 59, 0.06);
+}
+
+.cat-emoji { font-size: 1rem; line-height: 1; }
+.cat-label { font-family: var(--font-mono); font-size: 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* ── Scope selector ─────────────────────────────── */
+.leaderboard-scopes {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.leaderboard-scopes button {
+  flex: 1;
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.4rem 0.2rem;
+  border: 1px solid rgba(27, 42, 65, 0.15);
+  background: var(--color-paper);
+  color: var(--color-ink-soft);
+  cursor: pointer;
+  border-radius: var(--radius-panel);
+  min-height: 36px;
+}
+
+.leaderboard-scopes button.active {
+  background: var(--color-paper-dark);
+  color: var(--color-ink);
+  border-color: rgba(27, 42, 65, 0.3);
+}
+
+.leaderboard-scopes button.coming-soon {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.soon-badge {
+  position: absolute;
+  top: -6px;
+  right: -2px;
+  font-size: 0.38rem;
+  background: var(--color-brass);
+  color: #fff;
+  border-radius: 3px;
+  padding: 0.1rem 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* ── Empty state ─────────────────────────────────── */
+.lb-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2.5rem 1rem;
+  background: var(--color-paper-dark);
+  border-radius: var(--radius-panel);
+  border: 1px solid rgba(27, 42, 65, 0.08);
+}
+
+.lb-empty-skunk {
+  font-size: 3rem;
+  animation: skunk-bounce 1.8s ease-in-out infinite;
+}
+
+@keyframes skunk-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+.lb-empty-text {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+/* ── Podium ─────────────────────────────────────── */
+.lb-podium {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0 0.25rem;
+}
+
+.podium-slot {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  animation: podium-rise 0.45s ease-out both;
+  max-width: 110px;
+}
+
+.podium-slot--1st { animation-delay: 0ms; }
+.podium-slot--2nd { animation-delay: 80ms; }
+.podium-slot--3rd { animation-delay: 140ms; }
+
+@keyframes podium-rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.podium-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  width: 100%;
+}
+
+.podium-slot--own .podium-info {
+  background: rgba(201, 154, 61, 0.12);
+  border-radius: 6px 6px 0 0;
+  padding: 0.3rem 0.25rem 0.15rem;
+}
+
+.podium-pseudo {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: var(--color-ink);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.podium-slot--own .podium-pseudo {
+  color: #8A6510;
+  font-weight: 600;
+}
+
+.podium-score {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--color-ink-soft);
+  text-align: center;
+}
+
+/* Podium bars */
+.podium-bar {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  font-size: 1.4rem;
+  border-radius: 4px 4px 0 0;
+  background: var(--color-paper-dark);
+  border: 1px solid rgba(27, 42, 65, 0.12);
+  border-bottom: none;
+  padding-top: 0.4rem;
+}
+
+.podium-bar--1st {
+  height: 72px;
+  background: rgba(201, 154, 61, 0.1);
+  border-color: rgba(201, 154, 61, 0.3);
+}
+
+.podium-bar--2nd {
+  height: 54px;
+}
+
+.podium-bar--3rd {
+  height: 40px;
+}
+
+.podium-slot--own .podium-bar {
+  border-color: rgba(201, 154, 61, 0.5);
+}
+
+/* ── Results list (4th+) ─────────────────────────────── */
+.leaderboard-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper-dark);
+  border-radius: var(--radius-panel);
+  border: 1px solid rgba(27, 42, 65, 0.08);
+  overflow: hidden;
+}
+
+.leaderboard-row {
+  display: grid;
+  grid-template-columns: 2rem 1fr auto;
+  align-items: center;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid rgba(27, 42, 65, 0.06);
+  font-family: var(--font-body);
+  border-left: 3px solid transparent;
+  animation: slide-in 0.3s ease-out both;
+}
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.leaderboard-row:last-child { border-bottom: none; }
+
+.leaderboard-row--own {
+  background: rgba(201, 154, 61, 0.07);
+  border-left-color: var(--color-brass);
+}
+
+.rank  { font-family: var(--font-display); font-weight: 600; color: var(--color-brass); }
+.who   { font-family: var(--font-body); font-size: 0.9rem; color: var(--color-ink); }
+.score { font-family: var(--font-mono); font-size: 0.82rem; color: var(--color-ink); }
+
+/* Status text (shared) */
+.status-text,
+.error-text {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-align: center;
+  margin: 0;
+}
+.error-text { color: var(--color-coral); }

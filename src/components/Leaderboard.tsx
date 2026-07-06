@@ -1,0 +1,178 @@
+import { useEffect, useState } from "react";
+import {
+  fetchLeaderboardByPeriod,
+  getProfile,
+} from "../lib/supabase";
+import type { LeaderboardCategory, LeaderboardPeriod, LeaderboardScope, LeaderboardRow } from "../lib/supabase";
+import { useAuth } from "../lib/useAuth";
+
+const CATEGORIES: {
+  id: LeaderboardCategory;
+  label: string;
+  emoji: string;
+  format: (row: LeaderboardRow) => string;
+}[] = [
+  { id: "db_max",      label: "Plus fort",  emoji: "💥", format: r => `${(r.db_max ?? 0).toFixed(1)} dB` },
+  { id: "duree_ms",    label: "Plus long",  emoji: "⏱️", format: r => `${((r.duree_ms ?? 0) / 1000).toFixed(2)} s` },
+  { id: "freq_max",    label: "Plus aigu",  emoji: "🎵", format: r => {
+    const f = Math.max(0, ...(r.sequence_notes ?? []).map(n => n.frequency));
+    return f > 0 ? `${f.toFixed(0)} Hz` : "— Hz";
+  }},
+  { id: "freq_min",    label: "Plus grave", emoji: "🎸", format: r => {
+    const freqs = (r.sequence_notes ?? []).map(n => n.frequency).filter(f => isFinite(f));
+    const f = freqs.length ? Math.min(...freqs) : 0;
+    return f > 0 ? `${f.toFixed(0)} Hz` : "— Hz";
+  }},
+  { id: "notes_count", label: "Mélodie",    emoji: "🎼", format: r => `${r.sequence_notes?.length ?? 0} notes` },
+];
+
+const PERIODS: { id: LeaderboardPeriod; label: string }[] = [
+  { id: "day",   label: "Jour" },
+  { id: "week",  label: "Semaine" },
+  { id: "month", label: "Mois" },
+  { id: "year",  label: "Année" },
+  { id: "all",   label: "Tout" },
+];
+
+const SCOPES: { id: LeaderboardScope; label: string }[] = [
+  { id: "global",   label: "Mondial" },
+  { id: "country",  label: "Pays" },
+  { id: "city",     label: "Ville" },
+  { id: "personal", label: "Perso" },
+];
+
+export function Leaderboard() {
+  const { user } = useAuth();
+  const [category, setCategory] = useState<LeaderboardCategory>("db_max");
+  const [period, setPeriod]     = useState<LeaderboardPeriod>("all");
+  const [scope, setScope]       = useState<LeaderboardScope>("global");
+  const [hasLocation, setHasLocation] = useState(false);
+  const [rows, setRows]         = useState<LeaderboardRow[]>([]);
+  const [loading, setLoading]   = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    getProfile(user.id).then(p => setHasLocation(Boolean(p?.pays)));
+  }, [user]);
+
+  useEffect(() => {
+    setLoading(true);
+    setLoadError(null);
+    const effectiveScope =
+      (scope === "country" || scope === "city") && !hasLocation ? "global" : scope;
+
+    fetchLeaderboardByPeriod(category, period, effectiveScope, { userId: user?.id })
+      .then(data => setRows(data))
+      .catch(() => setLoadError("Classement indisponible — vérifie la configuration Supabase."))
+      .finally(() => setLoading(false));
+  }, [category, period, scope, user, hasLocation]);
+
+  const activeCat = CATEGORIES.find(c => c.id === category)!;
+  const top3 = rows.slice(0, 3);
+  const rest = rows.slice(3);
+
+  return (
+    <div className="leaderboard-panel">
+      {/* Period selector */}
+      <div className="leaderboard-periods">
+        {PERIODS.map(p => (
+          <button key={p.id} className={period === p.id ? "active" : ""} onClick={() => setPeriod(p.id)}>
+            {p.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Category tabs */}
+      <div className="leaderboard-categories">
+        {CATEGORIES.map(c => (
+          <button key={c.id} className={category === c.id ? "active" : ""} onClick={() => setCategory(c.id)}>
+            <span className="cat-emoji">{c.emoji}</span>
+            <span className="cat-label">{c.label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Scope selector */}
+      <div className="leaderboard-scopes">
+        {SCOPES.map(s => {
+          const needsLocation = (s.id === "country" || s.id === "city") && !hasLocation;
+          return (
+            <button
+              key={s.id}
+              className={[scope === s.id ? "active" : "", needsLocation ? "coming-soon" : ""].filter(Boolean).join(" ")}
+              onClick={() => { if (!needsLocation) setScope(s.id); }}
+              title={needsLocation ? "Complète ton profil (pays/ville) pour activer ce filtre" : undefined}
+            >
+              {s.label}
+              {needsLocation && <span className="soon-badge">bientôt</span>}
+            </button>
+          );
+        })}
+      </div>
+
+      {loading && <p className="status-text">Chargement…</p>}
+      {loadError && <p className="error-text">{loadError}</p>}
+
+      {!loading && !loadError && rows.length === 0 && (
+        <div className="lb-empty">
+          <span className="lb-empty-skunk">🦨</span>
+          <p className="lb-empty-text">Sois le premier !</p>
+        </div>
+      )}
+
+      {/* Podium — top 3 */}
+      {!loading && rows.length > 0 && (
+        <div className="lb-podium">
+          {/* 2nd place */}
+          {top3[1] ? (
+            <div className={`podium-slot podium-slot--2nd${top3[1].user_id === user?.id ? " podium-slot--own" : ""}`}>
+              <div className="podium-info">
+                <div className="podium-pseudo">{top3[1].pseudo ?? "Anonyme"}</div>
+                <div className="podium-score">{activeCat.format(top3[1])}</div>
+              </div>
+              <div className="podium-bar podium-bar--2nd">🥈</div>
+            </div>
+          ) : <div className="podium-slot podium-slot--2nd podium-slot--empty"><div className="podium-bar podium-bar--2nd" /></div>}
+
+          {/* 1st place */}
+          <div className={`podium-slot podium-slot--1st${top3[0].user_id === user?.id ? " podium-slot--own" : ""}`}>
+            <div className="podium-info">
+              <div className="podium-pseudo">{top3[0].pseudo ?? "Anonyme"}</div>
+              <div className="podium-score">{activeCat.format(top3[0])}</div>
+            </div>
+            <div className="podium-bar podium-bar--1st">🥇</div>
+          </div>
+
+          {/* 3rd place */}
+          {top3[2] ? (
+            <div className={`podium-slot podium-slot--3rd${top3[2].user_id === user?.id ? " podium-slot--own" : ""}`}>
+              <div className="podium-info">
+                <div className="podium-pseudo">{top3[2].pseudo ?? "Anonyme"}</div>
+                <div className="podium-score">{activeCat.format(top3[2])}</div>
+              </div>
+              <div className="podium-bar podium-bar--3rd">🥉</div>
+            </div>
+          ) : <div className="podium-slot podium-slot--3rd podium-slot--empty"><div className="podium-bar podium-bar--3rd" /></div>}
+        </div>
+      )}
+
+      {/* Rows 4+ */}
+      {rest.length > 0 && (
+        <ol className="leaderboard-list" start={4}>
+          {rest.map((row, i) => (
+            <li
+              key={row.id}
+              className={`leaderboard-row${row.user_id === user?.id ? " leaderboard-row--own" : ""}`}
+              style={{ animationDelay: `${(i + 3) * 45}ms` }}
+            >
+              <span className="rank">{i + 4}</span>
+              <span className="who">{row.pseudo ?? "Anonyme"}</span>
+              <span className="score">{activeCat.format(row)}</span>
+            </li>
+          ))}
+        </ol>
+      )}
+    </div>
+  );
+}
