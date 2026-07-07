@@ -1,0 +1,6 @@
+.empty-state { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 2rem 1rem; text-align: center; }
+.empty-state-illo { opacity: 0.85; }
+.empty-state-title { font-family: var(--font-display); font-size: 1rem; color: var(--color-ink); margin: 0; }
+.empty-state-subtitle { font-family: var(--font-body); font-size: 0.8rem; color: var(--color-ink-soft); margin: 0; line-height: 1.5; max-width: 240px; }
+.empty-state-action { padding: 0.6rem 1.25rem; background: var(--color-coral); color: white; border: none; border-radius: 8px; font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; cursor: pointer; transition: opacity 0.15s; }
+.empty-state-action:hover { opacity: 0.9; }

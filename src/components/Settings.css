@@ -316,3 +316,21 @@
   display: flex;
   gap: 0.5rem;
 }
+
+/* Health Check */
+.health-check { display: flex; flex-direction: column; gap: 0.5rem; }
+.hc-run-btn {
+  padding: 0.5rem 1rem; background: var(--color-paper-dark);
+  border: 1px solid var(--color-brass); border-radius: 6px;
+  font-family: var(--font-mono); font-size: 0.7rem; color: var(--color-brass);
+  cursor: pointer; transition: background 0.15s;
+}
+.hc-run-btn:disabled { opacity: 0.6; cursor: default; }
+.hc-results { display: flex; flex-direction: column; gap: 0.3rem; margin-top: 0.25rem; }
+.hc-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; }
+.hc-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.hc-dot--pending { background: rgba(27,42,65,0.2); }
+.hc-dot--ok { background: var(--color-mint); }
+.hc-dot--fail { background: var(--color-coral); }
+.hc-label { font-family: var(--font-body); font-size: 0.78rem; color: var(--color-ink); flex: 1; }
+.hc-status { font-family: var(--font-mono); font-size: 0.65rem; color: var(--color-ink-soft); }

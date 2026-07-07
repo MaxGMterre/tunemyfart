@@ -1,11 +1,71 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../lib/useAuth";
 import { useToast } from "./ui/Toast";
 import { useTheme } from "../App";
 import type { ThemeMode } from "../App";
 import { SOUNDS_PREF_KEY, HAPTICS_PREF_KEY } from "../lib/constants";
 import { setAnalyticsEnabled, isAnalyticsEnabled } from "../lib/analytics";
-import { submitFeedback } from "../lib/supabase";
+import { submitFeedback, supabase } from "../lib/supabase";
+import { FAQ } from "./FAQ";
+import "./FAQ.css";
+
+function HealthCheck() {
+  const [checks, setChecks] = React.useState<Record<string, boolean | null>>({
+    supabase: null, auth: null, microphone: null, storage: null, network: null,
+  });
+  const [running, setRunning] = React.useState(false);
+
+  const run = async () => {
+    setRunning(true);
+    setChecks({ supabase: null, auth: null, microphone: null, storage: null, network: null });
+    // Network
+    const network = navigator.onLine;
+    // Supabase
+    let sup = false;
+    try { const { error } = await supabase.from("profiles").select("id").limit(1); sup = !error; } catch { sup = false; }
+    // Auth
+    let auth = false;
+    try { const { data } = await supabase.auth.getSession(); auth = !!data.session; } catch { auth = false; }
+    // Microphone
+    let mic = false;
+    try { const s = await navigator.mediaDevices.getUserMedia({ audio: true }); s.getTracks().forEach(t => t.stop()); mic = true; } catch { mic = false; }
+    // Storage
+    let storage = false;
+    try { localStorage.setItem("_hc", "1"); localStorage.removeItem("_hc"); storage = true; } catch { storage = false; }
+    setChecks({ supabase: sup, auth, microphone: mic, storage, network });
+    setRunning(false);
+  };
+
+  const items: { key: string; label: string }[] = [
+    { key: "network", label: "Connexion réseau" },
+    { key: "supabase", label: "Base de données" },
+    { key: "auth", label: "Session active" },
+    { key: "microphone", label: "Microphone" },
+    { key: "storage", label: "Stockage local" },
+  ];
+
+  return (
+    <div className="health-check">
+      <button className="hc-run-btn" onClick={run} disabled={running}>
+        {running ? "Diagnostic en cours…" : "Lancer le diagnostic"}
+      </button>
+      {Object.values(checks).some(v => v !== null) && (
+        <div className="hc-results">
+          {items.map(({ key, label }) => {
+            const v = checks[key];
+            return (
+              <div key={key} className="hc-item">
+                <span className={`hc-dot hc-dot--${v === null ? "pending" : v ? "ok" : "fail"}`} />
+                <span className="hc-label">{label}</span>
+                <span className="hc-status">{v === null ? "—" : v ? "OK" : "Échec"}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
 
 interface Props {
   onClose: () => void;
@@ -303,6 +363,18 @@ export function Settings({ onClose }: Props) {
                 </div>
               </div>
             )}
+          </section>
+
+          {/* ── Diagnostic ── */}
+          <section className="settings-section">
+            <h3 className="settings-section-title">Diagnostic du laboratoire</h3>
+            <HealthCheck />
+          </section>
+
+          {/* ── FAQ ── */}
+          <section className="settings-section">
+            <h3 className="settings-section-title">FAQ</h3>
+            <FAQ />
           </section>
         </div>
       </div>

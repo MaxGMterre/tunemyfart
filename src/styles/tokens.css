@@ -10,6 +10,23 @@
   --color-violet: #9b59b6;
   --color-blue: #3498db;
 
+  /* Extended palette */
+  --color-sage: #6B8F71;
+  --color-rust: #9B3A2A;
+  --color-sky: #7B9EB8;
+  --color-amber: #E8A857;
+  --color-plum: #6B4E71;
+  /* Ink scale */
+  --color-ink-100: #E8ECF1;
+  --color-ink-200: #C8D0DA;
+  --color-ink-300: #A3B0BF;
+  --color-ink-600: #3D5A73;
+  --color-ink-900: #0F1C2D;
+  /* Paper scale */
+  --color-paper-50: #FDFAF4;
+  --color-paper-100: #F8F2E4;
+  --color-paper-400: #DDD4B8;
+
   /* Typo */
   --font-display: "Fraunces", "Georgia", serif;
   --font-mono: "IBM Plex Mono", "Courier New", monospace;
@@ -26,6 +43,11 @@
   --color-ink-soft: rgba(232, 223, 200, 0.5);
   --color-brass: #d4aa4a;
   --color-coral: #e06840;
+  --color-sage: #7AB882;
+  --color-rust: #C04A38;
+  --color-sky: #8BB5CE;
+  --color-amber: #F0BC6A;
+  --color-plum: #8B6A91;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -36,6 +58,11 @@
     --color-ink-soft: rgba(232, 223, 200, 0.5);
     --color-brass: #d4aa4a;
     --color-coral: #e06840;
+    --color-sage: #7AB882;
+    --color-rust: #C04A38;
+    --color-sky: #8BB5CE;
+    --color-amber: #F0BC6A;
+    --color-plum: #8B6A91;
   }
 }
 
@@ -207,4 +234,34 @@ html,
 body {
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
+}
+
+/* ── Responsive ─────────────────────────────────────── */
+/* iPhone SE (375px) */
+@media (max-width: 390px) {
+  .app-shell { max-width: 100%; }
+  .app-title { font-size: 1.3rem; }
+  .tab-bar button { font-size: 0.48rem; padding: 0.5rem 0.05rem; }
+  .panel-content { padding: 0.75rem 1rem 1.25rem; }
+}
+
+/* iPad (768px+) */
+@media (min-width: 768px) {
+  .app-shell {
+    max-width: 600px;
+    border-left: 1px solid rgba(27, 42, 65, 0.12);
+    border-right: 1px solid rgba(27, 42, 65, 0.12);
+  }
+}
+
+/* iPad Pro (1024px+) — 2 column */
+@media (min-width: 1024px) {
+  .app-shell { max-width: 900px; }
+}
+
+/* Landscape on mobile — hide tab labels */
+@media (orientation: landscape) and (max-height: 500px) {
+  .tab-bar button { padding: 0.4rem 0.1rem; min-height: 36px; }
+  .tab-bar button span:not(.tab-icon) { display: none; }
+  .app-header { padding: 0.75rem 1.25rem 0.5rem; }
 }

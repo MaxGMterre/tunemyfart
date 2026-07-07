@@ -100,11 +100,13 @@ function StreakCalendar({ dates }: { dates: string[] }) {
   );
 }
 
+const APP_VERSION = "1.0.0";
+
 interface ProfileProps {
   onTabChange?: (tab: string) => void;
 }
 
-export function Profile({ onTabChange: _onTabChange }: ProfileProps = {}) {
+export function Profile({ onTabChange }: ProfileProps = {}) {
   const { user, signOut, linkEmail } = useAuth();
   const userId = user?.id ?? getUserId();
   const [editing, setEditing] = useState(false);
@@ -645,6 +647,12 @@ export function Profile({ onTabChange: _onTabChange }: ProfileProps = {}) {
           Quitter le laboratoire
         </button>
       </div>
+
+      {user && (
+        <button className="admin-link" onClick={() => onTabChange?.("admin")}>
+          v{APP_VERSION}
+        </button>
+      )}
 
       {showSettings && <Settings onClose={() => setShowSettings(false)} />}
     </div>

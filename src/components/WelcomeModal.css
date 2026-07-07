@@ -348,3 +348,8 @@
   margin: 0;
   text-align: center;
 }
+
+/* ── Pet name (onboarding page 2) ───────────────────── */
+.welcome-pet-name { display: flex; align-items: center; gap: 0.5rem; justify-content: center; margin-top: 0.5rem; }
+.pet-name-label { font-family: var(--font-mono); font-size: 0.62rem; text-transform: uppercase; color: var(--color-ink-soft); }
+.pet-name-value { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: var(--color-brass); }

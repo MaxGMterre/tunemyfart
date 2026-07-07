@@ -5,7 +5,8 @@ import type { RecordingResult } from "../lib/useRecorder";
 import { useAuth } from "../lib/useAuth";
 import { useToast } from "./ui/Toast";
 import { Loading } from "./ui/Loading";
-import { EmptyState } from "./ui/EmptyState";
+import { EmptyState as EmptyStateSimple } from "./ui/EmptyState";
+import { EmptyState } from "./EmptyState";
 import { ShareCard } from "./ShareCard";
 
 // ── Helpers ────────────────────────────────────────────────
@@ -197,7 +198,7 @@ export function History({
 
   if (!user) {
     return (
-      <EmptyState
+      <EmptyStateSimple
         message="Connecte-toi pour accéder à ton corpus."
         ctaLabel="Créer un compte"
         onCta={() => onTabChange?.("profil")}
@@ -286,9 +287,9 @@ export function History({
       {/* List */}
       {filtered.length === 0 ? (
         <EmptyState
-          message="Aucun relevé enregistré à ce jour"
-          ctaLabel="Débuter l'analyse"
-          onCta={() => onTabChange?.("analyser")}
+          variant="history"
+          action={() => onTabChange?.("analyser")}
+          actionLabel="Débuter l'analyse"
         />
       ) : (
         <ol className="history-list">

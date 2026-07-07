@@ -1,0 +1,87 @@
+CREATE TABLE IF NOT EXISTS artifacts (
+  id serial PRIMARY KEY,
+  slug text NOT NULL UNIQUE,
+  name text NOT NULL,
+  subtitle text,
+  description text,
+  rarity text NOT NULL CHECK (rarity IN ('common','uncommon','rare','legendary')),
+  unlock_condition jsonb,
+  drop_weight integer DEFAULT 100,
+  illustration_hint text,
+  lore text
+);
+
+CREATE TABLE IF NOT EXISTS user_artifacts (
+  user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE,
+  artifact_id integer REFERENCES artifacts(id) ON DELETE CASCADE,
+  discovered_at timestamptz DEFAULT now(),
+  PRIMARY KEY (user_id, artifact_id)
+);
+
+ALTER TABLE user_artifacts ENABLE ROW LEVEL SECURITY;
+CREATE POLICY artifacts_read ON user_artifacts FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY artifacts_insert ON user_artifacts FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- 15 predefined artifacts
+INSERT INTO artifacts (slug, name, subtitle, description, rarity, drop_weight, lore) VALUES
+  ('barometre_flatulence', 'Le Baromètre à Flatulence', 'Sir Windsor, 1743',
+   'Premier instrument de mesure dédié à la pression gazeuse corporelle.',
+   'legendary', 10,
+   'Fabriqué en laiton poli par Sir Reginald Windsor à l''issue de 40 années de recherche discrète.'),
+  ('diapason_ambroise', 'Le Diapason d''Ambroise', 'Vienne, 1876',
+   'Diapason accordé sur la fréquence fondamentale du pet moyen européen.',
+   'rare', 30,
+   'Ambroise Klatschmayer affirmait que tout homme cultive en lui un La naturel.'),
+  ('oreillette_fartesius', 'L''Oreillette du Dr. Fartesius', 'Padoue, 1601',
+   'Dispositif acoustique permettant d''isoler les fréquences sub-basales.',
+   'legendary', 5,
+   'Le Dr. Fartesius portait cet instrument lors de ses conférences à l''Académie Padouane des Sciences Occultes.'),
+  ('sifflet_victorien', 'Le Sifflet Victorien', 'Londres, 1889',
+   'Sifflet en argent calibré pour reproduire exactement un Mi bémol de troisième octave.',
+   'uncommon', 80,
+   'Distribué aux membres de la Société Royale d''Acoustique Ventrale lors du banquet annuel de 1889.'),
+  ('registre_premier', 'Le Premier Registre', 'Paris, 1902',
+   'Carnet d''origine contenant les 100 premiers relevés scientifiques documentés.',
+   'rare', 25,
+   'Initialement rédigé en latin, traduit en français par le Professeur Émile Tournevent.'),
+  ('phono_cristal', 'Le Phonographe de Cristal', 'Prague, 1923',
+   'Appareil d''enregistrement acoustique utilisant une membrane en cristal de Bohème.',
+   'rare', 20,
+   'Produit 12 exemplaires. 9 ont survécu à la Seconde Guerre Mondiale.'),
+  ('medaille_premier', 'La Médaille du Premier Pet', 'Bruxelles, 1955',
+   'Décernée par l''Institut International de Sonologie Humaine pour un premier relevé certifié.',
+   'common', 150,
+   'L''Institut en a décerné plus de 400 000 depuis sa fondation.'),
+  ('cornette_acoustique', 'La Cornette Acoustique', 'Lyon, 1834',
+   'Amplificateur acoustique en corne naturelle, optimisé pour les graves.',
+   'uncommon', 60,
+   'Fabriquée à partir de cornes de bovins sélectionnés pour leur résonance naturelle.'),
+  ('montre_precision', 'La Montre de Précision', 'Genève, 1911',
+   'Chronomètre mesurant la durée des émissions avec une précision au centième de seconde.',
+   'uncommon', 70,
+   'Ancêtre direct de nos algorithmes de mesure de durée.'),
+  ('cloche_labo', 'La Cloche de Laboratoire', 'Berlin, 1897',
+   'Utilisée pour isoler acoustiquement les échantillons lors des analyses.',
+   'common', 120,
+   'Standard dans tous les laboratoires de physiologie acoustique de l''époque wilhelminienne.'),
+  ('parchemin_tonalite', 'Le Parchemin des Tonalités', 'Tolède, 1543',
+   'Premier traité sur la classification musicale des émissions gazeuses humaines.',
+   'legendary', 8,
+   'Attribué au mystérieux Fra Petro Ventosus, dont l''identité reste débattue.'),
+  ('loupe_spectrale', 'La Loupe Spectrale', 'Amsterdam, 1956',
+   'Permet d''observer visuellement la décomposition spectrale d''un signal audio.',
+   'rare', 35,
+   'Ancêtre de nos analyseurs FFT modernes.'),
+  ('encrier_analyse', 'L''Encrier d''Analyse', 'Florence, 1765',
+   'Contient une encre spéciale qui change de couleur selon la note dominante du texte qui l''utilise.',
+   'uncommon', 55,
+   'Sa formule chimique exacte a été perdue lors de l''incendie de la bibliothèque Medicis de 1798.'),
+  ('tuyau_orgue', 'Le Tuyau d''Orgue', 'Strasbourg, 1688',
+   'Tuyau d''orgue accordé sur la note fondamentale humaine universelle.',
+   'rare', 28,
+   'Offert par le facteur d''orgues Andreas Silbermann à la Société des Amateurs de Physiologie Musicale.'),
+  ('ballon_resonance', 'Le Ballon de Résonance', 'Tokyo, 1968',
+   'Sphère en caoutchouc vulcanisé amplifiant sélectivement les fréquences entre 80 et 400 Hz.',
+   'common', 100,
+   'Développé lors des Jeux Olympiques de Tokyo pour les épreuves d''acoustique sportive.')
+ON CONFLICT (slug) DO NOTHING;

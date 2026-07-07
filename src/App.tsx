@@ -27,7 +27,9 @@ const Composer = lazy(() => import("./components/Composer").then((m) => ({ defau
 const Profile = lazy(() => import("./components/Profile").then((m) => ({ default: m.Profile })));
 const Duel = lazy(() => import("./components/Duel").then((m) => ({ default: m.Duel })));
 const Feed = lazy(() => import("./components/Feed").then((m) => ({ default: m.Feed })));
+const AdminDashboard = lazy(() => import("./components/AdminDashboard").then((m) => ({ default: m.AdminDashboard })));
 import { track } from "./lib/analytics";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import "./styles/tokens.css";
 import "./components/Auth.css";
 import "./components/Recorder.css";
@@ -46,6 +48,11 @@ import "./components/Shop.css";
 import "./components/Duel.css";
 import "./components/Feed.css";
 import "./components/SeasonBanner.css";
+import "./components/ErrorBoundary.css";
+import "./components/AdminDashboard.css";
+import "./components/FAQ.css";
+import "./components/ui/Tooltip.css";
+import "./components/EmptyState.css";
 
 // ── Dark mode ─────────────────────────────────────────────────────────────────
 
@@ -94,7 +101,7 @@ function ThemeProvider({ children }: { children: React.ReactNode }) {
 
 // ── Tabs ───────────────────────────────────────────────────────────────────────
 
-type Tab = "analyser" | "classement" | "missions" | "profil" | "composer" | "duel" | "communauté";
+type Tab = "analyser" | "classement" | "missions" | "profil" | "composer" | "duel" | "communauté" | "admin";
 
 const BASE_TABS: Tab[] = ["analyser", "classement", "missions", "profil", "communauté"];
 
@@ -107,6 +114,7 @@ const TAB_SVGS: Record<Tab, React.ReactNode> = {
   composer:   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="6" width="18" height="13" rx="1"/><line x1="7.5" y1="6" x2="7.5" y2="19"/><line x1="10" y1="6" x2="10" y2="19"/><line x1="12.5" y1="6" x2="12.5" y2="19"/><line x1="15" y1="6" x2="15" y2="19"/><rect x="5.5" y="6" width="2.5" height="7.5" rx="0.5" fill="currentColor" stroke="none"/><rect x="10.5" y="6" width="2.5" height="7.5" rx="0.5" fill="currentColor" stroke="none"/><rect x="13" y="6" width="2.5" height="7.5" rx="0.5" fill="currentColor" stroke="none"/></svg>,
   communauté: <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="9" cy="7" r="3"/><circle cx="17" cy="7" r="3"/><path d="M3 21 C3 17 6 14.5 9 14.5 C12 14.5 15 17 15 21"/><path d="M13 14.8 C14 14.6 15.3 14.5 17 14.5 C20 14.5 21 16.5 21 19"/></svg>,
   duel:       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M6 3 L6 9 L3 12 L6 15 L6 21"/><path d="M18 3 L18 9 L21 12 L18 15 L18 21"/><line x1="6" y1="12" x2="18" y2="12"/></svg>,
+  admin:      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="9" x2="9" y2="21"/></svg>,
 };
 
 const TAB_META: Record<Tab, { label: string }> = {
@@ -117,6 +125,7 @@ const TAB_META: Record<Tab, { label: string }> = {
   composer:   { label: "Clavier" },
   communauté: { label: "Communauté" },
   duel:       { label: "Duels" },
+  admin:      { label: "Admin" },
 };
 
 // ── Network watcher ────────────────────────────────────────────────────────────
@@ -230,6 +239,7 @@ function AppShell() {
             {tab === "composer" && <Composer />}
             {tab === "communauté" && <Feed />}
             {tab === "duel" && <Duel />}
+            {tab === "admin" && <AdminDashboard />}
           </main>
         </Suspense>
 
@@ -285,13 +295,15 @@ function AppWithSplash() {
 
 function App() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <ToastProvider>
-          <AppWithSplash />
-        </ToastProvider>
-      </AuthProvider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <AuthProvider>
+          <ToastProvider>
+            <AppWithSplash />
+          </ToastProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 

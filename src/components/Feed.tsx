@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../lib/useAuth";
 import { supabase } from "../lib/supabase";
 import { useToast } from "./ui/Toast";
+import { EmptyState } from "./EmptyState";
 
 interface FeedItem {
   id: number;
@@ -116,9 +117,7 @@ export function Feed() {
       {loading ? (
         <div className="feed-loading">Chargement du fil…</div>
       ) : items.length === 0 ? (
-        <div className="feed-empty">
-          Aucune activité récente dans le laboratoire.
-        </div>
+        <EmptyState variant="feed" />
       ) : (
         <div className="feed-list">
           {items.map((item) => {

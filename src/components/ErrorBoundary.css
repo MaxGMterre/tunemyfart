@@ -1,0 +1,32 @@
+.error-boundary {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: var(--color-paper); padding: 2rem;
+}
+.error-boundary-inner {
+  max-width: 340px; text-align: center; display: flex; flex-direction: column;
+  align-items: center; gap: 1rem;
+}
+.eb-illustration { margin-bottom: 0.5rem; }
+.eb-title {
+  font-family: var(--font-display); font-size: 1.1rem; color: var(--color-ink);
+  margin: 0;
+}
+.eb-message {
+  font-family: var(--font-mono); font-size: 0.7rem; color: var(--color-coral);
+  background: rgba(217,96,59,0.08); border: 1px solid rgba(217,96,59,0.25);
+  border-radius: 4px; padding: 0.5rem 0.75rem; word-break: break-word; margin: 0;
+}
+.eb-hint {
+  font-family: var(--font-body); font-size: 0.78rem; color: var(--color-ink-soft); margin: 0;
+}
+.eb-actions { display: flex; flex-direction: column; gap: 0.5rem; width: 100%; }
+.eb-btn {
+  width: 100%; padding: 0.7rem; border-radius: 8px; font-family: var(--font-mono);
+  font-size: 0.72rem; text-transform: uppercase; cursor: pointer; transition: all 0.15s;
+}
+.eb-btn--primary {
+  background: linear-gradient(180deg, #e87050, #d9603b); color: white; border: none;
+}
+.eb-btn--ghost {
+  background: none; border: 1px solid rgba(27,42,65,0.2); color: var(--color-ink-soft);
+}
