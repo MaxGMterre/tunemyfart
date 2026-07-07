@@ -5,6 +5,8 @@ export const SCREEN_HEADERS = {
   profil: { title: "Fiche spécimen", subtitle: "Corpus personnel" },
   composer: { title: "Le Clavier", subtitle: "Compositeur acoustique" },
   corpus: { title: "Corpus", subtitle: "Historique des relevés" },
+  communauté: { title: "Communauté", subtitle: "Activité du laboratoire" },
+  duel: { title: "Salle des Duels", subtitle: "Défis entre chercheurs" },
 } as const;
 
 export const PENDING_UPLOADS_KEY = "tmf_pending_uploads";

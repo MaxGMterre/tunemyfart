@@ -235,6 +235,7 @@ export interface PersonalStats {
   total: number;
   note_frequente: string | null;
   streak: number;
+  recordingDates: string[];
 }
 
 export async function saveProfile(profile: ProfilePayload) {
@@ -290,6 +291,7 @@ export async function getPersonalStats(userId: string): Promise<PersonalStats> {
     total: 0,
     note_frequente: null,
     streak: 0,
+    recordingDates: [],
   };
   try {
     const { data, error } = await supabase
@@ -362,6 +364,7 @@ export async function getPersonalStats(userId: string): Promise<PersonalStats> {
       total,
       note_frequente,
       streak,
+      recordingDates: [...dateSet].sort(),
     };
   } catch {
     return empty;

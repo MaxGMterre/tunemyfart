@@ -16,6 +16,7 @@ import {
   pickRandom,
 } from "./ProutDialogue";
 import { SFX } from "../lib/soundEffects";
+import "./Recorder.css";
 
 // ── Helpers ──────────────────────────────────────────────
 
@@ -47,33 +48,106 @@ const HUMEUR_EMOJIS = ["😊", "😤", "😂", "😴", "🤔", "😐", "🥴", "
 export function Recorder() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const spectrogramCanvasRef = useRef<HTMLCanvasElement>(null);
+  const pianoRollCanvasRef = useRef<HTMLCanvasElement>(null);
   const [playError, setPlayError] = useState<string | null>(null);
 
+  // Long recording mode
+  const [longMode, setLongMode] = useState(false);
+
+  // Live stats during recording
+  const [liveStats, setLiveStats] = useState({
+    peakDb: -100,
+    peakNote: null as string | null,
+    noteCount: 0,
+    elapsedMs: 0,
+  });
+  const liveStatsRef = useRef(liveStats);
+  const elapsedTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const recordStartRef = useRef<number>(0);
+
   // Live waveform — phosphor green on dark screen
-  const handleLiveFrame = useCallback((buffer: Float32Array) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    const w = canvas.width;
-    const h = canvas.height;
-    const mid = h / 2;
-    ctx.fillStyle = "#0A0F1A";
-    ctx.fillRect(0, 0, w, h);
-    ctx.strokeStyle = "#39FF14";
-    ctx.lineWidth = 1.5;
-    ctx.shadowBlur = 6;
-    ctx.shadowColor = "rgba(57, 255, 20, 0.5)";
-    ctx.beginPath();
-    const step = buffer.length / w;
-    for (let x = 0; x < w; x++) {
-      const v = buffer[Math.floor(x * step)] ?? 0;
-      const y = mid + v * mid * 0.9;
-      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-    ctx.shadowBlur = 0;
-  }, []);
+  const handleLiveFrame = useCallback(
+    (buffer: Float32Array, fftData?: Uint8Array) => {
+      // Oscilloscope
+      const canvas = canvasRef.current;
+      if (canvas) {
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          const w = canvas.width;
+          const h = canvas.height;
+          const mid = h / 2;
+          ctx.fillStyle = "#0A0F1A";
+          ctx.fillRect(0, 0, w, h);
+          ctx.strokeStyle = "#39FF14";
+          ctx.lineWidth = 1.5;
+          ctx.shadowBlur = 6;
+          ctx.shadowColor = "rgba(57, 255, 20, 0.5)";
+          ctx.beginPath();
+          const step = buffer.length / w;
+          for (let x = 0; x < w; x++) {
+            const v = buffer[Math.floor(x * step)] ?? 0;
+            const y = mid + v * mid * 0.9;
+            x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+        }
+      }
+
+      // Spectrogram waterfall
+      const sg = spectrogramCanvasRef.current;
+      if (sg && fftData) {
+        const ctx2 = sg.getContext("2d");
+        if (ctx2) {
+          // Shift existing pixels left by 1px
+          const imageData = ctx2.getImageData(1, 0, sg.width - 1, sg.height);
+          ctx2.putImageData(imageData, 0, 0);
+          // Draw new column on right
+          const binCount = fftData.length;
+          const step = binCount / sg.height;
+          for (let y = 0; y < sg.height; y++) {
+            const bin = Math.floor((sg.height - 1 - y) * step);
+            const v = fftData[bin] ?? 0; // 0-255
+            const r =
+              v > 192 ? 255 : v > 128 ? Math.floor((v - 128) * 4) : 0;
+            const g =
+              v > 64 ? Math.min(255, Math.floor((v - 64) * 2.5)) : 0;
+            const b =
+              v < 128
+                ? Math.min(255, v * 2)
+                : Math.max(0, 255 - (v - 128) * 4);
+            ctx2.fillStyle = `rgb(${r},${g},${b})`;
+            ctx2.fillRect(sg.width - 1, y, 1, 1);
+          }
+        }
+      }
+
+      // Piano roll waterfall (uses liveNote from state — captured via ref below)
+      const currentNote = liveNoteRef.current;
+      const pr = pianoRollCanvasRef.current;
+      if (pr) {
+        const ctx3 = pr.getContext("2d");
+        if (ctx3) {
+          const img = ctx3.getImageData(1, 0, pr.width - 1, pr.height);
+          ctx3.putImageData(img, 0, 0);
+          ctx3.fillStyle = "#0A0F1A";
+          ctx3.fillRect(pr.width - 1, 0, 1, pr.height);
+          if (currentNote) {
+            const midiNorm = Math.max(
+              0,
+              Math.min(1, (currentNote.midi - 36) / 48)
+            );
+            const y = Math.floor((1 - midiNorm) * (pr.height - 4));
+            const hue = (currentNote.midi % 12) * 30;
+            ctx3.fillStyle = `hsl(${hue}, 90%, 60%)`;
+            ctx3.fillRect(pr.width - 2, y, 2, 4);
+          }
+        }
+      }
+    },
+    []
+  );
 
   const {
     status,
@@ -85,8 +159,66 @@ export function Recorder() {
     start,
     stop,
     reset,
+    setMaxDuration,
   } = useRecorder(handleLiveFrame);
+
+  // Keep a ref to liveNote so handleLiveFrame (memoized) can access the latest value
+  const liveNoteRef = useRef(liveNote);
+  useEffect(() => {
+    liveNoteRef.current = liveNote;
+  }, [liveNote]);
   const { user } = useAuth();
+
+  // Sync long mode → setMaxDuration
+  useEffect(() => {
+    setMaxDuration(longMode ? 5 * 60 * 1000 : 30_000);
+  }, [longMode, setMaxDuration]);
+
+  // Live stats: update peakDb and peakNote when liveDb / liveNote change during recording
+  useEffect(() => {
+    if (status !== "recording") return;
+    setLiveStats((prev) => {
+      const next = { ...prev };
+      if (liveDb > prev.peakDb) next.peakDb = liveDb;
+      if (liveNote) {
+        next.peakNote = `${liveNote.note}${liveNote.octave}`;
+        next.noteCount = prev.noteCount + 1;
+      }
+      liveStatsRef.current = next;
+      return next;
+    });
+  }, [liveDb, liveNote, status]);
+
+  // Elapsed timer during recording
+  useEffect(() => {
+    if (status === "recording") {
+      recordStartRef.current = performance.now();
+      elapsedTimerRef.current = setInterval(() => {
+        setLiveStats((prev) => {
+          const next = {
+            ...prev,
+            elapsedMs: performance.now() - recordStartRef.current,
+          };
+          liveStatsRef.current = next;
+          return next;
+        });
+      }, 250);
+    } else {
+      if (elapsedTimerRef.current !== null) {
+        clearInterval(elapsedTimerRef.current);
+        elapsedTimerRef.current = null;
+      }
+      if (status === "idle" || status === "done") {
+        setLiveStats({ peakDb: -100, peakNote: null, noteCount: 0, elapsedMs: 0 });
+      }
+    }
+    return () => {
+      if (elapsedTimerRef.current !== null) {
+        clearInterval(elapsedTimerRef.current);
+        elapsedTimerRef.current = null;
+      }
+    };
+  }, [status]);
 
   // Metadata
   const [alimentation, setAlimentation] = useState("");
@@ -413,6 +545,26 @@ export function Recorder() {
           </div>
         </div>
 
+        {/* Spectrogram */}
+        <div className="spectrogram-screen">
+          <canvas
+            ref={spectrogramCanvasRef}
+            className="spectrogram-canvas"
+            width={320}
+            height={80}
+          />
+        </div>
+
+        {/* Piano roll */}
+        <div className="piano-roll-screen">
+          <canvas
+            ref={pianoRollCanvasRef}
+            className="piano-roll-canvas"
+            width={320}
+            height={60}
+          />
+        </div>
+
         {/* VU meter */}
         <div className="vu-section">
           <div className="vu-meter">
@@ -504,6 +656,17 @@ export function Recorder() {
       {/* ── Record / Stop buttons ── */}
       {status === "idle" && (
         <div className="record-btn-wrap">
+          <div className="long-mode-toggle">
+            <button
+              className={`mode-toggle-btn${longMode ? " active" : ""}`}
+              onClick={() => setLongMode((v) => !v)}
+            >
+              Mode session {longMode ? "ON" : "OFF"}
+            </button>
+            <span className="mode-toggle-hint">
+              {longMode ? "Jusqu'à 5 min" : "30 sec max"}
+            </span>
+          </div>
           <button
             className="rec-btn"
             onClick={handleStart}
@@ -516,6 +679,28 @@ export function Recorder() {
 
       {isRecording && (
         <div className="record-btn-wrap">
+          {isRecording && (
+            <div className="live-stats-panel">
+              <div className="live-stat">
+                <span className="ls-val">{liveStats.peakDb.toFixed(1)}</span>
+                <span className="ls-lbl">dB pic</span>
+              </div>
+              <div className="live-stat">
+                <span className="ls-val">{liveStats.peakNote ?? "—"}</span>
+                <span className="ls-lbl">note max</span>
+              </div>
+              <div className="live-stat">
+                <span className="ls-val">{liveStats.noteCount}</span>
+                <span className="ls-lbl">événements</span>
+              </div>
+              <div className="live-stat">
+                <span className="ls-val">
+                  {formatTime(liveStats.elapsedMs / 1000)}
+                </span>
+                <span className="ls-lbl">durée</span>
+              </div>
+            </div>
+          )}
           <button
             className="rec-btn rec-btn--stop"
             onClick={handleStop}
@@ -575,6 +760,25 @@ export function Recorder() {
               <span className="stat-value">{result.sequenceNotes.length}</span>
             </div>
           </div>
+
+          {result.timbre && (
+            <div className="timbre-emotion-row">
+              <div className="timbre-badge">
+                <span className="badge-label">Timbre</span>
+                <span className="badge-value">{result.timbre.category}</span>
+              </div>
+              {result.emotion && (
+                <div className="emotion-badge">
+                  <span className="badge-label">Personnalité</span>
+                  <span className="badge-value">{result.emotion.category}</span>
+                </div>
+              )}
+              <div className="musicality-badge">
+                <span className="badge-label">Musicalité</span>
+                <span className="badge-value">{result.musicalityScore}/100</span>
+              </div>
+            </div>
+          )}
 
           <audio ref={audioRef} src={result.url} preload="metadata" />
           <div className="audio-player-custom">

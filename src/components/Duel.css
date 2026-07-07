@@ -1,0 +1,32 @@
+.duel-panel { padding: 0.5rem 0; }
+.duel-header { margin-bottom: 1rem; }
+.duel-title { font-family: var(--font-display); font-size: 1.1rem; color: var(--color-ink); margin: 0; }
+.duel-subtitle { font-family: var(--font-mono); font-size: 0.62rem; text-transform: uppercase; color: var(--color-ink-soft); }
+.duel-tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+.duel-tab { flex: 1; padding: 0.45rem; background: var(--color-paper-dark); border: 1px solid var(--color-ink-soft); border-radius: 6px; font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase; cursor: pointer; color: var(--color-ink-soft); }
+.duel-tab.active { background: var(--color-coral); border-color: var(--color-coral); color: white; }
+.duel-empty { text-align: center; padding: 2rem 1rem; font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-ink-soft); font-style: italic; }
+.duel-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.duel-card { background: var(--color-paper-dark); border-left: 3px solid var(--color-brass); border-radius: 0 6px 6px 0; padding: 0.75rem; }
+.duel-card-top { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+.duel-cat-icon { font-size: 1.2rem; }
+.duel-cat-label { font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase; color: var(--color-ink-soft); }
+.duel-vs { font-family: var(--font-display); font-size: 0.9rem; font-weight: 600; color: var(--color-ink); margin-left: auto; }
+.duel-status-badge { font-family: var(--font-mono); font-size: 0.58rem; text-transform: uppercase; padding: 2px 8px; border-radius: 10px; }
+.duel-status-badge--pending { background: rgba(201,154,61,0.2); color: var(--color-brass); }
+.duel-status-badge--accepted { background: rgba(46,204,113,0.2); color: var(--color-mint); }
+.duel-status-badge--completed { background: rgba(155,89,182,0.2); color: var(--color-violet); }
+.duel-status-badge--expired { background: rgba(27,42,65,0.2); color: var(--color-ink-soft); }
+.duel-card-actions { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+.duel-action-btn { flex: 1; padding: 0.35rem; border: 1px solid var(--color-coral); background: rgba(217,96,59,0.1); color: var(--color-coral); border-radius: 4px; font-family: var(--font-mono); font-size: 0.6rem; text-transform: uppercase; cursor: pointer; }
+.duel-create-form { display: flex; flex-direction: column; gap: 1rem; }
+.duel-form-title { font-family: var(--font-display); font-size: 0.95rem; color: var(--color-ink); margin: 0; }
+.duel-form-label { font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase; color: var(--color-ink-soft); display: block; margin-bottom: 0.4rem; }
+.duel-friend-select { width: 100%; padding: 0.5rem; background: var(--color-paper-dark); border: 1px solid var(--color-brass); border-radius: 4px; font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-ink); }
+.duel-category-row { display: flex; gap: 0.5rem; }
+.duel-cat-btn { flex: 1; padding: 0.5rem 0.25rem; background: var(--color-paper-dark); border: 1px solid var(--color-ink-soft); border-radius: 6px; cursor: pointer; text-align: center; }
+.duel-cat-btn.selected { border-color: var(--color-brass); background: rgba(201,154,61,0.12); }
+.duel-cat-btn-icon { font-size: 1rem; display: block; }
+.duel-cat-btn-name { font-family: var(--font-mono); font-size: 0.52rem; text-transform: uppercase; color: var(--color-ink-soft); display: block; }
+.duel-send-btn { padding: 0.75rem; background: linear-gradient(180deg, #e87050, #d9603b); color: white; border: none; border-radius: 8px; font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; cursor: pointer; }
+.duel-no-friends { font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-ink-soft); text-align: center; padding: 1rem; font-style: italic; }

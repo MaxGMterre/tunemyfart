@@ -220,6 +220,10 @@ export function History({
       cents: 0,
     })),
     waveform: [],
+    timbre: null,
+    emotion: null,
+    musicalityScore: 0,
+    zcr: 0,
   });
 
   return (

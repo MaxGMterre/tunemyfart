@@ -150,3 +150,219 @@ export function downsampleWaveform(
   }
   return result;
 }
+
+// ── Enhanced DSP ──────────────────────────────────────────
+
+export type TimbreCategory =
+  | "Cristallin"
+  | "Boisé"
+  | "Métallique"
+  | "Terreux"
+  | "Aérien"
+  | "Nasal"
+  | "Rocailleux"
+  | "Ombragé";
+
+export type EmotionCategory =
+  | "Confiant"
+  | "Timide"
+  | "Explosif"
+  | "Méditatif"
+  | "Malicieux"
+  | "Solennel";
+
+export interface TimbreResult {
+  category: TimbreCategory;
+  centroid: number;
+  spread: number;
+  flatness: number;
+}
+
+export interface EmotionResult {
+  category: EmotionCategory;
+  confidence: number;
+}
+
+/** Compte le taux de passage par zéro (zero-crossing rate) d'un buffer. */
+export function computeZeroCrossingRate(buffer: Float32Array): number {
+  let crossings = 0;
+  for (let i = 1; i < buffer.length; i++) {
+    if ((buffer[i - 1] >= 0 && buffer[i] < 0) || (buffer[i - 1] < 0 && buffer[i] >= 0)) {
+      crossings++;
+    }
+  }
+  return crossings / buffer.length;
+}
+
+/** Classifie le timbre à partir des magnitudes FFT. */
+export function classifyTimbre(
+  fftMagnitudes: Float32Array,
+  sampleRate: number
+): TimbreResult {
+  const binCount = fftMagnitudes.length;
+  const binHz = sampleRate / 2 / binCount;
+
+  // Spectral centroid
+  let weightedSum = 0;
+  let totalMag = 0;
+  for (let i = 0; i < binCount; i++) {
+    const mag = Math.max(0, fftMagnitudes[i]);
+    weightedSum += mag * i * binHz;
+    totalMag += mag;
+  }
+  const centroid = totalMag > 0 ? weightedSum / totalMag : 0;
+
+  // Spectral spread
+  let spreadSum = 0;
+  for (let i = 0; i < binCount; i++) {
+    const mag = Math.max(0, fftMagnitudes[i]);
+    const freq = i * binHz;
+    spreadSum += mag * (freq - centroid) * (freq - centroid);
+  }
+  const spread = totalMag > 0 ? Math.sqrt(spreadSum / totalMag) : 0;
+
+  // Spectral flatness (geometric mean / arithmetic mean)
+  let logSum = 0;
+  let ariSum = 0;
+  let validBins = 0;
+  for (let i = 0; i < binCount; i++) {
+    const mag = Math.max(1e-10, fftMagnitudes[i]);
+    logSum += Math.log(mag);
+    ariSum += mag;
+    validBins++;
+  }
+  const geoMean = validBins > 0 ? Math.exp(logSum / validBins) : 0;
+  const ariMean = validBins > 0 ? ariSum / validBins : 1;
+  const flatness = ariMean > 0 ? Math.min(1, geoMean / ariMean) : 0;
+
+  // Energy ratios: low (<300 Hz), mid (300-2000 Hz), hi (>2000 Hz)
+  let lowEnergy = 0;
+  let midEnergy = 0;
+  let hiEnergy = 0;
+  for (let i = 0; i < binCount; i++) {
+    const mag = Math.max(0, fftMagnitudes[i]);
+    const freq = i * binHz;
+    if (freq < 300) lowEnergy += mag;
+    else if (freq < 2000) midEnergy += mag;
+    else hiEnergy += mag;
+  }
+  const totalEnergy = lowEnergy + midEnergy + hiEnergy || 1;
+  const lowRatio = lowEnergy / totalEnergy;
+  const midRatio = midEnergy / totalEnergy;
+  const hiRatio = hiEnergy / totalEnergy;
+
+  // Classification
+  let category: TimbreCategory;
+  if (flatness > 0.7 && hiRatio > 0.3) {
+    category = "Rocailleux";
+  } else if (flatness > 0.7) {
+    category = "Aérien";
+  } else if (centroid < 300) {
+    category = "Terreux";
+  } else if (centroid < 800 && lowRatio > 0.5) {
+    category = "Boisé";
+  } else if (centroid > 2000 && hiRatio > 0.25) {
+    category = "Métallique";
+  } else if (midRatio > 0.4 && centroid >= 800 && centroid <= 1500) {
+    category = "Nasal";
+  } else if (flatness < 0.15) {
+    category = "Cristallin";
+  } else {
+    category = "Ombragé";
+  }
+
+  return { category, centroid, spread, flatness };
+}
+
+/** Prédit l'émotion d'un enregistrement à partir de paramètres audio. */
+export function predictEmotion(params: {
+  dbMax: number;
+  durationMs: number;
+  noteCount: number;
+  zcr: number;
+  spectralCentroid: number;
+  spectralFlatness: number;
+}): EmotionResult {
+  const { dbMax, durationMs, noteCount, zcr, spectralCentroid } = params;
+
+  const scores: Record<EmotionCategory, number> = {
+    Confiant: 0,
+    Timide: 0,
+    Explosif: 0,
+    Méditatif: 0,
+    Malicieux: 0,
+    Solennel: 0,
+  };
+
+  // dB rules
+  if (dbMax > -10) scores["Explosif"] += 3;
+  if (dbMax > -20) scores["Confiant"] += 2;
+  if (dbMax < -40) scores["Timide"] += 3;
+
+  // Duration rules
+  if (durationMs > 4000) {
+    scores["Méditatif"] += 2;
+    scores["Solennel"] += 1;
+  }
+  if (durationMs < 500) {
+    scores["Timide"] += 2;
+    scores["Malicieux"] += 1;
+  }
+
+  // Note count rules
+  if (noteCount > 20) scores["Malicieux"] += 2;
+  if (noteCount < 3) scores["Solennel"] += 2;
+
+  // ZCR rules
+  if (zcr > 0.15) {
+    scores["Explosif"] += 1;
+    scores["Malicieux"] += 1;
+  }
+  if (zcr < 0.05) scores["Méditatif"] += 2;
+
+  // Centroid rules
+  if (spectralCentroid > 2000) scores["Explosif"] += 1;
+  if (spectralCentroid < 400) scores["Solennel"] += 1;
+
+  const entries = Object.entries(scores) as [EmotionCategory, number][];
+  const best = entries.reduce((a, b) => (b[1] > a[1] ? b : a));
+  const total = entries.reduce((sum, [, v]) => sum + v, 0);
+
+  return {
+    category: best[0],
+    confidence: total > 0 ? best[1] / total : 0,
+  };
+}
+
+/** Calcule un score de musicalité entre 0 et 100. */
+export function scoreMusicality(params: {
+  noteCount: number;
+  durationMs: number;
+  uniqueNotes: number;
+  zcr: number;
+}): number {
+  const { noteCount, durationMs, uniqueNotes, zcr } = params;
+
+  // Up to 30 pts for note count
+  const notePts = Math.min(30, noteCount * 2);
+
+  // Up to 20 pts for unique notes
+  const uniquePts = Math.min(20, uniqueNotes * 4);
+
+  // Up to 30 pts for duration (sweet spot 1-5 s)
+  const durationSec = durationMs / 1000;
+  let durationPts = 0;
+  if (durationSec >= 1 && durationSec <= 5) {
+    durationPts = 30;
+  } else if (durationSec < 1) {
+    durationPts = Math.round(durationSec * 30);
+  } else {
+    // > 5s: diminishing returns
+    durationPts = Math.max(0, Math.round(30 - (durationSec - 5) * 2));
+  }
+
+  // Up to 20 pts for ZCR (moderate ZCR is musical)
+  const zcrPts = Math.min(20, Math.round(Math.max(0, 1 - Math.abs(zcr - 0.08) / 0.08) * 20));
+
+  return Math.min(100, notePts + uniquePts + durationPts + zcrPts);
+}

@@ -449,3 +449,30 @@
   flex-shrink: 0;
   margin-left: 0.5rem;
 }
+
+/* ── Studio entry button ── */
+
+.composer-studio-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.65rem 1rem;
+  background: rgba(201, 154, 61, 0.1);
+  border: 1px solid rgba(201, 154, 61, 0.45);
+  border-radius: 8px;
+  color: var(--color-brass);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.composer-studio-btn:hover {
+  background: rgba(201, 154, 61, 0.2);
+  border-color: var(--color-brass);
+}
+

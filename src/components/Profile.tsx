@@ -60,6 +60,46 @@ const WORLD_RANKS = [
   { emoji: "🔢", label: "Actif", category: "total" },
 ];
 
+const STREAK_MILESTONES = [
+  { days: 3,   label: "Assidu",                    reward: "+XP bonus" },
+  { days: 7,   label: "Chercheur régulier",         reward: "Titre" },
+  { days: 14,  label: "Laborantin confirmé",        reward: "Thème" },
+  { days: 30,  label: "Chercheur émérite",          reward: "Titre rare" },
+  { days: 100, label: "Immortel du laboratoire",    reward: "Avatar exclusif" },
+  { days: 365, label: "Patriarche de la sonoflatulogie", reward: "Titre légendaire" },
+];
+
+function StreakCalendar({ dates }: { dates: string[] }) {
+  const dateSet = new Set(dates);
+  const today = new Date();
+  const DAYS = 91;
+  const cells: { date: string; active: boolean }[] = [];
+  for (let i = DAYS - 1; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const iso = d.toISOString().split("T")[0];
+    cells.push({ date: iso, active: dateSet.has(iso) });
+  }
+  const weeks: typeof cells[] = [];
+  for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
+
+  return (
+    <div className="streak-calendar">
+      {weeks.map((week, wi) => (
+        <div key={wi} className="streak-week">
+          {week.map((c) => (
+            <div
+              key={c.date}
+              className={`streak-day${c.active ? " streak-day--active" : ""}`}
+              title={c.date}
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 interface ProfileProps {
   onTabChange?: (tab: string) => void;
 }
@@ -71,6 +111,7 @@ export function Profile({ onTabChange: _onTabChange }: ProfileProps = {}) {
   const [showSettings, setShowSettings] = useState(false);
   const [showFriends, setShowFriends] = useState(false);
   const [achievementsOpen, setAchievementsOpen] = useState(false);
+  const [showStreakCalendar, setShowStreakCalendar] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [profileXp, setProfileXp] = useState(0);
@@ -132,6 +173,7 @@ export function Profile({ onTabChange: _onTabChange }: ProfileProps = {}) {
           total: 0,
           note_frequente: null,
           streak: 0,
+          recordingDates: [],
         });
       } finally {
         setLoading(false);
@@ -245,10 +287,15 @@ export function Profile({ onTabChange: _onTabChange }: ProfileProps = {}) {
             <span className="badge-label">{badge.label}</span>
           </div>
           {stats && stats.streak > 0 && (
-            <div className="profile-streak">
-              🔥 {stats.streak} jour{stats.streak > 1 ? "s" : ""} consécutif
-              {stats.streak > 1 ? "s" : ""}
-            </div>
+            <button
+              className={`profile-streak${stats.streak >= 7 ? " profile-streak--big" : ""}`}
+              onClick={() => setShowStreakCalendar((v) => !v)}
+              aria-expanded={showStreakCalendar}
+            >
+              <span className={`streak-flame${stats.streak >= 7 ? " streak-flame--pulse" : ""}`}>🔥</span>
+              <span className="streak-count">{stats.streak}</span>
+              <span className="streak-label">jour{stats.streak > 1 ? "s" : ""}</span>
+            </button>
           )}
           {nextBadge && stats && (
             <div className="badge-progress-hint">
@@ -483,6 +530,26 @@ export function Profile({ onTabChange: _onTabChange }: ProfileProps = {}) {
           </div>
         )}
       </div>
+
+      {/* Streak calendar + milestones */}
+      {stats && stats.streak > 0 && showStreakCalendar && (
+        <div className="profile-section">
+          <div className="section-title">Calendrier d'activité — 13 semaines</div>
+          <StreakCalendar dates={stats.recordingDates} />
+          <div className="streak-milestones">
+            {STREAK_MILESTONES.map((m) => {
+              const reached = stats.streak >= m.days;
+              return (
+                <div key={m.days} className={`streak-milestone${reached ? " reached" : ""}`}>
+                  <span className="sm-days">{m.days}j</span>
+                  <span className="sm-label">{m.label}</span>
+                  <span className="sm-reward">{reached ? "✓" : m.reward}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Confrères */}
       <div className="profile-section">

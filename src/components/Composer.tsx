@@ -5,6 +5,7 @@ import type { Composition, CompositionNote } from "../lib/supabase";
 import { NoteCircle, CHROMATIC_NOTES } from "./NoteCircle";
 import type { ChromaticNote } from "./NoteCircle";
 import { SFX } from "../lib/soundEffects";
+import { Studio } from "./Studio";
 
 // ── Note tables ───────────────────────────────────────────
 
@@ -95,6 +96,7 @@ type ViewMode = "piano" | "circle";
 
 export function Composer() {
   const { user } = useAuth();
+  const [showStudio, setShowStudio] = useState(false);
   const [collectedNotes, setCollectedNotes] = useState<Set<string>>(new Set());
   const [activeNote, setActiveNote] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("piano");
@@ -269,6 +271,16 @@ export function Composer() {
 
   return (
     <div className="composer-panel">
+      {showStudio && <Studio onClose={() => setShowStudio(false)} />}
+
+      <button
+        className="composer-studio-btn"
+        onClick={() => setShowStudio(true)}
+        aria-label="Ouvrir le Studio multi-pistes"
+      >
+        🎛 Ouvrir le Studio
+      </button>
+
       <p className="composer-subtitle">
         {collectedNotes.size} / 12 notes au corpus
       </p>
