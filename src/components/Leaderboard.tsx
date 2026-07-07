@@ -68,6 +68,7 @@ const PERIODS: { id: LeaderboardPeriod; label: string }[] = [
 
 const SCOPES: { id: LeaderboardScope; label: string }[] = [
   { id: "global", label: "Mondial" },
+  { id: "friends", label: "Amis" },
   { id: "country", label: "Pays" },
   { id: "city", label: "Région" },
   { id: "personal", label: "Personnel" },
@@ -146,26 +147,29 @@ export function Leaderboard() {
         {SCOPES.map((s) => {
           const needsLocation =
             (s.id === "country" || s.id === "city") && !hasLocation;
+          const needsAuth = s.id === "friends" && !user;
           return (
             <button
               key={s.id}
               className={[
                 scope === s.id ? "active" : "",
-                needsLocation ? "coming-soon" : "",
+                needsLocation || needsAuth ? "coming-soon" : "",
               ]
                 .filter(Boolean)
                 .join(" ")}
               onClick={() => {
-                if (!needsLocation) setScope(s.id);
+                if (!needsLocation && !needsAuth) setScope(s.id);
               }}
               title={
                 needsLocation
                   ? "Renseigne ta localisation dans ta fiche spécimen pour activer ce filtre"
+                  : needsAuth
+                  ? "Connecte-toi pour voir le classement de tes confrères"
                   : undefined
               }
             >
               {s.label}
-              {needsLocation && <span className="soon-badge">bientôt</span>}
+              {(needsLocation || needsAuth) && <span className="soon-badge">{needsAuth ? "login" : "bientôt"}</span>}
             </button>
           );
         })}

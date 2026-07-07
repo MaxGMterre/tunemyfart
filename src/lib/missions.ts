@@ -12,7 +12,11 @@ export type MissionCondition =
   | { type: "distinct_locations"; value: number }
   | { type: "distinct_alimentations"; value: number }
   | { type: "dominant_note_count"; value: number }
-  | { type: "night_recordings"; value: number };
+  | { type: "night_recordings"; value: number }
+  | { type: "midnight_recording"; value: number }
+  | { type: "morning_recording"; value: number }
+  | { type: "chercheur_note_count"; value: number }
+  | { type: "distinct_alimentations_exact"; value: number };
 
 export interface Mission {
   id: string;
@@ -21,6 +25,7 @@ export interface Mission {
   emoji: string;
   condition: MissionCondition;
   recompense: string;
+  hidden?: boolean;  // succès secret — affiché seulement après déblocage
 }
 
 export interface MissionProgress {
@@ -127,6 +132,146 @@ export const MISSIONS: Mission[] = [
     emoji: "🌙",
     condition: { type: "night_recordings", value: 3 },
     recompense: "Badge Chercheur de Nuit",
+  },
+];
+
+// ── Succès secrets (hidden achievements) ──────────────────────────────────────
+
+export const ACHIEVEMENTS: Mission[] = [
+  {
+    id: "ach_ponctuel",
+    titre: "Le Ponctuel",
+    description: "Enregistrer un spécimen à minuit pile",
+    emoji: "🕛",
+    condition: { type: "midnight_recording", value: 1 },
+    recompense: "Horloge à Gaz Certifiée",
+    hidden: true,
+  },
+  {
+    id: "ach_matinal",
+    titre: "Le Matinal",
+    description: "Premier relevé entre 5h et 7h du matin",
+    emoji: "🌅",
+    condition: { type: "morning_recording", value: 1 },
+    recompense: "Brevet de l'Aurore Acoustique",
+    hidden: true,
+  },
+  {
+    id: "ach_nocturne",
+    titre: "Le Nocturne",
+    description: "10 relevés nocturnes entre 22h et 6h",
+    emoji: "🦇",
+    condition: { type: "night_recordings", value: 10 },
+    recompense: "Titre de Chercheur de l'Obscurité",
+    hidden: true,
+  },
+  {
+    id: "ach_symphonie",
+    titre: "La Symphonie",
+    description: "3 mélodies avec 5 notes ou plus chacune",
+    emoji: "🎻",
+    condition: { type: "melody_min_notes", value: 5, count: 3 },
+    recompense: "Baguette du Chef d'Orchestre Digestif",
+    hidden: true,
+  },
+  {
+    id: "ach_copieur",
+    titre: "Le Copieur",
+    description: "Enregistrer 5 fois la même note dominante",
+    emoji: "🔁",
+    condition: { type: "dominant_note_count", value: 5 },
+    recompense: "Tampon de Reproductibilité",
+    hidden: true,
+  },
+  {
+    id: "ach_arc_en_ciel",
+    titre: "L'Arc-en-ciel",
+    description: "Avoir collecté chacune des 12 notes chromatiques",
+    emoji: "🌈",
+    condition: { type: "notes_collected", value: 12 },
+    recompense: "Prisme Acoustique Complet",
+    hidden: true,
+  },
+  {
+    id: "ach_eclectique",
+    titre: "L'Éclectique",
+    description: "Renseigner 10 régimes alimentaires différents",
+    emoji: "🥗",
+    condition: { type: "distinct_alimentations_exact", value: 10 },
+    recompense: "Diplôme de Gastronomie Acoustique",
+    hidden: true,
+  },
+  {
+    id: "ach_touriste",
+    titre: "Le Touriste",
+    description: "Contribuer depuis 5 lieux distincts",
+    emoji: "🧳",
+    condition: { type: "distinct_locations", value: 5 },
+    recompense: "Passeport du Corpus Mondial",
+    hidden: true,
+  },
+  {
+    id: "ach_poete",
+    titre: "Le Poète",
+    description: "Ajouter une note personnelle sur 20 enregistrements",
+    emoji: "✒️",
+    condition: { type: "chercheur_note_count", value: 20 },
+    recompense: "Plume du Rédacteur Scientifique",
+    hidden: true,
+  },
+  {
+    id: "ach_discret",
+    titre: "Le Discret Absolu",
+    description: "Un spécimen mesuré à moins de -50 dB",
+    emoji: "🤫",
+    condition: { type: "db_below", value: -50, count: 1 },
+    recompense: "Badge du Silence Absolu",
+    hidden: true,
+  },
+  {
+    id: "ach_bombe_h",
+    titre: "La Bombe H",
+    description: "Un spécimen atteignant plus de -5 dB",
+    emoji: "💣",
+    condition: { type: "db_max", value: -5 },
+    recompense: "Médaille du Dépassement Critique",
+    hidden: true,
+  },
+  {
+    id: "ach_marathonien",
+    titre: "Le Marathonien",
+    description: "Un spécimen de plus de 10 secondes",
+    emoji: "🏃",
+    condition: { type: "duration_ms", value: 10000 },
+    recompense: "Chronomètre d'Or de l'Endurance",
+    hidden: true,
+  },
+  {
+    id: "ach_fidele",
+    titre: "Le Fidèle",
+    description: "30 jours consécutifs de contributions",
+    emoji: "💍",
+    condition: { type: "streak_days", value: 30 },
+    recompense: "Chevalier de l'Assiduité Perpétuelle",
+    hidden: true,
+  },
+  {
+    id: "ach_legendaire",
+    titre: "Le Légendaire",
+    description: "100 enregistrements au corpus",
+    emoji: "🏛️",
+    condition: { type: "recording_count", value: 100 },
+    recompense: "Statue de Marbre au Panthéon Acoustique",
+    hidden: true,
+  },
+  {
+    id: "ach_fantome",
+    titre: "Le Fantôme",
+    description: "Revenir après 30 jours d'absence",
+    emoji: "👻",
+    condition: { type: "midnight_recording", value: 0 }, // sentinel — checked differently
+    recompense: "Titre de Revenant Acoustique",
+    hidden: true,
   },
 ];
 
@@ -278,6 +423,53 @@ export function checkMissions(
         prog = Math.min(1, target > 0 ? current / target : 1);
         break;
       }
+
+      // Achievement-only condition types
+      case "midnight_recording": {
+        if (mission.condition.value === 0) { completed = false; prog = 0; break; } // sentinel (fantome)
+        current = recordings.filter((r) => {
+          if (!r.created_at) return false;
+          const h = new Date(r.created_at).getHours();
+          return h === 0;
+        }).length;
+        target = mission.condition.value;
+        completed = current >= target;
+        prog = Math.min(1, target > 0 ? current / target : 1);
+        break;
+      }
+
+      case "morning_recording": {
+        current = recordings.filter((r) => {
+          if (!r.created_at) return false;
+          const h = new Date(r.created_at).getHours();
+          return h >= 5 && h < 7;
+        }).length;
+        target = mission.condition.value;
+        completed = current >= target;
+        prog = Math.min(1, target > 0 ? current / target : 1);
+        break;
+      }
+
+      case "chercheur_note_count": {
+        const withNote = (recordings as (RecordingRow & { chercheur_note?: string | null })[])
+          .filter((r) => r.chercheur_note && r.chercheur_note.trim().length > 0).length;
+        current = withNote;
+        target = mission.condition.value;
+        completed = current >= target;
+        prog = Math.min(1, target > 0 ? current / target : 1);
+        break;
+      }
+
+      case "distinct_alimentations_exact": {
+        const alims = new Set(
+          recordings.map((r) => r.alimentation).filter((a): a is string => Boolean(a))
+        );
+        current = alims.size;
+        target = mission.condition.value;
+        completed = current >= target;
+        prog = Math.min(1, target > 0 ? current / target : 1);
+        break;
+      }
     }
 
     return { mission, completed, progress: prog, current, target };
@@ -288,4 +480,72 @@ export function checkMissions(
     .map((p) => p.mission.id);
 
   return { progress, newlyCompleted };
+}
+
+export function checkAchievements(
+  stats: PersonalStats,
+  recordings: (RecordingRow & { chercheur_note?: string | null })[],
+  previouslyCompleted: string[] = []
+): { progress: MissionProgress[]; newlyCompleted: string[] } {
+  // Reuse same logic — ACHIEVEMENTS use same condition types
+  const allProgress = checkMissions(stats, recordings as RecordingRow[], previouslyCompleted);
+  // But we evaluate against ACHIEVEMENTS list
+  const achProgress: MissionProgress[] = ACHIEVEMENTS.map((mission) => {
+    const found = allProgress.progress.find((p) => p.mission.id === mission.id);
+    // For missions not in MISSIONS list, run the check inline
+    if (found) return found;
+
+    // Re-evaluate this specific achievement
+    let current = 0, target = 1, completed = false, prog = 0;
+    const cond = mission.condition;
+
+    if (cond.type === "midnight_recording" && cond.value > 0) {
+      current = recordings.filter((r) => { const h = r.created_at ? new Date(r.created_at).getHours() : -1; return h === 0; }).length;
+      target = cond.value; completed = current >= target; prog = Math.min(1, current / target);
+    } else if (cond.type === "morning_recording") {
+      current = recordings.filter((r) => { const h = r.created_at ? new Date(r.created_at).getHours() : -1; return h >= 5 && h < 7; }).length;
+      target = cond.value; completed = current >= target; prog = Math.min(1, current / target);
+    } else if (cond.type === "night_recordings") {
+      current = recordings.filter((r) => { const h = r.created_at ? new Date(r.created_at).getHours() : -1; return h >= 22 || h < 6; }).length;
+      target = cond.value; completed = current >= target; prog = Math.min(1, current / target);
+    } else if (cond.type === "recording_count") {
+      current = stats.total; target = cond.value; completed = current >= target; prog = Math.min(1, current / target);
+    } else if (cond.type === "streak_days") {
+      current = stats.streak; target = cond.value; completed = current >= target; prog = Math.min(1, current / target);
+    } else if (cond.type === "db_max") {
+      const db = stats.db_max ?? -100; completed = db >= cond.value; prog = Math.min(1, Math.max(0, (db + 60) / (cond.value + 60))); current = Math.round(db); target = cond.value;
+    } else if (cond.type === "duration_ms") {
+      current = stats.duree_max_ms ?? 0; target = cond.value; completed = current >= target; prog = Math.min(1, current / target);
+    } else if (cond.type === "db_below") {
+      current = recordings.filter((r) => r.db_max != null && r.db_max < cond.value).length;
+      target = cond.count; completed = current >= target; prog = Math.min(1, current / target);
+    } else if (cond.type === "melody_min_notes") {
+      current = recordings.filter((r) => Array.isArray(r.sequence_notes) && r.sequence_notes.length >= cond.value).length;
+      target = cond.count; completed = current >= target; prog = Math.min(1, current / target);
+    } else if (cond.type === "notes_collected") {
+      const notes = new Set(recordings.map((r) => r.note_principale).filter(Boolean));
+      current = notes.size; target = cond.value; completed = current >= target; prog = Math.min(1, current / target);
+    } else if (cond.type === "dominant_note_count") {
+      const nm: Record<string, number> = {};
+      for (const r of recordings) if (r.note_principale) nm[r.note_principale] = (nm[r.note_principale] ?? 0) + 1;
+      current = Math.max(0, ...Object.values(nm)); target = cond.value; completed = current >= target; prog = Math.min(1, current / target);
+    } else if (cond.type === "distinct_locations") {
+      current = new Set(recordings.map((r) => r.lieu).filter(Boolean)).size;
+      target = cond.value; completed = current >= target; prog = Math.min(1, current / target);
+    } else if (cond.type === "distinct_alimentations" || cond.type === "distinct_alimentations_exact") {
+      current = new Set(recordings.map((r) => r.alimentation).filter(Boolean)).size;
+      target = cond.value; completed = current >= target; prog = Math.min(1, current / target);
+    } else if (cond.type === "chercheur_note_count") {
+      current = recordings.filter((r) => r.chercheur_note?.trim()).length;
+      target = cond.value; completed = current >= target; prog = Math.min(1, current / target);
+    }
+
+    return { mission, completed, progress: prog, current, target };
+  });
+
+  const newlyCompleted = achProgress
+    .filter((p) => p.completed && !previouslyCompleted.includes(p.mission.id))
+    .map((p) => p.mission.id);
+
+  return { progress: achProgress, newlyCompleted };
 }

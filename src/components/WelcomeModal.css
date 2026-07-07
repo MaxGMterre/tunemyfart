@@ -98,6 +98,36 @@
   margin-bottom: 0;
 }
 
+/* ── Character illustration ───────────────────── */
+.welcome-character {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 130px;
+  margin-bottom: 0.25rem;
+}
+
+.welcome-character2 {
+  position: absolute;
+  bottom: 0;
+  right: 20px;
+  font-size: 2.2rem;
+  animation: character2-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+}
+
+@keyframes character2-pop {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.welcome-auth-character {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.25rem;
+  animation: character2-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
 .welcome-title {
   font-family: var(--font-display);
   font-size: 1.5rem;

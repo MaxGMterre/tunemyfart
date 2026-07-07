@@ -259,3 +259,60 @@
   color: var(--color-ink);
   background: var(--color-paper-dark);
 }
+
+/* Feedback form */
+.settings-feedback-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.settings-fb-tabs {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.settings-fb-tabs button {
+  flex: 1;
+  background: none;
+  border: 1.5px solid rgba(201, 154, 61, 0.3);
+  border-radius: 5px;
+  padding: 0.4rem 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--color-ink-soft);
+  cursor: pointer;
+  transition: all 0.12s;
+  min-height: 36px;
+}
+
+.settings-fb-tabs button.active {
+  border-color: var(--color-brass);
+  color: var(--color-brass);
+  background: rgba(201, 154, 61, 0.1);
+}
+
+.settings-fb-textarea {
+  width: 100%;
+  background: var(--color-paper-dark);
+  border: 1.5px solid rgba(201, 154, 61, 0.3);
+  border-radius: 6px;
+  padding: 0.6rem 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-ink);
+  resize: vertical;
+  min-height: 80px;
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.settings-fb-textarea:focus {
+  border-color: var(--color-brass);
+}
+
+.settings-fb-actions {
+  display: flex;
+  gap: 0.5rem;
+}

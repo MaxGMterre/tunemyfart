@@ -19,6 +19,7 @@ import { Composer } from "./components/Composer";
 import { Profile } from "./components/Profile";
 import { SplashScreen } from "./components/SplashScreen";
 import { WelcomeModal } from "./components/WelcomeModal";
+import { track } from "./lib/analytics";
 import "./styles/tokens.css";
 import "./components/Auth.css";
 import "./components/Recorder.css";
@@ -30,6 +31,8 @@ import "./components/Profile.css";
 import "./components/WelcomeModal.css";
 import "./components/History.css";
 import "./components/Settings.css";
+import "./components/DailyChallenge.css";
+import "./components/Friends.css";
 
 // ── Dark mode ─────────────────────────────────────────────────────────────────
 
@@ -115,6 +118,10 @@ function NetworkWatcher() {
 function AppShell() {
   const { session, loading } = useAuth();
   const [tab, setTab] = useState<Tab>("analyser");
+
+  useEffect(() => {
+    track("app_open");
+  }, []);
   const [showWelcome, setShowWelcome] = useState(
     () => !localStorage.getItem(ONBOARDING_KEY)
   );
@@ -131,11 +138,18 @@ function AppShell() {
   const handleWelcomeClose = () => {
     localStorage.setItem(ONBOARDING_KEY, "true");
     setShowWelcome(false);
+    track("onboarding_completed");
   };
 
   const handleComposerUnlock = () => {
     localStorage.setItem("tmf_composer_unlocked", "true");
     setComposerUnlocked(true);
+  };
+
+  // Track tab changes
+  const handleTabChange = (t: Tab) => {
+    setTab(t);
+    track("tab_change", { tab: t });
   };
 
   const swipeHandlers = useSwipeable({
@@ -200,7 +214,7 @@ function AppShell() {
             <button
               key={t}
               className={tab === t ? "active" : ""}
-              onClick={() => setTab(t)}
+              onClick={() => handleTabChange(t)}
               aria-label={TAB_META[t].label}
               aria-current={tab === t ? "page" : undefined}
             >

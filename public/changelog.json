@@ -1,0 +1,46 @@
+[
+  {
+    "version": "0.3.0",
+    "date": "2026-07-06",
+    "title": "Sprint Titan Contenu & Viralité",
+    "changes": [
+      "Défi du jour avec récompense XP et confetti",
+      "Système d'amis PROUT-XXXX avec classement entre confrères",
+      "3 nouveaux templates de partage : Story, Poster scientifique, Diplôme",
+      "Onboarding narratif 4 écrans avec le Professeur Prout",
+      "15 succès secrets dans la fiche spécimen",
+      "Analytics anonymes opt-in",
+      "Formulaire de feedback intégré",
+      "Mode sombre / clair / automatique"
+    ]
+  },
+  {
+    "version": "0.2.0",
+    "date": "2026-06-15",
+    "title": "Sprint Titan Univers Mr.Prout",
+    "changes": [
+      "Personnage Mr.Prout en 6 poses SVG",
+      "Putois mascotte animée avec 4 états",
+      "Splash screen d'ouverture",
+      "Dialogues contextuels : 170+ messages",
+      "Roue chromatique NoteCircle",
+      "Compositeur avec piano et roue chromatique",
+      "Champs humeur, social, note chercheur",
+      "Modal de récompense missions avec confetti",
+      "Thème sombre"
+    ]
+  },
+  {
+    "version": "0.1.0",
+    "date": "2026-05-01",
+    "title": "Lancement du Laboratoire",
+    "changes": [
+      "Analyseur acoustique temps réel",
+      "Détection de note et mesure dB SPL",
+      "Classements mondiaux par catégorie",
+      "Fiche spécimen avec statistiques personnelles",
+      "Missions de progression",
+      "Authentification anonyme ou e-mail"
+    ]
+  }
+]

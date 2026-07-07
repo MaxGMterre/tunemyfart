@@ -4,6 +4,8 @@ import { useToast } from "./ui/Toast";
 import { useTheme } from "../App";
 import type { ThemeMode } from "../App";
 import { SOUNDS_PREF_KEY, HAPTICS_PREF_KEY } from "../lib/constants";
+import { setAnalyticsEnabled, isAnalyticsEnabled } from "../lib/analytics";
+import { submitFeedback } from "../lib/supabase";
 
 interface Props {
   onClose: () => void;
@@ -20,6 +22,11 @@ export function Settings({ onClose }: Props) {
     () => localStorage.getItem(HAPTICS_PREF_KEY) !== "false"
   );
   const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [analytics, setAnalytics] = useState(() => isAnalyticsEnabled());
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [fbType, setFbType] = useState<"bug" | "suggestion">("bug");
+  const [fbDesc, setFbDesc] = useState("");
+  const [fbSending, setFbSending] = useState(false);
   const { theme, setTheme } = useTheme();
 
   // Persist prefs immediately on change
@@ -29,6 +36,26 @@ export function Settings({ onClose }: Props) {
   useEffect(() => {
     localStorage.setItem(HAPTICS_PREF_KEY, haptics ? "true" : "false");
   }, [haptics]);
+
+  const handleAnalyticsToggle = (val: boolean) => {
+    setAnalytics(val);
+    setAnalyticsEnabled(val);
+  };
+
+  const handleSendFeedback = async () => {
+    if (!fbDesc.trim()) return;
+    setFbSending(true);
+    try {
+      await submitFeedback({ user_id: user?.id, type: fbType, description: fbDesc });
+      showToast("Merci pour ton retour !", "success");
+      setFbDesc("");
+      setShowFeedback(false);
+    } catch {
+      showToast("Erreur d'envoi — réessaie plus tard", "error");
+    } finally {
+      setFbSending(false);
+    }
+  };
 
   const handleExportData = () => {
     const data = {
@@ -151,6 +178,28 @@ export function Settings({ onClose }: Props) {
             </div>
           </section>
 
+          {/* Analytics */}
+          <section className="settings-section">
+            <div className="settings-section-title">Analytics</div>
+            <div className="settings-row settings-row--toggle">
+              <div>
+                <span className="settings-row-label">Données d'usage anonymes</span>
+                <span className="settings-row-hint">
+                  Aide à améliorer l'appli — aucune donnée personnelle
+                </span>
+              </div>
+              <button
+                className={`settings-toggle${analytics ? " on" : ""}`}
+                onClick={() => handleAnalyticsToggle(!analytics)}
+                role="switch"
+                aria-checked={analytics}
+                aria-label="Analytics"
+              >
+                <span className="toggle-knob" />
+              </button>
+            </div>
+          </section>
+
           {/* Confidentialité */}
           <section className="settings-section">
             <div className="settings-section-title">Confidentialité</div>
@@ -218,18 +267,42 @@ export function Settings({ onClose }: Props) {
           {/* Support */}
           <section className="settings-section">
             <div className="settings-section-title">Support</div>
-            <a
-              className="settings-link-btn"
-              href="mailto:contact@tunemyfart.app?subject=Bug%20report"
-            >
-              Signaler un bug
-            </a>
-            <a
-              className="settings-link-btn"
-              href="mailto:contact@tunemyfart.app?subject=Suggestion"
-            >
-              Suggérer une amélioration
-            </a>
+            {!showFeedback ? (
+              <>
+                <button className="settings-link-btn" onClick={() => { setFbType("bug"); setShowFeedback(true); }}>
+                  Signaler un bug
+                </button>
+                <button className="settings-link-btn" onClick={() => { setFbType("suggestion"); setShowFeedback(true); }}>
+                  Suggérer une amélioration
+                </button>
+              </>
+            ) : (
+              <div className="settings-feedback-form">
+                <div className="settings-fb-tabs">
+                  <button className={fbType === "bug" ? "active" : ""} onClick={() => setFbType("bug")}>🐛 Bug</button>
+                  <button className={fbType === "suggestion" ? "active" : ""} onClick={() => setFbType("suggestion")}>💡 Suggestion</button>
+                </div>
+                <textarea
+                  className="settings-fb-textarea"
+                  value={fbDesc}
+                  onChange={(e) => setFbDesc(e.target.value)}
+                  placeholder={fbType === "bug" ? "Décris le problème observé…" : "Décris ton idée d'amélioration…"}
+                  rows={4}
+                />
+                <div className="settings-fb-actions">
+                  <button
+                    className="settings-link-btn"
+                    onClick={handleSendFeedback}
+                    disabled={fbSending || !fbDesc.trim()}
+                  >
+                    {fbSending ? "Envoi…" : "Envoyer"}
+                  </button>
+                  <button className="settings-link-btn" onClick={() => setShowFeedback(false)}>
+                    Annuler
+                  </button>
+                </div>
+              </div>
+            )}
           </section>
         </div>
       </div>

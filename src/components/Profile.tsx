@@ -8,6 +8,11 @@ import {
 import type { ProfilePayload, PersonalStats } from "../lib/supabase";
 import { useAuth } from "../lib/useAuth";
 import { Settings } from "./Settings";
+import { Friends } from "./Friends";
+import { DailyChallenge, XpLevelBar } from "./DailyChallenge";
+import { ACHIEVEMENTS } from "../lib/missions";
+import "./DailyChallenge.css";
+import "./Friends.css";
 
 const AVATARS = ["💨", "🐛", "🦨", "🎵", "🔬", "💥"];
 
@@ -64,8 +69,11 @@ export function Profile({ onTabChange: _onTabChange }: ProfileProps = {}) {
   const userId = user?.id ?? getUserId();
   const [editing, setEditing] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showFriends, setShowFriends] = useState(false);
+  const [achievementsOpen, setAchievementsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [profileXp, setProfileXp] = useState(0);
   const [stats, setStats] = useState<PersonalStats | null>(null);
   const [worldRanks, setWorldRanks] = useState<Record<string, number>>({});
   const [form, setForm] = useState<FormState>({
@@ -105,6 +113,10 @@ export function Profile({ onTabChange: _onTabChange }: ProfileProps = {}) {
             poids: profile.poids?.toString() ?? "",
             taille: profile.taille?.toString() ?? "",
           });
+          const anyProfile = profile as unknown as Record<string, unknown>;
+          if (anyProfile.xp != null) {
+            setProfileXp(Number(anyProfile.xp) || 0);
+          }
         } else {
           setEditing(true);
         }
@@ -182,12 +194,45 @@ export function Profile({ onTabChange: _onTabChange }: ProfileProps = {}) {
   const badge = getBadge(stats?.total ?? 0);
   const nextBadge = BADGE_LEVELS.find((b) => b.min > (stats?.total ?? 0));
 
+  // Read completed achievements from localStorage
+  const completedMissionIds = JSON.parse(localStorage.getItem("tmf_completed_missions") ?? "[]") as string[];
+  const unlockedAchievements = ACHIEVEMENTS.filter((a) => completedMissionIds.includes(a.id));
+
   if (loading) {
     return <p className="status-text">Chargement de la fiche spécimen…</p>;
   }
 
+  if (showFriends) {
+    return (
+      <div className="profile-panel">
+        <button className="edit-btn" onClick={() => setShowFriends(false)} style={{ marginBottom: "1rem" }}>
+          ← Retour
+        </button>
+        <Friends />
+      </div>
+    );
+  }
+
   return (
     <div className="profile-panel">
+      {/* Daily challenge banner */}
+      <DailyChallenge onXpUpdated={() => {
+        // Reload XP from profile
+        getProfile(userId).then((p) => {
+          const anyP = p as unknown as Record<string, unknown> | null;
+          if (anyP?.xp != null) {
+            setProfileXp(Number(anyP.xp) || 0);
+          }
+        }).catch(() => {});
+      }} />
+
+      {/* XP / Level bar */}
+      {profileXp > 0 && (
+        <div className="profile-section">
+          <XpLevelBar xp={profileXp} />
+        </div>
+      )}
+
       {/* Header */}
       <div className="profile-header">
         <div className="profile-avatar">{form.avatar || "🦨"}</div>
@@ -406,6 +451,45 @@ export function Profile({ onTabChange: _onTabChange }: ProfileProps = {}) {
             <span className="record-label">Corpus total</span>
           </div>
         </div>
+      </div>
+
+      {/* Succès secrets */}
+      <div className="profile-section">
+        <button
+          className="section-title section-title--toggle"
+          onClick={() => setAchievementsOpen((o) => !o)}
+          aria-expanded={achievementsOpen}
+        >
+          <span>Succès secrets</span>
+          <span className="achievements-count">
+            {unlockedAchievements.length}/{ACHIEVEMENTS.length} {achievementsOpen ? "▲" : "▼"}
+          </span>
+        </button>
+        {achievementsOpen && (
+          <div className="achievements-grid">
+            {ACHIEVEMENTS.map((a) => {
+              const unlocked = completedMissionIds.includes(a.id);
+              return (
+                <div
+                  key={a.id}
+                  className={`achievement-chip${unlocked ? " achievement-chip--unlocked" : ""}`}
+                  title={unlocked ? `${a.titre}: ${a.description}` : "???"}
+                >
+                  <span className="achievement-emoji">{unlocked ? a.emoji : "🔒"}</span>
+                  <span className="achievement-name">{unlocked ? a.titre : "???"}</span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Confrères */}
+      <div className="profile-section">
+        <div className="section-title">Réseau social du laboratoire</div>
+        <button className="settings-link-btn" onClick={() => setShowFriends(true)}>
+          Gérer mes confrères →
+        </button>
       </div>
 
       {/* Rang mondial */}

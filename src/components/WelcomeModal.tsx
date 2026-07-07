@@ -1,5 +1,11 @@
 import { useState } from "react";
 import { useAuth } from "../lib/useAuth";
+import {
+  MrProut,
+  MrProutExcited,
+  MrProutThinking,
+  MrProutWriting,
+} from "../assets/characters";
 
 type Mode = "onboarding" | "auth";
 type AuthTab = "signup" | "login";
@@ -10,44 +16,43 @@ interface Props {
 
 const PAGES = [
   {
-    logo: "🦨",
+    character: <MrProutExcited size={130} />,
     title: "Bienvenue au Laboratoire",
-    sub: "Instrument scientifique du phénomène gazeux",
-    body: "Tunemyfart mesure, analyse et classe tes exploits acoustiques avec la rigueur d'un laboratoire des années 70.",
+    sub: "Prof. Prout vous reçoit",
+    body: "Je suis le Professeur Prout, et j'ai consacré ma vie à l'étude acoustique des phénomènes gazeux. Mon instrument va analyser, classifier et archiver chacun de tes spécimens avec la rigueur d'un vrai laboratoire.",
+    cta: "Fascinant →",
   },
   {
-    logo: null,
-    title: "Protocoles disponibles",
-    sub: "Équipements du laboratoire",
-    body: null,
+    character: <MrProut size={130} />,
+    character2: "🦨",
+    title: "Mon assistant : Putois",
+    sub: "Partenaire de terrain depuis 1987",
+    body: "Putois détecte les émissions avec une précision olfactive hors du commun. Il te guidera pendant l'enregistrement et te soufflera des conseils scientifiques… à sa façon.",
+    cta: "Je comprends →",
+  },
+  {
+    character: <MrProutThinking size={130} />,
+    title: "L'Anal-yser",
+    sub: "Équipement principal du laboratoire",
     features: [
-      {
-        icon: "🎙️",
-        label: "L'Anal-yser",
-        desc: "Oscilloscope live, détection de note et mesure en dB SPL",
-      },
-      {
-        icon: "📊",
-        label: "Les Registres",
-        desc: "Classements des confrères par intensité, durée, fréquence",
-      },
-      {
-        icon: "🎹",
-        label: "Le Clavier",
-        desc: "Rejoue tes meilleurs relevés en séquence chromatique",
-      },
+      { icon: "🎙️", label: "Oscilloscope live", desc: "Forme d'onde en temps réel" },
+      { icon: "🎵", label: "Détection de note", desc: "Chromagramme et fréquence fondamentale" },
+      { icon: "💥", label: "Mesure dB SPL", desc: "Intensité calibrée par rapport à -90 dB" },
+      { icon: "📊", label: "Classements", desc: "Compare-toi aux confrères du monde entier" },
     ],
+    cta: "Allons-y →",
   },
   {
-    logo: "🔬",
-    title: "Prêt à contribuer à la science ?",
-    sub: "Crée un compte pour préserver ton corpus",
-    body: "Ou continue sans compte — tu pourras t'inscrire depuis ta fiche spécimen.",
+    character: <MrProutWriting size={130} />,
+    title: "Premier défi scientifique",
+    sub: "Mission d'initiation du laboratoire",
+    body: "Avant de contribuer aux registres mondiaux, tu dois réaliser ton premier enregistrement. Clique sur l'onglet 🎙️ et appuie sur le bouton rouge. La science attend.",
+    cta: null, // last page — shows auth CTAs
   },
 ];
 
 export function WelcomeModal({ onClose }: Props) {
-  const { signInWithEmail, signUpWithEmail } = useAuth();
+  const { signInWithEmail, signUpWithEmail, signInAnonymously } = useAuth();
   const [mode, setMode] = useState<Mode>("onboarding");
   const [page, setPage] = useState(0);
   const [authTab, setAuthTab] = useState<AuthTab>("signup");
@@ -72,10 +77,19 @@ export function WelcomeModal({ onClose }: Props) {
     }
   };
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStartX(e.touches[0].clientX);
+  const handleAnon = async () => {
+    setLoading(true);
+    try {
+      await signInAnonymously();
+      onClose();
+    } catch {
+      onClose();
+    } finally {
+      setLoading(false);
+    }
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => setTouchStartX(e.touches[0].clientX);
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (touchStartX === null) return;
     const dx = e.changedTouches[0].clientX - touchStartX;
@@ -93,40 +107,18 @@ export function WelcomeModal({ onClose }: Props) {
     return (
       <div className="welcome-overlay" onClick={handleOverlayClick}>
         <div className="welcome-modal">
-          <button
-            className="welcome-close"
-            onClick={onClose}
-            aria-label="Fermer"
-          >
-            ✕
-          </button>
-          <button
-            className="welcome-back"
-            onClick={() => {
-              setMode("onboarding");
-              setError(null);
-            }}
-          >
+          <button className="welcome-close" onClick={onClose} aria-label="Fermer">✕</button>
+          <button className="welcome-back" onClick={() => { setMode("onboarding"); setError(null); }}>
             ← Retour
           </button>
-          <div className="welcome-logo welcome-logo--sm">🦨</div>
+          <div className="welcome-auth-character" aria-hidden="true">
+            <MrProutWriting size={90} />
+          </div>
           <div className="welcome-auth-tabs">
-            <button
-              className={authTab === "signup" ? "active" : ""}
-              onClick={() => {
-                setAuthTab("signup");
-                setError(null);
-              }}
-            >
+            <button className={authTab === "signup" ? "active" : ""} onClick={() => { setAuthTab("signup"); setError(null); }}>
               Inscription
             </button>
-            <button
-              className={authTab === "login" ? "active" : ""}
-              onClick={() => {
-                setAuthTab("login");
-                setError(null);
-              }}
-            >
+            <button className={authTab === "login" ? "active" : ""} onClick={() => { setAuthTab("login"); setError(null); }}>
               Connexion
             </button>
           </div>
@@ -149,12 +141,8 @@ export function WelcomeModal({ onClose }: Props) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                autoComplete={
-                  authTab === "login" ? "current-password" : "new-password"
-                }
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleAuth();
-                }}
+                autoComplete={authTab === "login" ? "current-password" : "new-password"}
+                onKeyDown={(e) => { if (e.key === "Enter") handleAuth(); }}
               />
             </label>
             {error && <p className="welcome-error">{error}</p>}
@@ -163,11 +151,7 @@ export function WelcomeModal({ onClose }: Props) {
               onClick={handleAuth}
               disabled={loading || !email || !password}
             >
-              {loading
-                ? "Identification…"
-                : authTab === "login"
-                ? "Accéder au laboratoire"
-                : "Créer mon dossier"}
+              {loading ? "Identification…" : authTab === "login" ? "Accéder au laboratoire" : "Créer mon dossier"}
             </button>
           </div>
         </div>
@@ -176,6 +160,7 @@ export function WelcomeModal({ onClose }: Props) {
   }
 
   const currentPage = PAGES[page];
+  const isLast = page === PAGES.length - 1;
 
   return (
     <div className="welcome-overlay" onClick={handleOverlayClick}>
@@ -184,19 +169,23 @@ export function WelcomeModal({ onClose }: Props) {
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <button className="welcome-close" onClick={onClose} aria-label="Fermer">
-          ✕
-        </button>
+        <button className="welcome-close" onClick={onClose} aria-label="Fermer">✕</button>
 
         <div className="welcome-page" key={page}>
-          {currentPage.logo && (
-            <div className="welcome-logo">{currentPage.logo}</div>
-          )}
+          <div className="welcome-character" aria-hidden="true">
+            {currentPage.character}
+            {currentPage.character2 && (
+              <span className="welcome-character2">{currentPage.character2}</span>
+            )}
+          </div>
+
           <h2 className="welcome-title">{currentPage.title}</h2>
           <p className="welcome-sub">{currentPage.sub}</p>
+
           {currentPage.body && (
             <p className="welcome-body">{currentPage.body}</p>
           )}
+
           {currentPage.features && (
             <div className="welcome-features">
               {currentPage.features.map((f) => (
@@ -212,7 +201,6 @@ export function WelcomeModal({ onClose }: Props) {
           )}
         </div>
 
-        {/* Pagination dots */}
         <div className="welcome-dots">
           {PAGES.map((_, i) => (
             <button
@@ -224,26 +212,19 @@ export function WelcomeModal({ onClose }: Props) {
           ))}
         </div>
 
-        {/* Navigation / CTA */}
-        {page < PAGES.length - 1 ? (
-          <button
-            className="welcome-btn-primary"
-            onClick={() => setPage((p) => p + 1)}
-          >
-            Suivant →
-          </button>
-        ) : (
+        {isLast ? (
           <>
-            <button
-              className="welcome-btn-primary"
-              onClick={() => setMode("auth")}
-            >
+            <button className="welcome-btn-primary" onClick={() => setMode("auth")}>
               Ouvrir un dossier au laboratoire
             </button>
-            <button className="welcome-btn-anon" onClick={onClose}>
-              Entrer comme observateur →
+            <button className="welcome-btn-anon" onClick={handleAnon} disabled={loading}>
+              {loading ? "Connexion…" : "Entrer comme observateur →"}
             </button>
           </>
+        ) : (
+          <button className="welcome-btn-primary" onClick={() => setPage((p) => p + 1)}>
+            {currentPage.cta ?? "Suivant →"}
+          </button>
         )}
       </div>
     </div>

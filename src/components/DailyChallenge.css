@@ -1,0 +1,194 @@
+.daily-challenge-banner {
+  position: relative;
+  background: linear-gradient(135deg, var(--color-paper-dark) 0%, var(--color-paper) 100%);
+  border: 2px solid var(--color-brass);
+  border-radius: 10px;
+  padding: 1rem 1.125rem;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.daily-challenge-banner--done {
+  border-color: #39FF14;
+}
+
+.dc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.dc-label {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-brass);
+}
+
+.dc-xp-badge {
+  background: var(--color-brass);
+  color: var(--color-paper-dark, #1a1610);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+.dc-description {
+  font-size: 0.9rem;
+  color: var(--color-ink);
+  margin: 0 0 0.75rem;
+  line-height: 1.4;
+}
+
+.dc-progress-wrap {
+  margin-bottom: 0.75rem;
+}
+
+.dc-progress-bar {
+  height: 6px;
+  background: rgba(201, 154, 61, 0.18);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.dc-progress-fill {
+  height: 100%;
+  background: var(--color-brass);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.dc-claim-btn {
+  width: 100%;
+  background: var(--color-brass);
+  color: var(--color-paper-dark, #1a1610);
+  border: none;
+  border-radius: 6px;
+  padding: 0.55rem 1rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.dc-claim-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.dc-claim-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.dc-done {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #39FF14;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.dc-done-check {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #39FF14;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+/* Confetti */
+.dc-confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.dc-confetti-piece {
+  position: absolute;
+  top: -10px;
+  border-radius: 2px;
+  animation: dc-fall linear both;
+}
+
+@keyframes dc-fall {
+  from { transform: translateY(0) rotate(0deg); opacity: 1; }
+  to   { transform: translateY(120px) rotate(720deg); opacity: 0; }
+}
+
+/* XP Level Bar */
+.xp-level-bar {
+  width: 100%;
+}
+
+.xp-level-bar--normal {
+  padding: 0.5rem 0;
+}
+
+.xp-level-bar--compact {
+  padding: 0.25rem 0;
+}
+
+.xp-level-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.35rem;
+}
+
+.xp-level-num {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-brass);
+}
+
+.xp-level-bar--compact .xp-level-num {
+  font-size: 0.85rem;
+}
+
+.xp-amount {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-ink-soft);
+}
+
+.xp-bar-track {
+  height: 8px;
+  background: rgba(201, 154, 61, 0.15);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.xp-level-bar--compact .xp-bar-track {
+  height: 5px;
+}
+
+.xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-brass) 0%, #e8c060 100%);
+  border-radius: 4px;
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.xp-next-label {
+  margin-top: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--color-ink-soft);
+  text-align: right;
+}

@@ -65,7 +65,7 @@ export type LeaderboardCategory =
   | "freq_min"
   | "notes_count";
 export type LeaderboardPeriod = "day" | "week" | "month" | "year" | "all";
-export type LeaderboardScope = "global" | "country" | "city" | "personal";
+export type LeaderboardScope = "global" | "country" | "city" | "personal" | "friends";
 
 export interface LeaderboardRow {
   id: string;
@@ -137,6 +137,18 @@ export async function fetchLeaderboardByPeriod(
   // Scope filter
   if (scope === "personal" && filters.userId) {
     query = query.eq("user_id", filters.userId);
+  } else if (scope === "friends" && filters.userId) {
+    // Fetch friend IDs first, then filter
+    const { data: ships } = await supabase
+      .from("friendships")
+      .select("user_a, user_b")
+      .or(`user_a.eq.${filters.userId},user_b.eq.${filters.userId}`);
+    const friendIds = (ships ?? []).map((s) =>
+      s.user_a === filters.userId ? s.user_b : s.user_a
+    );
+    // Include self
+    const ids = [...friendIds, filters.userId];
+    query = query.in("user_id", ids);
   }
 
   const { data, error } = await query;
@@ -475,5 +487,80 @@ export async function fetchUserCompositions(
 
 export async function deleteComposition(id: string): Promise<void> {
   const { error } = await supabase.from("compositions").delete().eq("id", id);
+  if (error) throw error;
+}
+
+// ── Friends ────────────────────────────────────────────────────────────────────
+
+function generateCode(userId: string): string {
+  let hash = 0;
+  for (const c of userId) hash = (hash * 31 + c.charCodeAt(0)) >>> 0;
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "";
+  let h = hash;
+  for (let i = 0; i < 4; i++) { code += chars[h % chars.length]; h = Math.floor(h / chars.length); }
+  return `PROUT-${code}`;
+}
+
+export async function getOrCreateFriendCode(userId: string): Promise<string> {
+  const { data } = await supabase.from("friend_codes").select("code").eq("user_id", userId).maybeSingle();
+  if (data?.code) return data.code;
+  const code = generateCode(userId);
+  await supabase.from("friend_codes").upsert({ user_id: userId, code }, { onConflict: "user_id" });
+  return code;
+}
+
+export interface FriendInfo {
+  user_id: string;
+  pseudo: string | null;
+  avatar: string;
+  level: number;
+  xp: number;
+  db_max: number | null;
+}
+
+export async function addFriendByCode(myUserId: string, code: string): Promise<void> {
+  const { data: fc, error: fcErr } = await supabase.from("friend_codes").select("user_id").eq("code", code.toUpperCase()).maybeSingle();
+  if (fcErr || !fc) throw new Error("Code ami introuvable");
+  if (fc.user_id === myUserId) throw new Error("Tu ne peux pas t'ajouter toi-même !");
+  const [a, b] = [myUserId, fc.user_id].sort();
+  const { error } = await supabase.from("friendships").insert({ user_a: a, user_b: b });
+  if (error) throw new Error("Déjà amis ou erreur");
+}
+
+export async function removeFriend(myUserId: string, friendId: string): Promise<void> {
+  const [a, b] = [myUserId, friendId].sort();
+  await supabase.from("friendships").delete().eq("user_a", a).eq("user_b", b);
+}
+
+export async function getFriends(userId: string): Promise<FriendInfo[]> {
+  const { data: ships } = await supabase.from("friendships").select("user_a, user_b").or(`user_a.eq.${userId},user_b.eq.${userId}`);
+  if (!ships || ships.length === 0) return [];
+  const friendIds = ships.map((s) => (s.user_a === userId ? s.user_b : s.user_a));
+  const { data: profiles } = await supabase.from("profiles").select("id, pseudo, avatar, level, xp").in("id", friendIds);
+  const { data: recs } = await supabase.from("recordings").select("user_id, db_max").in("user_id", friendIds).order("db_max", { ascending: false });
+  return (profiles ?? []).map((p) => {
+    const bestRec = recs?.find((r) => r.user_id === p.id);
+    return { user_id: p.id, pseudo: p.pseudo, avatar: p.avatar ?? "🦨", level: p.level ?? 1, xp: p.xp ?? 0, db_max: bestRec?.db_max ?? null };
+  });
+}
+
+// ── Feedback ───────────────────────────────────────────────────────────────────
+
+export interface FeedbackPayload {
+  user_id?: string;
+  type: "bug" | "suggestion";
+  severity?: "blocking" | "annoying" | "cosmetic";
+  description: string;
+  device_info?: string;
+  app_version?: string;
+}
+
+export async function submitFeedback(payload: FeedbackPayload): Promise<void> {
+  const { error } = await supabase.from("feedback").insert({
+    ...payload,
+    device_info: payload.device_info ?? navigator.userAgent,
+    app_version: import.meta.env.VITE_APP_VERSION ?? "1.0.0",
+  });
   if (error) throw error;
 }
