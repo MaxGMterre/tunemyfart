@@ -89,11 +89,14 @@ export function TodayDashboard({ onGoToAnalyser, onGoToMissions }: TodayDashboar
         )}
       </div>
 
-      {/* Grand bouton Analyser */}
-      <button className="today-cta" onClick={onGoToAnalyser}>
-        <span className="today-cta-icon">🎙</span>
-        <span className="today-cta-label">Nouveau relevé</span>
-      </button>
+      {/* Grand CTA central */}
+      <div className="today-cta-section">
+        <button className="today-cta-giant" onClick={onGoToAnalyser}>
+          <span className="today-cta-giant-icon">🎙</span>
+          <span className="today-cta-giant-label">Nouveau relevé</span>
+          <span className="today-cta-giant-sub">Analyser mon prout</span>
+        </button>
+      </div>
 
       {/* Missions */}
       <button className="today-missions-link" onClick={onGoToMissions}>

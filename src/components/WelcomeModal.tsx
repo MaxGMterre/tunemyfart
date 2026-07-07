@@ -7,20 +7,6 @@ import {
   MrProutWriting,
 } from "../assets/characters";
 
-const PET_NAMES = [
-  "Popcorn", "Ficelle", "Nougat", "Truffe", "Waffle", "Biscuit",
-  "Fumée", "Pétard", "Zéphyr", "Maestro", "Baron", "Duchesse",
-  "Rondelle", "Galette", "Sifflet", "Tonnerre", "Brindille", "Velours",
-  "Fougère", "Cracotte",
-];
-
-const petName =
-  sessionStorage.getItem("tmf_pet_name") ??
-  (() => {
-    const n = PET_NAMES[Math.floor(Math.random() * PET_NAMES.length)];
-    sessionStorage.setItem("tmf_pet_name", n);
-    return n;
-  })();
 
 type Mode = "onboarding" | "auth";
 type AuthTab = "signup" | "login";
@@ -193,13 +179,6 @@ export function WelcomeModal({ onClose }: Props) {
               <span className="welcome-character2">{currentPage.character2}</span>
             )}
           </div>
-          {page === 1 && (
-            <div className="welcome-pet-name">
-              <span className="pet-name-label">Son nom :</span>
-              <span className="pet-name-value">{petName}</span>
-            </div>
-          )}
-
           <h2 className="welcome-title">{currentPage.title}</h2>
           <p className="welcome-sub">{currentPage.sub}</p>
 

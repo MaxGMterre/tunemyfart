@@ -32,7 +32,7 @@ export class ErrorBoundary extends Component<Props, State> {
       <div className="error-boundary">
         <div className="error-boundary-inner">
           <div className="eb-illustration" aria-hidden="true">
-            {/* Mr. Prout perplexe avec loupe — SVG inline */}
+            {/* Pr. Prout perplexe avec loupe — SVG inline */}
             <svg viewBox="0 0 120 140" width="120" height="140" fill="none" xmlns="http://www.w3.org/2000/svg">
               {/* Corps */}
               <ellipse cx="60" cy="95" rx="28" ry="35" fill="#F5EDD6" stroke="#1B2A41" strokeWidth="1.5"/>

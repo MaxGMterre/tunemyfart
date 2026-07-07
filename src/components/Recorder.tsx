@@ -16,6 +16,8 @@ import {
   pickRandom,
 } from "./ProutDialogue";
 import { SFX } from "../lib/soundEffects";
+import { generateWeaponFromRecording, saveWeapon } from "../lib/weapons";
+import { useToast } from "./ui/Toast";
 import "./Recorder.css";
 
 // ── Helpers ──────────────────────────────────────────────
@@ -168,6 +170,7 @@ export function Recorder() {
     liveNoteRef.current = liveNote;
   }, [liveNote]);
   const { user } = useAuth();
+  const { showToast } = useToast();
 
   // Sync long mode → setMaxDuration
   useEffect(() => {
@@ -426,7 +429,7 @@ export function Recorder() {
       .map((n) => n.frequency)
       .filter((f) => f > 0 && isFinite(f));
     try {
-      await saveRecording({
+      const savedData = await saveRecording({
         audio_url,
         db_max: result.dbMax,
         db_avg: result.dbAvg,
@@ -452,6 +455,20 @@ export function Recorder() {
       setSaved(true);
       SFX.success();
       speak("Relevé certifié — versé au corpus.", "center");
+      // Génération asynchrone de l'arme — non-bloquant
+      if (user) {
+        const weaponInput = {
+          id: savedData?.id,
+          db_max: result.dbMax,
+          duree_ms: result.durationMs,
+          notes_count: result.sequenceNotes?.length ?? 0,
+          note_principale: result.notePrincipale,
+        };
+        const weapon = generateWeaponFromRecording(weaponInput);
+        saveWeapon(user.id, weapon).then((saved) => {
+          if (saved) showToast(`⚔️ ${saved.name} (${saved.rarity})`, "success");
+        }).catch(() => {});
+      }
     } catch {
       setSaveError(
         "Sauvegarde impossible — vérifie ta configuration Supabase (.env) et que tu es connecté."
@@ -668,11 +685,12 @@ export function Recorder() {
             </span>
           </div>
           <button
-            className="rec-btn"
+            className="rec-btn rec-btn-giant"
             onClick={handleStart}
             aria-label="Démarrer l'analyse"
           >
-            REC
+            <span className="rec-btn-giant-icon">🎙</span>
+            <span className="rec-btn-giant-label">{isRecording ? "Arrêter" : "REC"}</span>
           </button>
         </div>
       )}

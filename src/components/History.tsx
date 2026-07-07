@@ -4,6 +4,7 @@ import type { FullRecording } from "../lib/supabase";
 import type { RecordingResult } from "../lib/useRecorder";
 import { useAuth } from "../lib/useAuth";
 import { useToast } from "./ui/Toast";
+import { generateWeaponFromRecording, saveWeapon } from "../lib/weapons";
 import { Loading } from "./ui/Loading";
 import { EmptyState as EmptyStateSimple } from "./ui/EmptyState";
 import { EmptyState } from "./EmptyState";
@@ -143,6 +144,19 @@ export function History({
   useEffect(() => {
     load();
   }, [load]);
+
+  const handleCreateWeapon = async (rec: FullRecording) => {
+    if (!user) return;
+    const weapon = generateWeaponFromRecording({
+      id: rec.id,
+      db_max: rec.db_max,
+      duree_ms: rec.duree_ms,
+      notes_count: rec.sequence_notes?.length ?? 0,
+      note_principale: rec.note_principale,
+    });
+    const saved = await saveWeapon(user.id, weapon);
+    if (saved) showToast(`⚔️ ${saved.name} créée !`, "success");
+  };
 
   const handleDelete = async (id: string) => {
     try {
@@ -350,6 +364,14 @@ export function History({
                   aria-label="Partager ce relevé"
                 >
                   🦨
+                </button>
+                <button
+                  className="history-action-btn"
+                  onClick={() => handleCreateWeapon(rec)}
+                  aria-label="Créer une arme depuis ce relevé"
+                  title="Générer une arme"
+                >
+                  ⚔️
                 </button>
                 {deleteConfirm === rec.id ? (
                   <>

@@ -16,3 +16,56 @@
 .today-feed-pseudo { font-family: var(--font-mono); font-size: 0.7rem; flex: 1; }
 .today-feed-note { font-family: var(--font-mono); font-size: 0.7rem; color: var(--color-brass); }
 .today-feed-db { font-family: var(--font-mono); font-size: 0.65rem; color: var(--color-ink-soft); }
+
+/* ── Grand CTA section ─────────────────────────────────── */
+.today-cta-section { display: flex; justify-content: center; padding: 0.8rem 0; }
+.today-cta-giant {
+  width: 155px; height: 155px;
+  border-radius: 50%;
+  border: 4px solid #1D1D1F;
+  background: radial-gradient(circle at 35% 35%, #FF6B35, #E63946);
+  box-shadow: 8px 8px 0px 0px #1D1D1F;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: transform 100ms ease, box-shadow 100ms ease;
+  animation: subtle-bounce 2.5s ease-in-out infinite;
+  -webkit-tap-highlight-color: transparent;
+  gap: 0.1rem;
+  color: white;
+}
+.today-cta-giant:active {
+  transform: translate(8px, 8px);
+  box-shadow: 0px 0px 0px 0px #1D1D1F;
+  animation: none;
+}
+.today-cta-giant-icon  { font-size: 2.4rem; line-height: 1; }
+.today-cta-giant-label { font-family: var(--font-display); font-weight: 900; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; }
+.today-cta-giant-sub   { font-family: var(--font-mono); font-size: 0.5rem; color: rgba(255,255,255,0.75); }
+
+/* ── Recap cards cartoon ─────────────────────────────── */
+.today-recap-card {
+  background: #FFEDCC !important;
+  border: 2px solid #1D1D1F !important;
+  box-shadow: 3px 3px 0px 0px #1D1D1F !important;
+}
+.today-recap-value { color: #FF6B35 !important; }
+
+/* ── Missions link cartoon ────────────────────────────── */
+.today-missions-link {
+  background: transparent !important;
+  border: 2px solid #1D1D1F !important;
+  border-radius: 8px !important;
+  font-family: var(--font-mono) !important;
+  font-size: 0.65rem !important;
+  color: #1D1D1F !important;
+  cursor: pointer !important;
+  text-align: center !important;
+  padding: 0.5rem 1rem !important;
+  box-shadow: 2px 2px 0px 0px #1D1D1F !important;
+  display: block !important;
+  transition: transform 100ms !important;
+}
+.today-missions-link:active {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 0 0 0 0 #1D1D1F !important;
+}

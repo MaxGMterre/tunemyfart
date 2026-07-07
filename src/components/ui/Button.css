@@ -1,168 +1,50 @@
-.ui-btn {
+.btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  border-radius: 4px;
-  font-family: var(--font-mono);
+  font-family: var(--font-display, 'Fraunces', serif);
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.03em;
+  border: 3px solid var(--color-border, #1D1D1F);
+  border-radius: 12px;
   cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
+  transition: transform 100ms ease, box-shadow 100ms ease;
+  box-shadow: var(--shadow-cartoon, 4px 4px 0px 0px #1D1D1F);
   position: relative;
-  overflow: hidden;
-  transition: transform 0.1s ease, box-shadow 0.1s ease, filter 0.1s ease;
-  border: none;
-}
-
-/* Ripple */
-.ui-btn::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, transparent 70%);
-  opacity: 0;
-  transform: scale(0);
-  transition: opacity 0.3s ease, transform 0.35s ease;
-  pointer-events: none;
-}
-
-.ui-btn:active::after {
-  opacity: 1;
-  transform: scale(2.5);
-  transition: opacity 0s, transform 0s;
-}
-
-.ui-btn:disabled {
-  opacity: 0.42;
-  cursor: not-allowed;
-  pointer-events: none;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 /* Sizes */
-.ui-btn--sm {
-  font-size: 0.62rem;
-  padding: 0.35rem 0.8rem;
-  min-height: 32px;
-}
-.ui-btn--md {
-  font-size: 0.72rem;
-  padding: 0.6rem 1.15rem;
-  min-height: 40px;
-}
-.ui-btn--lg {
-  font-size: 0.8rem;
-  padding: 0.8rem 1.6rem;
-  min-height: 48px;
-}
+.btn--sm  { padding: 0.45rem 0.9rem;  font-size: 0.7rem;  border-radius: 8px; }
+.btn--md  { padding: 0.75rem 1.3rem;  font-size: 0.85rem; border-radius: 12px; }
+.btn--lg  { padding: 1rem 1.8rem;     font-size: 1rem;    border-radius: 14px; }
+.btn--full { width: 100%; }
 
-/* ── Primary : bouton coral laqué ────────────────────── */
-.ui-btn--primary {
-  background: linear-gradient(180deg, #e87050 0%, #d9603b 45%, #c0502a 100%);
-  color: #fff;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.2),
-    0 3px 0 #8c2e12,
-    0 4px 6px rgba(0,0,0,0.25);
-  border-bottom: 2px solid #8c2e12;
-}
+/* Variants */
+.btn--primary   { background: #FF6B35; color: #FFFFFF; }
+.btn--secondary { background: #4ECDC4; color: #1D1D1F; }
+.btn--tertiary  { background: #FFD93D; color: #1D1D1F; }
+.btn--danger    { background: #E63946; color: #FFFFFF; }
+.btn--success   { background: #06D6A0; color: #1D1D1F; }
+.btn--ghost     { background: transparent; color: #1D1D1F; }
 
-.ui-btn--primary:hover:not(:disabled) {
-  filter: brightness(1.06);
-  transform: translateY(-1px);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.2),
-    0 4px 0 #8c2e12,
-    0 5px 8px rgba(0,0,0,0.3);
+/* Hover */
+.btn:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px #1D1D1F;
 }
-
-.ui-btn--primary:active:not(:disabled) {
-  transform: translateY(2px);
-  box-shadow:
-    inset 0 2px 3px rgba(0,0,0,0.2),
-    0 1px 0 #8c2e12;
-  filter: brightness(0.95);
+/* Active */
+.btn:active:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px 0px #1D1D1F;
 }
-
-/* ── Secondary : plaque brass gravée ────────────────── */
-.ui-btn--secondary {
-  background: linear-gradient(180deg, #d9b84a 0%, #c99a3d 50%, #b8881e 100%);
-  color: #2a1a00;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.25),
-    0 2px 0 #7a5a00,
-    0 3px 5px rgba(0,0,0,0.2);
-  border-bottom: 1.5px solid #7a5a00;
-}
-
-.ui-btn--secondary:hover:not(:disabled) {
-  filter: brightness(1.05);
-  transform: translateY(-1px);
-}
-
-.ui-btn--secondary:active:not(:disabled) {
-  transform: translateY(1px);
-  box-shadow: inset 0 2px 3px rgba(0,0,0,0.15), 0 1px 0 #7a5a00;
-}
-
-/* ── Ghost : soulignement plume ─────────────────────── */
-.ui-btn--ghost {
-  background: transparent;
-  color: var(--color-ink-soft);
-  box-shadow: none;
-  border-bottom: 1.5px solid transparent;
-  transition: border-color 0.15s, color 0.15s;
-}
-
-.ui-btn--ghost:hover:not(:disabled) {
-  color: var(--color-ink);
-  border-bottom-color: var(--color-brass);
-}
-
-.ui-btn--ghost:active:not(:disabled) {
-  opacity: 0.75;
-}
-
-/* ── Danger : sceau interdit ────────────────────────── */
-.ui-btn--danger {
-  background: linear-gradient(180deg, #b04030 0%, #9b3a2a 50%, #7a2a1a 100%);
-  color: #fff;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.15),
-    0 2px 0 #4a1008,
-    0 3px 5px rgba(0,0,0,0.25);
-  border-bottom: 1.5px solid #4a1008;
-}
-
-.ui-btn--danger:hover:not(:disabled) {
-  filter: brightness(1.08);
-  transform: translateY(-1px);
-}
-
-.ui-btn--danger:active:not(:disabled) {
-  transform: translateY(1px);
-  box-shadow: inset 0 2px 3px rgba(0,0,0,0.2), 0 1px 0 #4a1008;
-}
-
-/* Spinner */
-.ui-btn-spinner {
-  display: inline-block;
-  width: 0.8em;
-  height: 0.8em;
-  border: 2px solid currentColor;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: btn-spin 0.6s linear infinite;
-  flex-shrink: 0;
-}
-
-@keyframes btn-spin {
-  to { transform: rotate(360deg); }
-}
-
-.ui-btn-icon {
-  display: inline-flex;
-  align-items: center;
-  font-size: 1em;
-  line-height: 1;
+/* Disabled */
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: 2px 2px 0px 0px rgba(29,29,31,0.3);
 }

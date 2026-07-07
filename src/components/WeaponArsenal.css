@@ -1,0 +1,31 @@
+.weapon-arsenal { margin-top: 1.5rem; border: 2.5px solid #1D1D1F; border-radius: 12px; overflow: hidden; box-shadow: 4px 4px 0px 0px #1D1D1F; }
+.weapon-arsenal-toggle { width: 100%; display: flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1rem; background: #FFD93D; border: none; cursor: pointer; font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; color: #1D1D1F; border-bottom: 2px solid #1D1D1F; }
+.weapon-arsenal-count { font-family: var(--font-mono); font-size: 0.62rem; margin-left: auto; background: rgba(0,0,0,0.1); padding: 2px 8px; border-radius: 20px; }
+.weapon-arsenal-chevron { font-size: 0.6rem; }
+.weapon-arsenal-body { padding: 0.8rem; background: #FDF6E3; }
+.weapon-filters { display: flex; gap: 0.4rem; margin-bottom: 0.8rem; }
+.weapon-filter-select { flex: 1; padding: 0.35rem 0.5rem; border: 2px solid #1D1D1F; border-radius: 6px; font-family: var(--font-mono); font-size: 0.6rem; background: white; cursor: pointer; }
+.weapon-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+.weapon-card { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; padding: 0.6rem 0.4rem; border: 2.5px solid; border-radius: 10px; cursor: pointer; background: white; box-shadow: 3px 3px 0px 0px #1D1D1F; transition: transform 100ms, box-shadow 100ms; position: relative; }
+.weapon-card:active { transform: translate(3px, 3px); box-shadow: 0 0 0 #1D1D1F; }
+.weapon-card-info { text-align: center; }
+.weapon-card-name { font-family: var(--font-display); font-size: 0.62rem; font-weight: 700; line-height: 1.2; color: #1D1D1F; }
+.weapon-card-type { font-family: var(--font-mono); font-size: 0.52rem; color: #4A4E52; margin-top: 0.1rem; }
+.weapon-card-score { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; margin-top: 0.15rem; }
+.weapon-fav-badge { position: absolute; top: 4px; right: 4px; font-size: 0.65rem; }
+.weapon-empty { text-align: center; padding: 1.5rem; font-family: var(--font-mono); font-size: 0.7rem; color: #4A4E52; }
+.weapon-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 600; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+.weapon-modal { background: #FDF6E3; border: 3px solid #1D1D1F; border-radius: 16px; padding: 1.5rem; max-width: 320px; width: 100%; text-align: center; box-shadow: 8px 8px 0px 0px #1D1D1F; animation: bounce-in 300ms ease-out both; }
+.weapon-modal-name { font-family: var(--font-display); font-size: 1rem; font-weight: 800; margin: 0.5rem 0 0.2rem; color: #1D1D1F; line-height: 1.2; }
+.weapon-modal-type { font-family: var(--font-mono); font-size: 0.6rem; color: #4A4E52; margin-bottom: 0.3rem; }
+.weapon-modal-rarity { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.8rem; }
+.weapon-modal-stats { text-align: left; margin: 0.6rem 0; }
+.weapon-stat-row { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.25rem; }
+.weapon-stat-label { font-family: var(--font-mono); font-size: 0.52rem; width: 65px; flex-shrink: 0; }
+.weapon-stat-track { flex: 1; height: 8px; background: rgba(0,0,0,0.08); border-radius: 4px; border: 1.5px solid #1D1D1F; overflow: hidden; }
+.weapon-stat-fill { height: 100%; border-radius: 3px; }
+.weapon-stat-value { font-family: var(--font-mono); font-size: 0.55rem; font-weight: 700; width: 22px; text-align: right; }
+.weapon-modal-score { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700; margin: 0.4rem 0; }
+.weapon-modal-actions { display: flex; gap: 0.5rem; margin-top: 0.8rem; justify-content: center; }
+.weapon-fav-btn { padding: 0.4rem 0.7rem; border: 2px solid #1D1D1F; border-radius: 8px; background: white; font-family: var(--font-mono); font-size: 0.6rem; cursor: pointer; box-shadow: 2px 2px 0 #1D1D1F; }
+.weapon-close-btn { padding: 0.4rem 1rem; border: 2px solid #1D1D1F; border-radius: 8px; background: #FF6B35; color: white; font-family: var(--font-mono); font-size: 0.62rem; cursor: pointer; font-weight: 700; box-shadow: 2px 2px 0 #1D1D1F; }

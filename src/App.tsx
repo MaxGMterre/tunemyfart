@@ -30,9 +30,11 @@ const Feed = lazy(() => import("./components/Feed").then((m) => ({ default: m.Fe
 const AdminDashboard = lazy(() => import("./components/AdminDashboard").then((m) => ({ default: m.AdminDashboard })));
 import { TodayDashboard } from "./components/TodayDashboard";
 import { GlobalSearch } from "./components/GlobalSearch";
+import { Settings } from "./components/Settings";
 import { track } from "./lib/analytics";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import "./styles/tokens.css";
+import "./components/ui/Button.css";
 import "./components/Auth.css";
 import "./components/Recorder.css";
 import "./components/Leaderboard.css";
@@ -58,6 +60,7 @@ import "./components/ui/UIComponents.css";
 import "./components/EmptyState.css";
 import "./components/ArtifactCabinet.css";
 import "./components/ThemePicker.css";
+import "./components/WeaponArsenal.css";
 import "./components/TodayDashboard.css";
 import "./components/GlobalSearch.css";
 
@@ -110,7 +113,7 @@ function ThemeProvider({ children }: { children: React.ReactNode }) {
 
 type Tab = "analyser" | "classement" | "missions" | "profil" | "composer" | "duel" | "communauté" | "admin";
 
-const BASE_TABS: Tab[] = ["analyser", "classement", "missions", "profil", "communauté"];
+const BASE_TABS: Tab[] = ["analyser", "classement", "missions", "composer", "profil"];
 
 // SVG tab icons defined inline — no emoji dependency
 const TAB_SVGS: Record<Tab, React.ReactNode> = {
@@ -162,6 +165,7 @@ function AppShell() {
   const [tab, setTab] = useState<Tab>("analyser");
   const [analyserView, setAnalyserView] = useState<"dashboard" | "record">("dashboard");
   const [searchOpen, setSearchOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   useEffect(() => {
     track("app_open");
@@ -170,14 +174,7 @@ function AppShell() {
   const [showWelcome, setShowWelcome] = useState(
     () => !localStorage.getItem(ONBOARDING_KEY)
   );
-  // Unlock composer once full_octave mission is complete
-  const [composerUnlocked, setComposerUnlocked] = useState(
-    () => localStorage.getItem("tmf_composer_unlocked") === "true"
-  );
-
-  const TABS: Tab[] = composerUnlocked
-    ? [...BASE_TABS, "composer"]
-    : BASE_TABS;
+  const TABS: Tab[] = BASE_TABS;
   const tabIndex = TABS.indexOf(tab);
 
   const handleWelcomeClose = () => {
@@ -188,7 +185,6 @@ function AppShell() {
 
   const handleComposerUnlock = () => {
     localStorage.setItem("tmf_composer_unlocked", "true");
-    setComposerUnlocked(true);
   };
 
   // View Transitions API helper
@@ -242,13 +238,10 @@ function AppShell() {
         <header className="app-header">
           <h1 className="app-title">{header.title}</h1>
           <p className="app-subtitle">{header.subtitle}</p>
-          <button
-            className="search-toggle-btn"
-            onClick={() => setSearchOpen(true)}
-            aria-label="Recherche"
-          >
-            🔍
-          </button>
+          <div className="header-actions">
+            <button className="search-toggle-btn" onClick={() => setSearchOpen(true)} aria-label="Recherche">🔍</button>
+            <button className="search-toggle-btn" onClick={() => setSettingsOpen(true)} aria-label="Réglages">⚙️</button>
+          </div>
         </header>
 
         <Suspense fallback={<Loading label="Chargement du laboratoire…" />}>
@@ -306,6 +299,7 @@ function AppShell() {
 
       {showWelcome && <WelcomeModal onClose={handleWelcomeClose} />}
       {searchOpen && <GlobalSearch onClose={() => setSearchOpen(false)} />}
+      {settingsOpen && <Settings onClose={() => setSettingsOpen(false)} />}
     </>
   );
 }

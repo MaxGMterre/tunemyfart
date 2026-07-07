@@ -11,6 +11,7 @@ import { Settings } from "./Settings";
 import { Friends } from "./Friends";
 import { DailyChallenge, XpLevelBar } from "./DailyChallenge";
 import { ArtifactCabinet } from "./ArtifactCabinet";
+import { WeaponArsenal } from "./WeaponArsenal";
 import { ACHIEVEMENTS } from "../lib/missions";
 import { getStreakCoupons } from "../lib/streaks";
 import "./DailyChallenge.css";
@@ -696,6 +697,8 @@ export function Profile({ onTabChange }: ProfileProps = {}) {
       </div>
 
       {user && <ArtifactCabinet />}
+
+      {user && <WeaponArsenal />}
 
       {user && (
         <button className="admin-link" onClick={() => onTabChange?.("admin")}>
