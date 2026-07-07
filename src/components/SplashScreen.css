@@ -1,79 +1,72 @@
-.splash {
-  position: fixed;
-  inset: 0;
-  background: var(--color-paper);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-  z-index: 9999;
-  animation: splash-fade-out 0.45s ease forwards;
-  animation-delay: 2.2s;
-  animation-fill-mode: both;
-  /* don't fade until delay fires */
-  opacity: 1;
+.splash-cinematic {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #0a0a0a;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  cursor: pointer; overflow: hidden;
+  transition: opacity 300ms ease-out;
 }
+.splash-fade-out { opacity: 0; pointer-events: none; }
 
-/* override: don't animate until delay fires */
-.splash { animation-play-state: running; }
-
-@keyframes splash-fade-out {
-  from { opacity: 1; transform: scale(1); }
-  to   { opacity: 0; transform: scale(1.04); pointer-events: none; }
-}
-
-.splash-character {
-  animation: splash-char-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
-
-@keyframes splash-char-in {
-  from { opacity: 0; transform: translateY(20px) scale(0.85); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+.splash-grain {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23grain)' opacity='0.08'/%3E%3C/svg%3E");
+  opacity: 0.4;
 }
 
 .splash-title {
-  font-family: var(--font-display);
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--color-ink);
-  display: flex;
-  gap: 0;
-  margin: 0;
+  font-family: var(--font-display, 'Fraunces', serif);
+  font-size: clamp(2rem, 10vw, 4rem);
+  font-weight: 900;
+  color: #C99A3D;
+  letter-spacing: 0.15em;
+  display: flex; gap: 0.05em;
+  margin-bottom: 1rem;
 }
-
-.splash-title-letter {
-  display: inline-block;
-  opacity: 0;
-  animation: letter-drop 0.3s ease forwards;
-}
+.splash-letter { opacity: 0; transition: opacity 120ms ease-out; }
+.splash-letter.visible { opacity: 1; }
 
 .splash-subtitle {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  color: rgba(245,237,214,0.6);
+  letter-spacing: 0.08em;
+  animation: fadeIn 400ms ease-out both;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.splash-reveal-circle {
+  position: absolute; border-radius: 50%;
+  width: 10px; height: 10px;
+  background: radial-gradient(circle, rgba(201,154,61,0.15) 0%, transparent 70%);
+  animation: revealExpand 800ms ease-out both;
+}
+@keyframes revealExpand {
+  to { width: 200vmax; height: 200vmax; }
+}
+
+.splash-mascot {
+  position: absolute; bottom: 12%; left: 10%;
+  animation: mascotEntry 400ms ease-out both;
+}
+@keyframes mascotEntry {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: none; }
+}
+.splash-mascot-arm {
+  transform-origin: 55px 65px;
+  animation: waveArm 600ms ease-in-out infinite alternate;
+}
+@keyframes waveArm {
+  from { transform: rotate(-15deg); }
+  to { transform: rotate(10deg); }
+}
+
+.splash-skip-hint {
+  position: absolute; bottom: 5%;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.6rem;
+  color: rgba(245,237,214,0.3);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--color-ink-soft);
-  margin: 0;
-  opacity: 0;
-  animation: splash-sub-in 0.4s ease 1.2s forwards;
-}
-
-.splash-divider {
-  width: 40px;
-  height: 1.5px;
-  background: var(--color-brass);
-  opacity: 0;
-  animation: splash-sub-in 0.4s ease 1s forwards;
-}
-
-@keyframes letter-drop {
-  from { opacity: 0; transform: translateY(-12px) rotate(-4deg); }
-  to   { opacity: 1; transform: translateY(0) rotate(0); }
-}
-
-@keyframes splash-sub-in {
-  from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 1; transform: translateY(0); }
 }

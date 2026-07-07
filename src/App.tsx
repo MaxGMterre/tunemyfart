@@ -28,6 +28,8 @@ const Profile = lazy(() => import("./components/Profile").then((m) => ({ default
 const Duel = lazy(() => import("./components/Duel").then((m) => ({ default: m.Duel })));
 const Feed = lazy(() => import("./components/Feed").then((m) => ({ default: m.Feed })));
 const AdminDashboard = lazy(() => import("./components/AdminDashboard").then((m) => ({ default: m.AdminDashboard })));
+import { TodayDashboard } from "./components/TodayDashboard";
+import { GlobalSearch } from "./components/GlobalSearch";
 import { track } from "./lib/analytics";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import "./styles/tokens.css";
@@ -52,7 +54,12 @@ import "./components/ErrorBoundary.css";
 import "./components/AdminDashboard.css";
 import "./components/FAQ.css";
 import "./components/ui/Tooltip.css";
+import "./components/ui/UIComponents.css";
 import "./components/EmptyState.css";
+import "./components/ArtifactCabinet.css";
+import "./components/ThemePicker.css";
+import "./components/TodayDashboard.css";
+import "./components/GlobalSearch.css";
 
 // ── Dark mode ─────────────────────────────────────────────────────────────────
 
@@ -153,6 +160,8 @@ function NetworkWatcher() {
 function AppShell() {
   const { session, loading } = useAuth();
   const [tab, setTab] = useState<Tab>("analyser");
+  const [analyserView, setAnalyserView] = useState<"dashboard" | "record">("dashboard");
+  const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
     track("app_open");
@@ -182,20 +191,29 @@ function AppShell() {
     setComposerUnlocked(true);
   };
 
+  // View Transitions API helper
+  function navigateTo(newTab: Tab) {
+    if ('startViewTransition' in document) {
+      (document as any).startViewTransition(() => setTab(newTab));
+    } else {
+      setTab(newTab);
+    }
+  }
+
   // Track tab changes
   const handleTabChange = (t: Tab) => {
-    setTab(t);
+    navigateTo(t);
     track("tab_change", { tab: t });
   };
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
       const next = TABS[tabIndex + 1];
-      if (next) setTab(next);
+      if (next) navigateTo(next);
     },
     onSwipedRight: () => {
       const prev = TABS[tabIndex - 1];
-      if (prev) setTab(prev);
+      if (prev) navigateTo(prev);
     },
     trackMouse: false,
     delta: 60,
@@ -224,17 +242,37 @@ function AppShell() {
         <header className="app-header">
           <h1 className="app-title">{header.title}</h1>
           <p className="app-subtitle">{header.subtitle}</p>
+          <button
+            className="search-toggle-btn"
+            onClick={() => setSearchOpen(true)}
+            aria-label="Recherche"
+          >
+            🔍
+          </button>
         </header>
 
         <Suspense fallback={<Loading label="Chargement du laboratoire…" />}>
           <main className="panel-content" {...swipeHandlers}>
-            {tab === "analyser" && <Recorder />}
+            {tab === "analyser" && analyserView === "dashboard" && (
+              <TodayDashboard
+                onGoToAnalyser={() => setAnalyserView("record")}
+                onGoToMissions={() => { navigateTo("missions"); track("tab_change", { tab: "missions" }); }}
+              />
+            )}
+            {tab === "analyser" && analyserView === "record" && (
+              <>
+                <button className="back-to-dashboard" onClick={() => setAnalyserView("dashboard")}>
+                  ← Accueil
+                </button>
+                <Recorder />
+              </>
+            )}
             {tab === "classement" && <Leaderboard />}
             {tab === "missions" && (
               <Missions onComposerUnlocked={handleComposerUnlock} />
             )}
             {tab === "profil" && (
-              <Profile onTabChange={(t) => setTab(t as Tab)} />
+              <Profile onTabChange={(t) => navigateTo(t as Tab)} />
             )}
             {tab === "composer" && <Composer />}
             {tab === "communauté" && <Feed />}
@@ -267,6 +305,7 @@ function AppShell() {
       </div>
 
       {showWelcome && <WelcomeModal onClose={handleWelcomeClose} />}
+      {searchOpen && <GlobalSearch onClose={() => setSearchOpen(false)} />}
     </>
   );
 }
@@ -283,9 +322,11 @@ function AppWithSplash() {
     setSplashDone(true);
   };
 
+  const splashEnabled = localStorage.getItem("tmf_show_splash") !== "false";
+
   return (
     <>
-      {!splashDone && <SplashScreen onDone={handleSplashDone} />}
+      {!splashDone && splashEnabled && <SplashScreen onDone={handleSplashDone} />}
       <AppShell />
     </>
   );

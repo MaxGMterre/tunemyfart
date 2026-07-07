@@ -320,6 +320,44 @@
   color: var(--color-ink);
 }
 
+/* ── Entry animations ────────────────────────────────── */
+@keyframes riseUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
+@keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: none; } }
+/* Top 3 podium monte depuis le bas */
+.leaderboard-podium-item { animation: riseUp 350ms ease-out both; }
+.leaderboard-podium-item:nth-child(1) { animation-delay: 0ms; }
+.leaderboard-podium-item:nth-child(2) { animation-delay: 80ms; }
+.leaderboard-podium-item:nth-child(3) { animation-delay: 160ms; }
+/* Liste glisse depuis la droite */
+.leaderboard-row { animation: slideInRight 260ms ease-out both; }
+
+/* ── Season filter ───────────────────────────────────── */
+.leaderboard-season-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.leaderboard-season-btn {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid rgba(27, 42, 65, 0.2);
+  background: var(--color-paper);
+  color: var(--color-ink-soft);
+  cursor: pointer;
+  border-radius: var(--radius-panel);
+  min-height: 32px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.leaderboard-season-btn.active {
+  background: var(--color-brass);
+  color: #fff;
+  border-color: var(--color-brass);
+}
+
 /* Status text (shared) */
 .status-text,
 .error-text {

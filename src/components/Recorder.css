@@ -1060,6 +1060,18 @@
   color: rgba(201, 154, 61, 0.6);
 }
 
+/* ── Entry animations ────────────────────────────────── */
+@keyframes fadeSlideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+@keyframes ledPulse { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+.recorder-panel { animation: fadeSlideUp 200ms ease-out both; }
+.recorder-table { animation: fadeSlideUp 200ms ease-out 60ms both; }
+.analyser-widget { animation: scaleIn 280ms cubic-bezier(0.34, 1.56, 0.64, 1) 120ms both; }
+.recorder-led { animation: ledPulse 600ms ease-in-out both; }
+.recorder-led:nth-child(1) { animation-delay: 300ms; }
+.recorder-led:nth-child(2) { animation-delay: 450ms; }
+
 /* ── Timbre / emotion / musicality row ───────────────── */
 .timbre-emotion-row {
   display: flex;

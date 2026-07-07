@@ -1,0 +1,18 @@
+.global-search-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 800; display: flex; align-items: flex-start; justify-content: center; padding: 4rem 1rem 1rem; }
+.global-search-modal { background: var(--color-paper); border-radius: 12px; width: 100%; max-width: 480px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: searchSlideIn 200ms ease-out both; }
+@keyframes searchSlideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: none; } }
+.global-search-bar { display: flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1rem; border-bottom: 1px solid var(--color-ink-soft); }
+.global-search-icon { font-size: 1rem; }
+.global-search-input { flex: 1; border: none; background: transparent; font-family: var(--font-mono); font-size: 0.9rem; color: var(--color-ink); outline: none; }
+.global-search-close { background: transparent; border: none; cursor: pointer; font-size: 0.8rem; color: var(--color-ink-soft); padding: 0.2rem; }
+.global-search-history, .global-search-results { padding: 0.5rem 0; }
+.search-section-title { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 1rem; font-family: var(--font-mono); font-size: 0.6rem; text-transform: uppercase; color: var(--color-ink-soft); }
+.search-clear-btn { background: transparent; border: none; cursor: pointer; font-family: var(--font-mono); font-size: 0.6rem; color: var(--color-coral, #D9603B); }
+.search-history-item { display: block; width: 100%; text-align: left; background: transparent; border: none; padding: 0.5rem 1rem; font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-ink); cursor: pointer; }
+.search-history-item:hover { background: rgba(0,0,0,0.04); }
+.search-result { display: flex; align-items: center; gap: 0.7rem; padding: 0.6rem 1rem; }
+.search-result:hover { background: rgba(0,0,0,0.03); }
+.search-result-icon { font-size: 1rem; }
+.search-result-title { font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-ink); }
+.search-result-sub { font-family: var(--font-mono); font-size: 0.6rem; color: var(--color-ink-soft); }
+.global-search-loading, .global-search-empty { padding: 1rem; font-family: var(--font-mono); font-size: 0.7rem; color: var(--color-ink-soft); text-align: center; }

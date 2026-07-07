@@ -10,7 +10,9 @@ import { useAuth } from "../lib/useAuth";
 import { Settings } from "./Settings";
 import { Friends } from "./Friends";
 import { DailyChallenge, XpLevelBar } from "./DailyChallenge";
+import { ArtifactCabinet } from "./ArtifactCabinet";
 import { ACHIEVEMENTS } from "../lib/missions";
+import { getStreakCoupons } from "../lib/streaks";
 import "./DailyChallenge.css";
 import "./Friends.css";
 
@@ -119,6 +121,7 @@ export function Profile({ onTabChange }: ProfileProps = {}) {
   const [profileXp, setProfileXp] = useState(0);
   const [stats, setStats] = useState<PersonalStats | null>(null);
   const [worldRanks, setWorldRanks] = useState<Record<string, number>>({});
+  const [streakCoupons, setStreakCoupons] = useState(0);
   const [form, setForm] = useState<FormState>({
     pseudo: "",
     avatar: "🦨",
@@ -129,6 +132,9 @@ export function Profile({ onTabChange }: ProfileProps = {}) {
     poids: "",
     taille: "",
   });
+
+  const [bio, setBio] = useState<string>("");
+  const [citation, setCitation] = useState<string>("");
 
   // Account linking state
   const [linkingAccount, setLinkingAccount] = useState(false);
@@ -160,6 +166,8 @@ export function Profile({ onTabChange }: ProfileProps = {}) {
           if (anyProfile.xp != null) {
             setProfileXp(Number(anyProfile.xp) || 0);
           }
+          if (typeof anyProfile.bio === "string") setBio(anyProfile.bio);
+          if (typeof anyProfile.citation === "string") setCitation(anyProfile.citation);
         } else {
           setEditing(true);
         }
@@ -195,12 +203,13 @@ export function Profile({ onTabChange }: ProfileProps = {}) {
       .catch(() => {
         /* RPC not yet deployed */
       });
+    getStreakCoupons(user.id).then(setStreakCoupons).catch(() => {});
   }, [userId, user]);
 
   const handleSave = async () => {
     setSaving(true);
     try {
-      const payload: ProfilePayload = {
+      const payload = {
         id: userId,
         pseudo: form.pseudo || null,
         avatar: form.avatar,
@@ -210,7 +219,9 @@ export function Profile({ onTabChange }: ProfileProps = {}) {
         ville: form.ville || null,
         poids: form.poids ? parseFloat(form.poids) : null,
         taille: form.taille ? parseInt(form.taille) : null,
-      };
+        bio: bio.slice(0, 280) || null,
+        citation: citation.slice(0, 200) || null,
+      } as ProfilePayload;
       await saveProfile(payload);
       setEditing(false);
     } catch {
@@ -299,6 +310,11 @@ export function Profile({ onTabChange }: ProfileProps = {}) {
               <span className="streak-label">jour{stats.streak > 1 ? "s" : ""}</span>
             </button>
           )}
+          {streakCoupons > 0 && (
+            <div className="streak-coupons">
+              🛡 {streakCoupons} coupon{streakCoupons > 1 ? "s" : ""} de pardon
+            </div>
+          )}
           {nextBadge && stats && (
             <div className="badge-progress-hint">
               {nextBadge.emoji} {nextBadge.label} dans{" "}
@@ -324,6 +340,14 @@ export function Profile({ onTabChange }: ProfileProps = {}) {
           </button>
         </div>
       </div>
+
+      {/* Bio & citation display */}
+      {!editing && (bio || citation) && (
+        <div className="profile-section">
+          {bio && <p className="profile-bio">{bio}</p>}
+          {citation && <blockquote className="profile-citation">« {citation} »</blockquote>}
+        </div>
+      )}
 
       {/* Edit form */}
       {editing && (
@@ -354,6 +378,29 @@ export function Profile({ onTabChange }: ProfileProps = {}) {
               placeholder="ex: SilentButDeadly"
             />
           </label>
+
+          <div className="profile-edit-field">
+            <label className="profile-edit-label">Bio <span className="profile-char-count">{bio.length}/280</span></label>
+            <textarea
+              className="profile-edit-textarea"
+              value={bio}
+              maxLength={280}
+              rows={3}
+              onChange={(e) => setBio(e.target.value)}
+              placeholder="Une courte présentation de votre démarche scientifique…"
+            />
+          </div>
+          <div className="profile-edit-field">
+            <label className="profile-edit-label">Citation favorite</label>
+            <input
+              type="text"
+              className="profile-edit-input"
+              value={citation}
+              maxLength={200}
+              onChange={(e) => setCitation(e.target.value)}
+              placeholder='"La science ne connaît pas de frontières olfactives"'
+            />
+          </div>
 
           <div className="form-row">
             <label className="form-field">
@@ -647,6 +694,8 @@ export function Profile({ onTabChange }: ProfileProps = {}) {
           Quitter le laboratoire
         </button>
       </div>
+
+      {user && <ArtifactCabinet />}
 
       {user && (
         <button className="admin-link" onClick={() => onTabChange?.("admin")}>

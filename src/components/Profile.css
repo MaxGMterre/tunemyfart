@@ -105,6 +105,8 @@
   color: var(--color-ink-soft);
 }
 
+.streak-coupons { font-family: var(--font-mono); font-size: 0.65rem; color: var(--color-brass); margin-top: 0.3rem; }
+
 .edit-btn {
   background: none;
   border: 1px solid rgba(27, 42, 65, 0.2);
@@ -492,3 +494,14 @@
 }
 
 .admin-link { background: none; border: none; font-family: var(--font-mono); font-size: 0.55rem; color: rgba(27,42,65,0.2); cursor: pointer; padding: 0.5rem; display: block; margin: 0 auto; }
+
+/* ── Bio & citation ─────────────────────────────────── */
+.profile-bio { font-size: 0.8rem; line-height: 1.5; color: var(--color-ink); margin: 0.5rem 0; }
+.profile-citation { font-family: var(--font-display); font-style: italic; font-size: 0.85rem; color: var(--color-ink-soft); border-left: 2px solid var(--color-brass); padding-left: 0.7rem; margin: 0.5rem 0; }
+.profile-char-count { font-family: var(--font-mono); font-size: 0.55rem; color: var(--color-ink-soft); margin-left: 0.5rem; }
+.profile-edit-field { display: flex; flex-direction: column; gap: 0.3rem; }
+.profile-edit-label { font-family: var(--font-mono); font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-ink-soft); }
+.profile-edit-textarea { width: 100%; border: 1.5px solid var(--color-ink-soft); border-radius: 6px; padding: 0.5rem; font-family: var(--font-body, serif); font-size: 0.8rem; resize: vertical; background: var(--color-paper); color: var(--color-ink); }
+.profile-edit-textarea:focus { border-color: var(--color-brass); outline: none; }
+.profile-edit-input { font-family: var(--font-body, serif); font-size: 0.8rem; padding: 0.45rem 0.5rem; border: 1.5px solid var(--color-ink-soft); border-radius: 6px; background: var(--color-paper); color: var(--color-ink); width: 100%; }
+.profile-edit-input:focus { border-color: var(--color-brass); outline: none; }

@@ -132,3 +132,10 @@
   color: var(--color-ink-soft);
   align-self: flex-end;
 }
+
+/* ── Entry animations ────────────────────────────────── */
+@keyframes dropIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: none; } }
+.mission-card { animation: dropIn 280ms ease-out both; }
+/* stagger via JS style tag: la n-ième card a animation-delay: n*50ms */
+.mission-card.completed { animation: dropIn 280ms ease-out both, completedPulse 400ms ease-out 350ms both; }
+@keyframes completedPulse { 0%,100% { box-shadow: none; } 50% { box-shadow: 0 0 12px rgba(201,154,61,0.6); } }

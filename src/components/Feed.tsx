@@ -120,14 +120,14 @@ export function Feed() {
         <EmptyState variant="feed" />
       ) : (
         <div className="feed-list">
-          {items.map((item) => {
+          {items.map((item, idx) => {
             const pseudo = item.pseudo ?? `Chercheur #${item.user_id.slice(0, 6)}`;
             const icon = ACTION_ICONS[item.action_type] ?? "📋";
             const label = ACTION_LABELS[item.action_type] ?? item.action_type;
             const liked = likedIds.has(item.id);
 
             return (
-              <div key={item.id} className="feed-card">
+              <div key={item.id} className="feed-card" style={{ animationDelay: `${idx * 60}ms` }}>
                 <span className="feed-icon">{icon}</span>
                 <div className="feed-body">
                   <p className="feed-text">

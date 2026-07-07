@@ -106,10 +106,11 @@ export function Missions({ onComposerUnlocked }: MissionsProps) {
 
         <div className="missions-list">
           {progressList.map(
-            ({ mission, completed: done, progress, current, target }) => (
+            ({ mission, completed: done, progress, current, target }, idx) => (
               <div
                 key={mission.id}
                 className={`mission-card${done ? " completed" : ""}`}
+                style={{ animationDelay: `${idx * 50}ms` }}
               >
                 <div className="mission-header">
                   <span className="mission-emoji">{mission.emoji}</span>

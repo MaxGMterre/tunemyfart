@@ -83,6 +83,7 @@ export function Leaderboard() {
   const [rows, setRows] = useState<LeaderboardRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [seasonFilter, setSeasonFilter] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -110,8 +111,15 @@ export function Leaderboard() {
   }, [category, period, scope, user, hasLocation]);
 
   const activeCat = CATEGORIES.find((c) => c.id === category)!;
-  const top3 = rows.slice(0, 3);
-  const rest = rows.slice(3);
+
+  const seasonCutoff = new Date();
+  seasonCutoff.setDate(seasonCutoff.getDate() - 30);
+  const filteredRows = seasonFilter
+    ? rows.filter((r) => r.created_at && new Date(r.created_at) >= seasonCutoff)
+    : rows;
+
+  const top3 = filteredRows.slice(0, 3);
+  const rest = filteredRows.slice(3);
 
   return (
     <div className="leaderboard-panel">
@@ -173,6 +181,16 @@ export function Leaderboard() {
             </button>
           );
         })}
+      </div>
+
+      {/* Season filter */}
+      <div className="leaderboard-season-row">
+        <button
+          className={`leaderboard-season-btn${seasonFilter ? " active" : ""}`}
+          onClick={() => setSeasonFilter(!seasonFilter)}
+        >
+          🏆 Saison
+        </button>
       </div>
 
       {loading && (
@@ -267,7 +285,7 @@ export function Leaderboard() {
               className={`leaderboard-row${
                 row.user_id === user?.id ? " leaderboard-row--own" : ""
               }`}
-              style={{ animationDelay: `${(i + 3) * 45}ms` }}
+              style={{ animationDelay: `${i * 40}ms` }}
             >
               <span className="rank">{i + 4}</span>
               <span className="who">{row.pseudo ?? "Spécimen anonyme"}</span>

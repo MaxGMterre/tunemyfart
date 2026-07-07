@@ -395,3 +395,6 @@
   background: rgba(255, 255, 255, 0.1);
   color: #aaa;
 }
+
+.studio-export-btn { display: block; margin: 0.8rem auto 0; background: var(--color-ink); color: var(--color-paper); border: none; padding: 0.5rem 1.2rem; border-radius: 6px; font-family: var(--font-mono); font-size: 0.7rem; cursor: pointer; }
+.studio-export-btn:disabled { opacity: 0.5; }

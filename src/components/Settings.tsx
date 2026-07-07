@@ -6,7 +6,9 @@ import type { ThemeMode } from "../App";
 import { SOUNDS_PREF_KEY, HAPTICS_PREF_KEY } from "../lib/constants";
 import { setAnalyticsEnabled, isAnalyticsEnabled } from "../lib/analytics";
 import { submitFeedback, supabase } from "../lib/supabase";
+import { getAmbientLevel, setAmbientLevel } from "../lib/ambientSound";
 import { FAQ } from "./FAQ";
+import { ThemePicker } from "./ThemePicker";
 import "./FAQ.css";
 
 function HealthCheck() {
@@ -81,6 +83,12 @@ export function Settings({ onClose }: Props) {
   const [haptics, setHaptics] = useState(
     () => localStorage.getItem(HAPTICS_PREF_KEY) !== "false"
   );
+  const [ambientLevel, setAmbientLevelState] = useState<"off" | "subtle" | "immersive">(
+    () => getAmbientLevel()
+  );
+  const [showSplash, setShowSplash] = useState(
+    () => localStorage.getItem("tmf_show_splash") !== "false"
+  );
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [analytics, setAnalytics] = useState(() => isAnalyticsEnabled());
   const [showFeedback, setShowFeedback] = useState(false);
@@ -100,6 +108,18 @@ export function Settings({ onClose }: Props) {
   const handleAnalyticsToggle = (val: boolean) => {
     setAnalytics(val);
     setAnalyticsEnabled(val);
+  };
+
+  const handleAmbientChange = (level: "off" | "subtle" | "immersive") => {
+    setAmbientLevel(level);
+    setAmbientLevelState(level);
+  };
+
+  const handleSplashToggle = (v: boolean) => {
+    setShowSplash(v);
+    localStorage.setItem("tmf_show_splash", v ? "true" : "false");
+    if (!v) sessionStorage.setItem("tmf_splash_shown", "1");
+    else sessionStorage.removeItem("tmf_splash_shown");
   };
 
   const handleSendFeedback = async () => {
@@ -165,6 +185,28 @@ export function Settings({ onClose }: Props) {
         </div>
 
         <div className="settings-body">
+          {/* Général */}
+          <section className="settings-section">
+            <div className="settings-section-title">Général</div>
+            <div className="settings-row settings-row--toggle">
+              <div>
+                <span className="settings-row-label">Afficher l'intro cinématique</span>
+                <span className="settings-row-hint">
+                  Séquence d'ouverture au lancement
+                </span>
+              </div>
+              <button
+                className={`settings-toggle${showSplash ? " on" : ""}`}
+                onClick={() => handleSplashToggle(!showSplash)}
+                role="switch"
+                aria-checked={showSplash}
+                aria-label="Afficher l'intro cinématique"
+              >
+                <span className="toggle-knob" />
+              </button>
+            </div>
+          </section>
+
           {/* Compte */}
           <section className="settings-section">
             <div className="settings-section-title">Compte</div>
@@ -216,6 +258,20 @@ export function Settings({ onClose }: Props) {
                 <span className="toggle-knob" />
               </button>
             </div>
+            <div className="settings-field">
+              <span className="settings-label">Ambiance laboratoire</span>
+              <div className="ambient-level-group">
+                {(["off", "subtle", "immersive"] as const).map((lvl) => (
+                  <button
+                    key={lvl}
+                    className={`ambient-btn${ambientLevel === lvl ? " active" : ""}`}
+                    onClick={() => handleAmbientChange(lvl)}
+                  >
+                    {{ off: "Silence", subtle: "Discret", immersive: "Immersif" }[lvl]}
+                  </button>
+                ))}
+              </div>
+            </div>
           </section>
 
           {/* Apparence */}
@@ -236,6 +292,10 @@ export function Settings({ onClose }: Props) {
                 ))}
               </div>
             </div>
+            <div className="settings-item">
+              <span className="settings-label">Thème du laboratoire</span>
+            </div>
+            <ThemePicker />
           </section>
 
           {/* Analytics */}

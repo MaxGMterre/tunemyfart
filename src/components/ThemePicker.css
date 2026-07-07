@@ -1,0 +1,9 @@
+.theme-picker { padding: 0.5rem 0; }
+.theme-picker-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+.theme-card { border: 1.5px solid var(--color-ink-soft); border-radius: 8px; padding: 0; overflow: hidden; cursor: pointer; background: transparent; text-align: left; position: relative; transition: border-color 120ms; }
+.theme-card.selected { border-color: var(--color-brass); border-width: 2px; }
+.theme-card-preview { height: 48px; position: relative; display: flex; align-items: center; justify-content: center; }
+.theme-preview-accent { width: 24px; height: 24px; border-radius: 50%; opacity: 0.8; }
+.theme-card-name { font-family: var(--font-mono); font-size: 0.6rem; text-transform: uppercase; padding: 0.3rem 0.4rem; color: var(--color-ink); }
+.theme-badge-premium { position: absolute; top: 4px; right: 4px; background: var(--color-brass); color: var(--color-paper); font-size: 0.5rem; padding: 1px 4px; border-radius: 3px; font-family: var(--font-mono); }
+.theme-check { position: absolute; bottom: 4px; right: 4px; color: var(--color-brass); font-weight: bold; font-size: 0.7rem; }

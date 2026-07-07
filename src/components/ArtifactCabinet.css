@@ -1,0 +1,24 @@
+.artifact-cabinet { margin-top: 1.5rem; border: 1.5px solid var(--color-ink-soft); border-radius: 10px; overflow: hidden; }
+.artifact-cabinet-toggle { width: 100%; display: flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1rem; background: transparent; border: none; cursor: pointer; font-family: var(--font-display); font-size: 0.95rem; color: var(--color-ink); }
+.artifact-count { font-family: var(--font-mono); font-size: 0.7rem; color: var(--color-brass); margin-left: auto; }
+.artifact-chevron { font-size: 0.6rem; color: var(--color-ink-soft); }
+.artifact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; padding: 0.8rem; background: var(--color-paper-100, rgba(0,0,0,0.02)); }
+.artifact-cell { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; padding: 0.5rem 0.2rem; border-radius: 6px; border: 1px solid transparent; background: transparent; cursor: pointer; transition: all 120ms; }
+.artifact-cell.owned { border-color: rgba(201,154,61,0.3); background: rgba(201,154,61,0.05); }
+.artifact-cell.owned:hover { border-color: var(--color-brass); background: rgba(201,154,61,0.1); }
+.artifact-cell.locked { opacity: 0.45; cursor: default; }
+.artifact-icon { font-size: 1.6rem; }
+.artifact-locked { font-size: 1.2rem; }
+.artifact-cell-name { font-family: var(--font-mono); font-size: 0.5rem; text-align: center; color: var(--color-ink-soft); line-height: 1.2; }
+.artifact-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+.artifact-modal { background: var(--color-paper); border-radius: 14px; padding: 1.5rem; max-width: 340px; width: 100%; text-align: center; }
+.artifact-modal-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+.artifact-modal-name { font-family: var(--font-display); font-size: 1.2rem; margin: 0 0 0.3rem; }
+.artifact-modal-subtitle { font-family: var(--font-mono); font-size: 0.65rem; color: var(--color-ink-soft); margin: 0 0 0.8rem; }
+.artifact-rarity-badge { display: inline-block; padding: 0.2rem 0.7rem; border-radius: 20px; font-family: var(--font-mono); font-size: 0.6rem; text-transform: uppercase; margin-bottom: 0.8rem; }
+.rarity-common { background: rgba(138,158,138,0.2); color: #8A9E8A; }
+.rarity-uncommon { background: rgba(74,155,127,0.2); color: #4A9B7F; }
+.rarity-rare { background: rgba(74,127,181,0.2); color: #4A7FB5; }
+.rarity-legendary { background: rgba(201,154,61,0.2); color: #C99A3D; }
+.artifact-modal-lore { font-family: var(--font-body, serif); font-size: 0.75rem; line-height: 1.5; color: var(--color-ink); margin-bottom: 1rem; text-align: left; }
+.artifact-modal-close { background: var(--color-brass); color: var(--color-paper); border: none; padding: 0.5rem 1.5rem; border-radius: 6px; font-family: var(--font-mono); font-size: 0.7rem; cursor: pointer; }

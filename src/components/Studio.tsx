@@ -4,6 +4,61 @@ import { supabase } from "../lib/supabase";
 import { useToast } from "./ui/Toast";
 import "./Studio.css";
 
+// ── WAV export helpers ─────────────────────────────────────
+
+async function renderToWav(notes: Array<{ freq: number; duration: number; startTime: number }>): Promise<Blob> {
+  const sampleRate = 44100;
+  const totalDuration = notes.reduce((max, n) => Math.max(max, n.startTime + n.duration), 0) + 0.5;
+  const offCtx = new OfflineAudioContext(2, Math.ceil(sampleRate * totalDuration), sampleRate);
+
+  for (const note of notes) {
+    const osc = offCtx.createOscillator();
+    const gain = offCtx.createGain();
+    osc.connect(gain);
+    gain.connect(offCtx.destination);
+    osc.frequency.value = note.freq;
+    osc.type = "triangle";
+    gain.gain.setValueAtTime(0.4, note.startTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, note.startTime + note.duration);
+    osc.start(note.startTime);
+    osc.stop(note.startTime + note.duration);
+  }
+
+  const buffer = await offCtx.startRendering();
+  return audioBufferToWav(buffer);
+}
+
+function audioBufferToWav(buffer: AudioBuffer): Blob {
+  const numChannels = buffer.numberOfChannels;
+  const sampleRate = buffer.sampleRate;
+  const length = buffer.length * numChannels * 2;
+  const arrayBuffer = new ArrayBuffer(44 + length);
+  const view = new DataView(arrayBuffer);
+
+  function writeStr(offset: number, str: string) {
+    for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
+  }
+  function writeUint32(offset: number, val: number) { view.setUint32(offset, val, true); }
+  function writeUint16(offset: number, val: number) { view.setUint16(offset, val, true); }
+
+  writeStr(0, "RIFF"); writeUint32(4, 36 + length);
+  writeStr(8, "WAVE"); writeStr(12, "fmt ");
+  writeUint32(16, 16); writeUint16(20, 1); writeUint16(22, numChannels);
+  writeUint32(24, sampleRate); writeUint32(28, sampleRate * numChannels * 2);
+  writeUint16(32, numChannels * 2); writeUint16(34, 16);
+  writeStr(36, "data"); writeUint32(40, length);
+
+  let offset = 44;
+  for (let i = 0; i < buffer.length; i++) {
+    for (let c = 0; c < numChannels; c++) {
+      const s = Math.max(-1, Math.min(1, buffer.getChannelData(c)[i]));
+      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      offset += 2;
+    }
+  }
+  return new Blob([arrayBuffer], { type: "audio/wav" });
+}
+
 // ── Types ─────────────────────────────────────────────────
 
 interface Sample {
@@ -90,6 +145,8 @@ export function Studio({ onClose }: StudioProps) {
   const [samples, setSamples] = useState<Sample[]>([]);
   const [activeSample, setActiveSample] = useState<string | null>(null);
   const [compositionName, setCompositionName] = useState("Ma composition");
+  const [composedNotes, setComposedNotes] = useState<Array<{ freq: number; duration: number; startTime: number }>>([]);
+  const [exporting, setExporting] = useState(false);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const sourcesRef = useRef<AudioBufferSourceNode[]>([]);
@@ -283,6 +340,64 @@ export function Studio({ onClose }: StudioProps) {
     ]);
   };
 
+  // ── Accumulate notes when clips are placed ────────────
+
+  const handleTrackClickWithNotes = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>, _trackId: string) => {
+      if (!activeSample) {
+        showToast("Sélectionne d'abord un sample dans la bibliothèque", "info");
+        return;
+      }
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const startBeat = Math.floor(x / BEAT_WIDTH);
+      if (startBeat >= TOTAL_BEATS) return;
+
+      const sample = samples.find((s) => s.id === activeSample);
+      if (!sample) return;
+
+      const durationBeats = Math.max(1, Math.round((sample.durationMs / 1000) * (bpm / 60)));
+      const beatDuration = 60 / bpm;
+      const startTime = startBeat * beatDuration;
+      const duration = Math.min(durationBeats, TOTAL_BEATS - startBeat) * beatDuration;
+
+      // Derive a frequency from the sample name (fallback 440 Hz)
+      const noteFreqMap: Record<string, number> = {
+        C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, G4: 392.0,
+        A4: 440.0, B4: 493.88, C5: 523.25,
+      };
+      const freq = noteFreqMap[sample.name] ?? 440;
+
+      setComposedNotes((prev) => [...prev, { freq, duration, startTime }]);
+    },
+    [activeSample, samples, bpm, showToast]
+  );
+
+  // ── Export handler ─────────────────────────────────────
+
+  const handleExport = async () => {
+    if (!composedNotes || composedNotes.length === 0) return;
+    setExporting(true);
+    try {
+      const blob = await renderToWav(composedNotes);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const date = new Date().toISOString().split("T")[0];
+      a.href = url;
+      a.download = `Composition-${date}.wav`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      if (navigator.share) {
+        await navigator.share({ title: "Composition TuneMyfart", files: [new File([blob], `Composition-${date}.wav`, { type: "audio/wav" })] });
+      }
+    } catch (err) {
+      console.error("Export error", err);
+    } finally {
+      setExporting(false);
+    }
+  };
+
   // ── Save composition ───────────────────────────────────
 
   const saveStudioComposition = async () => {
@@ -373,7 +488,7 @@ export function Studio({ onClose }: StudioProps) {
             <div
               className="track-body"
               style={{ width: TOTAL_BEATS * BEAT_WIDTH }}
-              onClick={(e) => handleTrackClick(e, track.id)}
+              onClick={(e) => { handleTrackClick(e, track.id); handleTrackClickWithNotes(e, track.id); }}
             >
               {/* Beat grid */}
               <div className="track-grid">
@@ -444,14 +559,11 @@ export function Studio({ onClose }: StudioProps) {
           + Piste
         </button>
 
-        <button
-          className="studio-action-btn"
-          onClick={() =>
-            showToast("Rendu non disponible en mode web — utilisez l'app native", "info")
-          }
-        >
-          Exporter
-        </button>
+        {composedNotes.length > 0 && (
+          <button className="studio-export-btn" onClick={handleExport} disabled={exporting}>
+            {exporting ? "Export…" : "⬇ Exporter .wav"}
+          </button>
+        )}
 
         <div className="studio-save-row">
           <input

@@ -14,3 +14,8 @@
 .like-btn.liked { color: var(--color-coral); }
 .feed-empty { text-align: center; padding: 2rem 1rem; font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-ink-soft); font-style: italic; }
 .feed-loading { text-align: center; padding: 1.5rem; font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-ink-soft); }
+
+/* ── Entry animations ────────────────────────────────── */
+@keyframes fadeFloat { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.feed-item { animation: fadeFloat 240ms ease-out both; }
+.feed-card { animation: fadeFloat 240ms ease-out both; }
