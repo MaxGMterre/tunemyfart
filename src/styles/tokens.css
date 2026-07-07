@@ -219,7 +219,8 @@ body {
   background: var(--color-wood-dark);
   position: sticky;
   bottom: 0;
-  padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
+  padding-top: 0.5rem;
+  padding-bottom: env(safe-area-inset-bottom, 0);
   overflow: visible;
   z-index: 100;
 }
@@ -311,7 +312,7 @@ body {
 .panel-content {
   flex: 1;
   min-height: 0;
-  padding: 1rem 1.25rem 1.5rem;
+  padding: 1rem 1.25rem calc(5rem + env(safe-area-inset-bottom, 0));
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;

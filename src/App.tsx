@@ -29,7 +29,6 @@ const Profile = lazy(() => import("./components/Profile").then((m) => ({ default
 const Duel = lazy(() => import("./components/Duel").then((m) => ({ default: m.Duel })));
 const Feed = lazy(() => import("./components/Feed").then((m) => ({ default: m.Feed })));
 const AdminDashboard = lazy(() => import("./components/AdminDashboard").then((m) => ({ default: m.AdminDashboard })));
-import { TodayDashboard } from "./components/TodayDashboard";
 import { GlobalSearch } from "./components/GlobalSearch";
 import { Settings } from "./components/Settings";
 import { track } from "./lib/analytics";
@@ -168,7 +167,6 @@ function NetworkWatcher() {
 function AppShell() {
   const { session, loading } = useAuth();
   const [tab, setTab] = useState<Tab>("analyser");
-  const [analyserView, setAnalyserView] = useState<"dashboard" | "record">("dashboard");
   const [searchOpen, setSearchOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
@@ -248,7 +246,7 @@ function AppShell() {
         <main className="panel-content" {...swipeHandlers}>
           <AnimatePresence mode="wait">
             <motion.div
-              key={tab === "analyser" ? `analyser-${analyserView}` : tab}
+              key={tab}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
@@ -256,20 +254,7 @@ function AppShell() {
               style={{ height: "100%" }}
             >
               <Suspense fallback={<Loading label="Chargement du laboratoire…" />}>
-                {tab === "analyser" && analyserView === "dashboard" && (
-                  <TodayDashboard
-                    onGoToAnalyser={() => setAnalyserView("record")}
-                    onGoToMissions={() => { navigateTo("missions"); track("tab_change", { tab: "missions" }); }}
-                  />
-                )}
-                {tab === "analyser" && analyserView === "record" && (
-                  <>
-                    <button className="back-to-dashboard" onClick={() => setAnalyserView("dashboard")}>
-                      ← Accueil
-                    </button>
-                    <Recorder />
-                  </>
-                )}
+                {tab === "analyser" && <Recorder />}
                 {tab === "classement" && <Leaderboard />}
                 {tab === "missions" && (
                   <Missions onComposerUnlocked={handleComposerUnlock} />
