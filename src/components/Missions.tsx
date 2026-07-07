@@ -4,6 +4,7 @@ import { MISSIONS, checkMissions } from "../lib/missions";
 import type { Mission, MissionProgress } from "../lib/missions";
 import { getPersonalStats, fetchUserRecordings } from "../lib/supabase";
 import { MissionRewardModal } from "./MissionRewardModal";
+import { SeasonBanner } from "./SeasonBanner";
 import { SFX } from "../lib/soundEffects";
 
 const COMPLETED_KEY = "tmf_completed_missions";
@@ -98,6 +99,7 @@ export function Missions({ onComposerUnlocked }: MissionsProps) {
   return (
     <>
       <div className="missions-panel">
+        <SeasonBanner />
         <p className="missions-progress-hint">
           {completed} / {progressList.length} protocoles accomplis
         </p>
