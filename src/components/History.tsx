@@ -133,7 +133,7 @@ export function History({
       const data = await fetchFullUserRecordings(user.id);
       setRecordings(data);
     } catch {
-      showToast("Impossible de charger le corpus.", "error");
+      showToast("Le laboratoire ne répond plus — vérification du réseau en cours.", "error");
     } finally {
       setLoading(false);
     }

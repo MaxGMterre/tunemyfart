@@ -18,7 +18,7 @@ export function Auth() {
       if (mode === "login") await signInWithEmail(email, password);
       else await signUpWithEmail(email, password);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Erreur de connexion");
+      setError(e instanceof Error ? e.message : "Identification impossible — vérifiez vos coordonnées épistolaires.");
     } finally {
       setLoading(false);
     }

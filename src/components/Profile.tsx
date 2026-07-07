@@ -185,7 +185,7 @@ export function Profile({ onTabChange: _onTabChange }: ProfileProps = {}) {
       setLinkEmailVal("");
       setLinkPassword("");
     } catch (e: unknown) {
-      setLinkError(e instanceof Error ? e.message : "Erreur de liaison");
+      setLinkError(e instanceof Error ? e.message : "Liaison du dossier impossible — contactez le secrétariat du laboratoire.");
     } finally {
       setLinking(false);
     }
@@ -199,7 +199,7 @@ export function Profile({ onTabChange: _onTabChange }: ProfileProps = {}) {
   const unlockedAchievements = ACHIEVEMENTS.filter((a) => completedMissionIds.includes(a.id));
 
   if (loading) {
-    return <p className="status-text">Chargement de la fiche spécimen…</p>;
+    return <p className="status-text">Consultation du registre en cours…</p>;
   }
 
   if (showFriends) {

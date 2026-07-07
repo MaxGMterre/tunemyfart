@@ -119,7 +119,7 @@ export function useRecorder(onLiveFrame?: (buffer: Float32Array) => void) {
       setStatus("recording");
       analyseLoop();
     } catch {
-      setError("Impossible d'accéder au micro. Vérifie les autorisations.");
+      setError("Le laboratoire n'a pas accès au microphone — autorisations requises.");
       setStatus("error");
     }
   }, [analyseLoop]);

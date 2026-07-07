@@ -1,0 +1,122 @@
+.shop-panel {
+  padding: 0 0 2rem;
+}
+
+.shop-header {
+  margin-bottom: 1.25rem;
+}
+
+.shop-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--color-brass);
+}
+
+.shop-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-ink-soft);
+  margin-top: 0.2rem;
+}
+
+.shop-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.shop-card {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  background: var(--color-paper-dark);
+  border: 1.5px solid rgba(201,154,61,0.25);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  animation: shop-card-in 0.3s ease both;
+}
+
+@keyframes shop-card-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.shop-card--owned {
+  border-color: #39FF14;
+  opacity: 0.75;
+}
+
+.shop-card-icon {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+  width: 44px;
+  text-align: center;
+}
+
+.shop-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.shop-card-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-ink);
+  margin-bottom: 0.2rem;
+}
+
+.shop-card-desc {
+  font-size: 0.75rem;
+  color: var(--color-ink-soft);
+  line-height: 1.4;
+}
+
+.shop-card-footer {
+  flex-shrink: 0;
+}
+
+.shop-buy-btn {
+  background: var(--color-brass);
+  color: var(--color-paper-dark, #1a1610);
+  border: none;
+  border-radius: 6px;
+  padding: 0.45rem 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  white-space: nowrap;
+}
+
+.shop-buy-btn:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.shop-buy-btn:active {
+  transform: translateY(1px);
+}
+
+.shop-owned-badge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: #39FF14;
+  border: 1px solid #39FF14;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+}
+
+.shop-legal {
+  margin-top: 1.5rem;
+  font-size: 0.65rem;
+  color: var(--color-ink-soft);
+  line-height: 1.5;
+  text-align: center;
+  opacity: 0.6;
+}

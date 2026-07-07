@@ -3,81 +3,148 @@
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  border: none;
-  border-radius: 3px;
+  border-radius: 4px;
   font-family: var(--font-mono);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
   cursor: pointer;
-  transition: filter 0.12s ease, transform 0.1s ease, box-shadow 0.1s ease;
   -webkit-tap-highlight-color: transparent;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, filter 0.1s ease;
+  border: none;
 }
 
-.ui-btn:hover:not(:disabled) {
-  filter: brightness(1.08);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+/* Ripple */
+.ui-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, transparent 70%);
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity 0.3s ease, transform 0.35s ease;
+  pointer-events: none;
 }
 
-.ui-btn:active:not(:disabled) {
-  transform: translateY(1px);
-  filter: brightness(0.96);
-  box-shadow: none;
+.ui-btn:active::after {
+  opacity: 1;
+  transform: scale(2.5);
+  transition: opacity 0s, transform 0s;
 }
 
 .ui-btn:disabled {
-  opacity: 0.45;
+  opacity: 0.42;
   cursor: not-allowed;
+  pointer-events: none;
 }
 
 /* Sizes */
 .ui-btn--sm {
   font-size: 0.62rem;
-  padding: 0.35rem 0.75rem;
+  padding: 0.35rem 0.8rem;
+  min-height: 32px;
 }
 .ui-btn--md {
   font-size: 0.72rem;
-  padding: 0.55rem 1.1rem;
+  padding: 0.6rem 1.15rem;
+  min-height: 40px;
 }
 .ui-btn--lg {
   font-size: 0.8rem;
-  padding: 0.75rem 1.5rem;
+  padding: 0.8rem 1.6rem;
+  min-height: 48px;
 }
 
-/* Variants */
+/* ── Primary : bouton coral laqué ────────────────────── */
 .ui-btn--primary {
-  background: var(--color-coral);
+  background: linear-gradient(180deg, #e87050 0%, #d9603b 45%, #c0502a 100%);
   color: #fff;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    0 3px 0 #8c2e12,
+    0 4px 6px rgba(0,0,0,0.25);
+  border-bottom: 2px solid #8c2e12;
 }
 
+.ui-btn--primary:hover:not(:disabled) {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    0 4px 0 #8c2e12,
+    0 5px 8px rgba(0,0,0,0.3);
+}
+
+.ui-btn--primary:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow:
+    inset 0 2px 3px rgba(0,0,0,0.2),
+    0 1px 0 #8c2e12;
+  filter: brightness(0.95);
+}
+
+/* ── Secondary : plaque brass gravée ────────────────── */
 .ui-btn--secondary {
-  background: transparent;
-  border: 1px solid var(--color-brass);
-  color: var(--color-brass);
+  background: linear-gradient(180deg, #d9b84a 0%, #c99a3d 50%, #b8881e 100%);
+  color: #2a1a00;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.25),
+    0 2px 0 #7a5a00,
+    0 3px 5px rgba(0,0,0,0.2);
+  border-bottom: 1.5px solid #7a5a00;
 }
 
+.ui-btn--secondary:hover:not(:disabled) {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.ui-btn--secondary:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 3px rgba(0,0,0,0.15), 0 1px 0 #7a5a00;
+}
+
+/* ── Ghost : soulignement plume ─────────────────────── */
 .ui-btn--ghost {
   background: transparent;
   color: var(--color-ink-soft);
-  border: 1px solid transparent;
+  box-shadow: none;
+  border-bottom: 1.5px solid transparent;
+  transition: border-color 0.15s, color 0.15s;
 }
 
 .ui-btn--ghost:hover:not(:disabled) {
-  border-color: rgba(27, 42, 65, 0.2);
   color: var(--color-ink);
+  border-bottom-color: var(--color-brass);
 }
 
+.ui-btn--ghost:active:not(:disabled) {
+  opacity: 0.75;
+}
+
+/* ── Danger : sceau interdit ────────────────────────── */
 .ui-btn--danger {
-  background: transparent;
-  border: 1px solid #c0392b;
-  color: #c0392b;
+  background: linear-gradient(180deg, #b04030 0%, #9b3a2a 50%, #7a2a1a 100%);
+  color: #fff;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    0 2px 0 #4a1008,
+    0 3px 5px rgba(0,0,0,0.25);
+  border-bottom: 1.5px solid #4a1008;
 }
 
 .ui-btn--danger:hover:not(:disabled) {
-  background: #c0392b;
-  color: #fff;
+  filter: brightness(1.08);
+  transform: translateY(-1px);
 }
 
-/* Spinner inside button */
+.ui-btn--danger:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 3px rgba(0,0,0,0.2), 0 1px 0 #4a1008;
+}
+
+/* Spinner */
 .ui-btn-spinner {
   display: inline-block;
   width: 0.8em;
@@ -90,12 +157,12 @@
 }
 
 @keyframes btn-spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
 .ui-btn-icon {
+  display: inline-flex;
+  align-items: center;
   font-size: 1em;
   line-height: 1;
 }
