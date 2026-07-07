@@ -127,7 +127,7 @@
 .key-white {
   flex: 1;
   height: 100%;
-  background: linear-gradient(180deg, #F8F2E4 0%, #E8D9B8 60%, #D4C094 100%);
+  background: linear-gradient(180deg, #FEFCF7 0%, #F5F0E1 60%, #E8E0CC 100%);
   border-right: 1.5px solid #2C1810;
   position: relative;
   cursor: pointer;
