@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { X } from "lucide-react";
 import { useAuth } from "../lib/useAuth";
 import { useToast } from "./ui/Toast";
 import { useTheme } from "../App";
@@ -180,7 +181,7 @@ export function Settings({ onClose }: Props) {
             onClick={onClose}
             aria-label="Fermer les paramètres"
           >
-            ✕
+            <X size={20} strokeWidth={2.5} />
           </button>
         </div>
 

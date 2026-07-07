@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Settings as SettingsIcon, X } from "lucide-react";
 import {
   saveProfile,
   getProfile,
@@ -14,8 +15,26 @@ import { ArtifactCabinet } from "./ArtifactCabinet";
 import { WeaponArsenal } from "./WeaponArsenal";
 import { ACHIEVEMENTS } from "../lib/missions";
 import { getStreakCoupons } from "../lib/streaks";
+import { generateUserAvatar } from "../lib/dicebear";
 import "./DailyChallenge.css";
 import "./Friends.css";
+
+const DICEBEAR_AVATAR_VALUE = "dicebear";
+const AVATAR_SEED_KEY = "tmf_avatar_seed";
+
+function getDicebearSeed(): string {
+  return localStorage.getItem(AVATAR_SEED_KEY) ?? crypto.randomUUID();
+}
+
+function saveDicebearSeed(seed: string): void {
+  localStorage.setItem(AVATAR_SEED_KEY, seed);
+}
+
+function reroulerSeed(): string {
+  const seed = crypto.randomUUID();
+  saveDicebearSeed(seed);
+  return seed;
+}
 
 const AVATARS = ["💨", "🐛", "🦨", "🎵", "🔬", "💥"];
 
@@ -136,6 +155,7 @@ export function Profile({ onTabChange }: ProfileProps = {}) {
 
   const [bio, setBio] = useState<string>("");
   const [citation, setCitation] = useState<string>("");
+  const [dicebearSeed, setDicebearSeed] = useState<string>(() => getDicebearSeed());
 
   // Account linking state
   const [linkingAccount, setLinkingAccount] = useState(false);
@@ -291,7 +311,19 @@ export function Profile({ onTabChange }: ProfileProps = {}) {
 
       {/* Header */}
       <div className="profile-header">
-        <div className="profile-avatar">{form.avatar || "🦨"}</div>
+        <div className="profile-avatar">
+          {form.avatar === DICEBEAR_AVATAR_VALUE ? (
+            <img
+              src={generateUserAvatar(userId, dicebearSeed)}
+              width={56}
+              height={56}
+              alt="Avatar procédural"
+              style={{ borderRadius: "50%", display: "block" }}
+            />
+          ) : (
+            form.avatar || "🦨"
+          )}
+        </div>
         <div className="profile-identity">
           <div className="profile-pseudo">
             {form.pseudo || "Spécimen anonyme"}
@@ -330,14 +362,14 @@ export function Profile({ onTabChange }: ProfileProps = {}) {
             onClick={() => setShowSettings(true)}
             aria-label="Paramètres"
           >
-            ⚙️
+            <SettingsIcon size={20} strokeWidth={2.5} />
           </button>
           <button
             className="edit-btn"
             onClick={() => setEditing((e) => !e)}
             aria-label="Modifier la fiche spécimen"
           >
-            {editing ? "✕" : "✎"}
+            {editing ? <X size={20} strokeWidth={2.5} /> : "✎"}
           </button>
         </div>
       </div>
@@ -367,7 +399,40 @@ export function Profile({ onTabChange }: ProfileProps = {}) {
                 {a}
               </button>
             ))}
+            <button
+              className={`avatar-option${form.avatar === DICEBEAR_AVATAR_VALUE ? " selected" : ""}`}
+              onClick={() => {
+                if (!localStorage.getItem(AVATAR_SEED_KEY)) {
+                  saveDicebearSeed(dicebearSeed);
+                }
+                setForm((f) => ({ ...f, avatar: DICEBEAR_AVATAR_VALUE }));
+              }}
+              title="Avatar procédural"
+              style={{ padding: 2, overflow: "hidden" }}
+            >
+              <img
+                src={generateUserAvatar(userId, dicebearSeed)}
+                width={32}
+                height={32}
+                alt="Avatar procédural"
+                style={{ borderRadius: "50%", display: "block" }}
+              />
+            </button>
           </div>
+          {form.avatar === DICEBEAR_AVATAR_VALUE && (
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
+              <span style={{ fontSize: "0.85rem", opacity: 0.7 }}>Avatar procédural</span>
+              <button
+                className="edit-btn"
+                onClick={() => {
+                  const seed = reroulerSeed();
+                  setDicebearSeed(seed);
+                }}
+              >
+                ♻️ Rerouler
+              </button>
+            </div>
+          )}
 
           <label className="form-field">
             Pseudo

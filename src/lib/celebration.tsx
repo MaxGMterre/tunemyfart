@@ -1,3 +1,5 @@
+import { motion, AnimatePresence } from "framer-motion";
+
 type CelebrationKind = "confetti" | "stars" | "fireworks";
 
 interface Particle {
@@ -123,4 +125,46 @@ export function celebrate(kind: CelebrationKind = "confetti", durationMs = 2500)
   }
 
   requestAnimationFrame(frame);
+}
+
+// ── React celebration particles component ─────────────────
+
+const VIVID_COLORS = ["#FF6B35", "#4ECDC4", "#FFD93D", "#E63946", "#06D6A0", "#C77DFF"];
+
+export function CelebrationParticles({ active, onComplete }: { active: boolean; onComplete?: () => void }) {
+  const particles = active ? Array.from({ length: 24 }).map((_, i) => ({
+    id: i,
+    angle: (i / 24) * Math.PI * 2,
+    speed: 150 + Math.random() * 150,
+    color: VIVID_COLORS[i % VIVID_COLORS.length],
+    size: 8 + Math.random() * 8,
+  })) : [];
+
+  return (
+    <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 9999 }}>
+      <AnimatePresence onExitComplete={onComplete}>
+        {particles.map(p => (
+          <motion.div
+            key={p.id}
+            initial={{ x: "50vw", y: "50vh", opacity: 1, scale: 1 }}
+            animate={{
+              x: `calc(50vw + ${Math.cos(p.angle) * p.speed}px)`,
+              y: `calc(50vh + ${Math.sin(p.angle) * p.speed + 100}px)`,
+              opacity: 0,
+              scale: 0.3,
+              rotate: 360,
+            }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            style={{
+              position: "absolute",
+              width: p.size,
+              height: p.size,
+              borderRadius: "2px",
+              backgroundColor: p.color,
+            }}
+          />
+        ))}
+      </AnimatePresence>
+    </div>
+  );
 }

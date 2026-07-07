@@ -1,0 +1,84 @@
+.new-weapon-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1rem;
+}
+.new-weapon-card {
+  background: #FDF6E3;
+  border: 3px solid #1D1D1F;
+  border-radius: 20px;
+  box-shadow: 8px 8px 0px 0px #1D1D1F;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  max-width: 320px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.new-weapon-flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, var(--rarity-color, #FFD93D) 0%, transparent 70%);
+  opacity: 0.15;
+  pointer-events: none;
+}
+.new-weapon-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-ink-soft);
+  margin: 0 0 1rem;
+}
+.new-weapon-name {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 900;
+  margin: 0.75rem 0 0.25rem;
+  color: var(--color-ink);
+}
+.new-weapon-rarity {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.25rem;
+}
+.new-weapon-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.new-weapon-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+}
+.new-weapon-stat > span { width: 60px; text-align: right; color: var(--color-ink-soft); }
+.stat-bar { flex: 1; height: 8px; background: var(--color-ink-100, #e8ecf1); border-radius: 4px; overflow: hidden; border: 1px solid var(--color-border); }
+.stat-bar > div { height: 100%; border-radius: 4px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
+.new-weapon-close {
+  background: #FF6B35;
+  color: #fff;
+  border: 3px solid #1D1D1F;
+  border-radius: 12px;
+  box-shadow: 4px 4px 0px 0px #1D1D1F;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.6rem 1.5rem;
+  cursor: pointer;
+  width: 100%;
+}

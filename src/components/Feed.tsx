@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useAuth } from "../lib/useAuth";
 import { supabase } from "../lib/supabase";
 import { useToast } from "./ui/Toast";
@@ -47,6 +48,7 @@ export function Feed() {
   const [items, setItems] = useState<FeedItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [likedIds, setLikedIds] = useState<Set<number>>(new Set());
+  const [listParent] = useAutoAnimate();
 
   useEffect(() => {
     async function loadFeed() {
@@ -119,7 +121,7 @@ export function Feed() {
       ) : items.length === 0 ? (
         <EmptyState variant="feed" />
       ) : (
-        <div className="feed-list">
+        <div className="feed-list" ref={listParent}>
           {items.map((item, idx) => {
             const pseudo = item.pseudo ?? `Chercheur #${item.user_id.slice(0, 6)}`;
             const icon = ACTION_ICONS[item.action_type] ?? "📋";

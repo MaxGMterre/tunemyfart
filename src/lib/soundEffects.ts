@@ -1,130 +1,70 @@
-import { SOUNDS_PREF_KEY } from "./constants";
+import { Howl } from "howler";
 
-let ctx: AudioContext | null = null;
+const SOUND_ENABLED_KEY = "tmf_sound_enabled";
+const VOLUME_KEY = "tmf_sound_volume";
 
-function getCtx(): AudioContext {
-  if (!ctx || ctx.state === "closed") {
-    ctx = new AudioContext();
+export function isSoundEnabled(): boolean {
+  return localStorage.getItem(SOUND_ENABLED_KEY) !== "false";
+}
+
+export function setSoundEnabled(v: boolean) {
+  localStorage.setItem(SOUND_ENABLED_KEY, String(v));
+}
+
+export function getSoundVolume(): number {
+  return parseFloat(localStorage.getItem(VOLUME_KEY) ?? "0.5");
+}
+
+export function setSoundVolume(v: number) {
+  localStorage.setItem(VOLUME_KEY, String(v));
+}
+
+// Lazy-initialized Howl instances
+const _sounds: Partial<Record<SoundName, Howl>> = {};
+
+type SoundName = "click" | "unlock" | "success" | "error" | "weaponObtained" | "levelUp" | "tabSwitch" | "proutAppear";
+
+const SOUND_CONFIG: Record<SoundName, { src: string; volume: number }> = {
+  click:          { src: "/sounds/click.mp3",          volume: 0.3 },
+  unlock:         { src: "/sounds/unlock.mp3",         volume: 0.5 },
+  success:        { src: "/sounds/success.mp3",        volume: 0.4 },
+  error:          { src: "/sounds/error.mp3",          volume: 0.4 },
+  weaponObtained: { src: "/sounds/weapon-obtained.mp3",volume: 0.6 },
+  levelUp:        { src: "/sounds/level-up.mp3",       volume: 0.5 },
+  tabSwitch:      { src: "/sounds/tab-switch.mp3",     volume: 0.2 },
+  proutAppear:    { src: "/sounds/prout-appear.mp3",   volume: 0.4 },
+};
+
+function getHowl(name: SoundName): Howl {
+  if (!_sounds[name]) {
+    const cfg = SOUND_CONFIG[name];
+    _sounds[name] = new Howl({
+      src: [cfg.src],
+      volume: cfg.volume * getSoundVolume(),
+      preload: false,
+      onloaderror: () => { /* silent fail — placeholder file */ },
+    });
   }
-  return ctx;
+  return _sounds[name]!;
 }
 
-function isSoundEnabled(): boolean {
-  return localStorage.getItem(SOUNDS_PREF_KEY) !== "false";
-}
-
-function playTone(
-  frequency: number,
-  type: OscillatorType,
-  durationMs: number,
-  gainStart: number,
-  gainEnd: number,
-  delayMs = 0
-): void {
+export function playSound(name: SoundName) {
   if (!isSoundEnabled()) return;
-  try {
-    const ac = getCtx();
-    if (ac.state === "suspended") ac.resume();
-    const osc = ac.createOscillator();
-    const gain = ac.createGain();
-    osc.connect(gain);
-    gain.connect(ac.destination);
-
-    osc.type = type;
-    osc.frequency.setValueAtTime(frequency, ac.currentTime + delayMs / 1000);
-
-    gain.gain.setValueAtTime(0, ac.currentTime);
-    gain.gain.setValueAtTime(gainStart, ac.currentTime + delayMs / 1000);
-    gain.gain.linearRampToValueAtTime(
-      gainEnd,
-      ac.currentTime + (delayMs + durationMs) / 1000
-    );
-
-    osc.start(ac.currentTime + delayMs / 1000);
-    osc.stop(ac.currentTime + (delayMs + durationMs + 10) / 1000);
-  } catch {
-    // AudioContext not available (e.g. SSR or restricted env)
-  }
+  try { getHowl(name).play(); } catch { /* silent fail */ }
 }
 
+// Backward-compatible named exports
 export const SFX = {
-  click(): void {
-    playTone(880, "square", 40, 0.12, 0);
-  },
-
-  unlock(): void {
-    // Rising arpeggio: C5 → E5 → G5
-    playTone(523, "sine", 120, 0.25, 0, 0);
-    playTone(659, "sine", 120, 0.25, 0, 100);
-    playTone(784, "sine", 200, 0.3, 0, 200);
-  },
-
-  error(): void {
-    // Descending minor — D4 → C4
-    playTone(294, "sawtooth", 120, 0.2, 0, 0);
-    playTone(261, "sawtooth", 180, 0.18, 0, 100);
-  },
-
-  success(): void {
-    // Short triumphant chord swell
-    playTone(523, "sine", 300, 0.2, 0, 0);
-    playTone(659, "sine", 300, 0.15, 0, 0);
-    playTone(784, "sine", 300, 0.12, 0, 0);
-    playTone(1047, "sine", 400, 0.18, 0, 80);
-  },
-
-  mrProutAppear(): void {
-    // Whimsical: portamento squeak up
-    try {
-      if (!isSoundEnabled()) return;
-      const ac = getCtx();
-      if (ac.state === "suspended") ac.resume();
-      const osc = ac.createOscillator();
-      const gain = ac.createGain();
-      osc.connect(gain);
-      gain.connect(ac.destination);
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(400, ac.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(800, ac.currentTime + 0.15);
-      osc.frequency.exponentialRampToValueAtTime(600, ac.currentTime + 0.3);
-      gain.gain.setValueAtTime(0.18, ac.currentTime);
-      gain.gain.linearRampToValueAtTime(0, ac.currentTime + 0.35);
-      osc.start(ac.currentTime);
-      osc.stop(ac.currentTime + 0.4);
-    } catch {
-      // ignore
-    }
-  },
-
-  recordStart(): void {
-    // Low thump
-    playTone(80, "sine", 80, 0.3, 0);
-    playTone(160, "sine", 60, 0.1, 0, 20);
-  },
-
-  recordStop(): void {
-    // Click + descend
-    playTone(440, "square", 30, 0.15, 0);
-    playTone(220, "sine", 80, 0.1, 0, 40);
-  },
-
-  noteHit(frequency: number): void {
-    try {
-      if (!isSoundEnabled()) return;
-      const ac = getCtx();
-      if (ac.state === "suspended") ac.resume();
-      const osc = ac.createOscillator();
-      const gain = ac.createGain();
-      osc.connect(gain);
-      gain.connect(ac.destination);
-      osc.type = "triangle";
-      osc.frequency.setValueAtTime(frequency, ac.currentTime);
-      gain.gain.setValueAtTime(0.22, ac.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.6);
-      osc.start(ac.currentTime);
-      osc.stop(ac.currentTime + 0.65);
-    } catch {
-      // ignore
-    }
-  },
+  click:    () => playSound("click"),
+  unlock:   () => playSound("unlock"),
+  success:  () => playSound("success"),
+  error:    () => playSound("error"),
+  weapon:   () => playSound("weaponObtained"),
+  levelUp:  () => playSound("levelUp"),
+  tab:      () => playSound("tabSwitch"),
+  // Legacy Web Audio API stubs — kept for backward compatibility
+  mrProutAppear: () => playSound("proutAppear"),
+  recordStart:   () => playSound("click"),
+  recordStop:    () => playSound("click"),
+  noteHit:       (_frequency: number) => { /* no-op — Howler version uses file-based sounds */ },
 };

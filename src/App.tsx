@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useSwipeable } from "react-swipeable";
 import { AuthProvider, useAuth } from "./lib/useAuth";
 import { useNetwork } from "./lib/useNetwork";
@@ -61,6 +62,7 @@ import "./components/EmptyState.css";
 import "./components/ArtifactCabinet.css";
 import "./components/ThemePicker.css";
 import "./components/WeaponArsenal.css";
+import "./components/NewWeaponModal.css";
 import "./components/TodayDashboard.css";
 import "./components/GlobalSearch.css";
 
@@ -187,13 +189,9 @@ function AppShell() {
     localStorage.setItem("tmf_composer_unlocked", "true");
   };
 
-  // View Transitions API helper
+  // Navigate helper — plain state update (Framer Motion handles animations)
   function navigateTo(newTab: Tab) {
-    if ('startViewTransition' in document) {
-      (document as any).startViewTransition(() => setTab(newTab));
-    } else {
-      setTab(newTab);
-    }
+    setTab(newTab);
   }
 
   // Track tab changes
@@ -244,35 +242,46 @@ function AppShell() {
           </div>
         </header>
 
-        <Suspense fallback={<Loading label="Chargement du laboratoire…" />}>
-          <main className="panel-content" {...swipeHandlers}>
-            {tab === "analyser" && analyserView === "dashboard" && (
-              <TodayDashboard
-                onGoToAnalyser={() => setAnalyserView("record")}
-                onGoToMissions={() => { navigateTo("missions"); track("tab_change", { tab: "missions" }); }}
-              />
-            )}
-            {tab === "analyser" && analyserView === "record" && (
-              <>
-                <button className="back-to-dashboard" onClick={() => setAnalyserView("dashboard")}>
-                  ← Accueil
-                </button>
-                <Recorder />
-              </>
-            )}
-            {tab === "classement" && <Leaderboard />}
-            {tab === "missions" && (
-              <Missions onComposerUnlocked={handleComposerUnlock} />
-            )}
-            {tab === "profil" && (
-              <Profile onTabChange={(t) => navigateTo(t as Tab)} />
-            )}
-            {tab === "composer" && <Composer />}
-            {tab === "communauté" && <Feed />}
-            {tab === "duel" && <Duel />}
-            {tab === "admin" && <AdminDashboard />}
-          </main>
-        </Suspense>
+        <main className="panel-content" {...swipeHandlers}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={tab === "analyser" ? `analyser-${analyserView}` : tab}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+              style={{ height: "100%" }}
+            >
+              <Suspense fallback={<Loading label="Chargement du laboratoire…" />}>
+                {tab === "analyser" && analyserView === "dashboard" && (
+                  <TodayDashboard
+                    onGoToAnalyser={() => setAnalyserView("record")}
+                    onGoToMissions={() => { navigateTo("missions"); track("tab_change", { tab: "missions" }); }}
+                  />
+                )}
+                {tab === "analyser" && analyserView === "record" && (
+                  <>
+                    <button className="back-to-dashboard" onClick={() => setAnalyserView("dashboard")}>
+                      ← Accueil
+                    </button>
+                    <Recorder />
+                  </>
+                )}
+                {tab === "classement" && <Leaderboard />}
+                {tab === "missions" && (
+                  <Missions onComposerUnlocked={handleComposerUnlock} />
+                )}
+                {tab === "profil" && (
+                  <Profile onTabChange={(t) => navigateTo(t as Tab)} />
+                )}
+                {tab === "composer" && <Composer />}
+                {tab === "communauté" && <Feed />}
+                {tab === "duel" && <Duel />}
+                {tab === "admin" && <AdminDashboard />}
+              </Suspense>
+            </motion.div>
+          </AnimatePresence>
+        </main>
 
         <nav className="tab-bar" aria-label="Navigation principale">
           <div

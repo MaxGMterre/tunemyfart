@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { fetchLeaderboardByPeriod, getProfile } from "../lib/supabase";
 import type {
   LeaderboardCategory,
@@ -84,6 +85,7 @@ export function Leaderboard() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [seasonFilter, setSeasonFilter] = useState(false);
+  const [listParent] = useAutoAnimate();
 
   useEffect(() => {
     if (!user) return;
@@ -278,7 +280,7 @@ export function Leaderboard() {
 
       {/* Rows 4+ */}
       {rest.length > 0 && (
-        <ol className="leaderboard-list" start={4}>
+        <ol className="leaderboard-list" start={4} ref={listParent}>
           {rest.map((row, i) => (
             <li
               key={row.id}

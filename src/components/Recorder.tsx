@@ -17,7 +17,9 @@ import {
 } from "./ProutDialogue";
 import { SFX } from "../lib/soundEffects";
 import { generateWeaponFromRecording, saveWeapon } from "../lib/weapons";
+import type { Weapon } from "../lib/weapons";
 import { useToast } from "./ui/Toast";
+import { NewWeaponModal } from "./NewWeaponModal";
 import "./Recorder.css";
 
 // ── Helpers ──────────────────────────────────────────────
@@ -233,6 +235,7 @@ export function Recorder() {
 
   const [saved, setSaved] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [newWeapon, setNewWeapon] = useState<Weapon | null>(null);
   const [uploading, setUploading] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [noteKey, setNoteKey] = useState(0);
@@ -465,8 +468,11 @@ export function Recorder() {
           note_principale: result.notePrincipale,
         };
         const weapon = generateWeaponFromRecording(weaponInput);
-        saveWeapon(user.id, weapon).then((saved) => {
-          if (saved) showToast(`⚔️ ${saved.name} (${saved.rarity})`, "success");
+        saveWeapon(user.id, weapon).then((savedWeapon) => {
+          if (savedWeapon) {
+            showToast(`⚔️ ${savedWeapon.name} (${savedWeapon.rarity})`, "success");
+            setNewWeapon(savedWeapon);
+          }
         }).catch(() => {});
       }
     } catch {
@@ -954,6 +960,7 @@ export function Recorder() {
       {showShare && result && (
         <ShareCard result={result} onClose={() => setShowShare(false)} />
       )}
+      {newWeapon && <NewWeaponModal weapon={newWeapon} onClose={() => setNewWeapon(null)} />}
     </div>
   );
 }

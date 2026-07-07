@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Search, X } from "lucide-react";
 import { supabase } from "../lib/supabase";
 
 interface SearchResult {
@@ -78,7 +79,7 @@ export function GlobalSearch({ onClose }: GlobalSearchProps) {
     <div className="global-search-overlay" onClick={onClose}>
       <div className="global-search-modal" onClick={(e) => e.stopPropagation()}>
         <div className="global-search-bar">
-          <span className="global-search-icon">🔍</span>
+          <span className="global-search-icon"><Search size={20} strokeWidth={2.5} /></span>
           <input
             ref={inputRef}
             className="global-search-input"
@@ -87,7 +88,7 @@ export function GlobalSearch({ onClose }: GlobalSearchProps) {
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") handleSubmit(); if (e.key === "Escape") onClose(); }}
           />
-          <button className="global-search-close" onClick={onClose}>✕</button>
+          <button className="global-search-close" onClick={onClose}><X size={20} strokeWidth={2.5} /></button>
         </div>
 
         {query === "" && history.length > 0 && (

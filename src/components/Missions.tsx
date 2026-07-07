@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useAuth } from "../lib/useAuth";
 import { MISSIONS, checkMissions } from "../lib/missions";
 import type { Mission, MissionProgress } from "../lib/missions";
@@ -27,6 +28,7 @@ export function Missions({ onComposerUnlocked }: MissionsProps) {
   const [loading, setLoading] = useState(true);
   const [rewardMission, setRewardMission] = useState<Mission | null>(null);
   const rewardQueueRef = useRef<Mission[]>([]);
+  const [listParent] = useAutoAnimate();
 
   useEffect(() => {
     if (!user) {
@@ -104,7 +106,7 @@ export function Missions({ onComposerUnlocked }: MissionsProps) {
           {completed} / {progressList.length} protocoles accomplis
         </p>
 
-        <div className="missions-list">
+        <div className="missions-list" ref={listParent}>
           {progressList.map(
             ({ mission, completed: done, progress, current, target }, idx) => (
               <div

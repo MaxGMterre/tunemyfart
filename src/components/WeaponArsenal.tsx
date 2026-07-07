@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { useAuth } from "../lib/useAuth";
 import { fetchUserWeapons, toggleFavorite } from "../lib/weapons";
 import type { Weapon, WeaponType, WeaponRarity } from "../lib/weapons";
 import { WeaponIcon } from "./weapons/WeaponIcon";
+import { SketchBorder } from "./ui/SketchBorder";
 
 const RARITY_LABELS: Record<WeaponRarity, string> = {
   common: "Commune", uncommon: "Peu commune", rare: "Rare", epic: "Épique", legendary: "Légendaire",
@@ -66,7 +68,7 @@ export function WeaponArsenal() {
       <button className="weapon-arsenal-toggle" onClick={() => setOpen(!open)}>
         <span>⚔️ Arsenal d'armes</span>
         <span className="weapon-arsenal-count">{weapons.length > 0 ? `${weapons.length} armes` : "0 armes"}</span>
-        <span className="weapon-arsenal-chevron">{open ? "▲" : "▼"}</span>
+        <span className="weapon-arsenal-chevron">{open ? <ChevronUp size={16} strokeWidth={2.5} /> : <ChevronDown size={16} strokeWidth={2.5} />}</span>
       </button>
 
       {open && (
@@ -89,17 +91,23 @@ export function WeaponArsenal() {
             <div className="weapon-empty">Aucune arme. Enregistrez un prout pour en obtenir une !</div>
           ) : (
             <div className="weapon-grid">
-              {filtered.map((w) => (
-                <div key={w.id} className="weapon-card" style={{ borderColor: RARITY_COLORS[w.rarity as WeaponRarity] }} onClick={() => setSelected(w)}>
-                  <WeaponIcon weaponType={w.weapon_type as WeaponType} visualSeed={w.visual_seed} rarity={w.rarity as WeaponRarity} size={56} />
-                  <div className="weapon-card-info">
-                    <div className="weapon-card-name">{w.name}</div>
-                    <div className="weapon-card-type">{TYPE_LABELS[w.weapon_type as WeaponType]}</div>
-                    <div className="weapon-card-score" style={{ color: RARITY_COLORS[w.rarity as WeaponRarity] }}>⭐ {w.overall_score}</div>
+              {filtered.map((w) => {
+                const isLegendary = (w.rarity as WeaponRarity) === "legendary";
+                const card = (
+                  <div className="weapon-card" style={{ borderColor: RARITY_COLORS[w.rarity as WeaponRarity] }} onClick={() => setSelected(w)}>
+                    <WeaponIcon visualSeed={w.visual_seed} rarity={w.rarity} size={56} />
+                    <div className="weapon-card-info">
+                      <div className="weapon-card-name">{w.name}</div>
+                      <div className="weapon-card-type">{TYPE_LABELS[w.weapon_type as WeaponType]}</div>
+                      <div className="weapon-card-score" style={{ color: RARITY_COLORS[w.rarity as WeaponRarity] }}>⭐ {w.overall_score}</div>
+                    </div>
+                    {w.is_favorite && <span className="weapon-fav-badge">❤️</span>}
                   </div>
-                  {w.is_favorite && <span className="weapon-fav-badge">❤️</span>}
-                </div>
-              ))}
+                );
+                return isLegendary ? (
+                  <SketchBorder key={w.id} color="#C99A3D" roughness={1.5}>{card}</SketchBorder>
+                ) : <div key={w.id}>{card}</div>;
+              })}
             </div>
           )}
         </div>
@@ -108,7 +116,7 @@ export function WeaponArsenal() {
       {selected && (
         <div className="weapon-modal-overlay" onClick={() => setSelected(null)}>
           <div className="weapon-modal" onClick={(e) => e.stopPropagation()}>
-            <WeaponIcon weaponType={selected.weapon_type as WeaponType} visualSeed={selected.visual_seed} rarity={selected.rarity as WeaponRarity} size={100} />
+            <WeaponIcon visualSeed={selected.visual_seed} rarity={selected.rarity} size={100} />
             <h3 className="weapon-modal-name">{selected.name}</h3>
             <div className="weapon-modal-type">{TYPE_LABELS[selected.weapon_type as WeaponType]}</div>
             <div className="weapon-modal-rarity" style={{ color: RARITY_COLORS[selected.rarity as WeaponRarity] }}>{RARITY_LABELS[selected.rarity as WeaponRarity]}</div>

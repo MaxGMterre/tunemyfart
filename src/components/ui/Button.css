@@ -32,16 +32,7 @@
 .btn--success   { background: #06D6A0; color: #1D1D1F; }
 .btn--ghost     { background: transparent; color: #1D1D1F; }
 
-/* Hover */
-.btn:hover:not(:disabled) {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px 0px #1D1D1F;
-}
-/* Active */
-.btn:active:not(:disabled) {
-  transform: translate(4px, 4px);
-  box-shadow: 0px 0px 0px 0px #1D1D1F;
-}
+/* Hover/active transforms removed — handled by Framer Motion spring physics */
 /* Disabled */
 .btn:disabled {
   opacity: 0.5;

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { fetchFullUserRecordings, deleteRecording } from "../lib/supabase";
 import type { FullRecording } from "../lib/supabase";
 import type { RecordingResult } from "../lib/useRecorder";
@@ -125,6 +126,7 @@ export function History({
   const [shareTarget, setShareTarget] = useState<FullRecording | null>(null);
   const [playingId, setPlayingId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [listParent] = useAutoAnimate();
 
   const load = useCallback(async () => {
     if (!user) {
@@ -306,7 +308,7 @@ export function History({
           actionLabel="Débuter l'analyse"
         />
       ) : (
-        <ol className="history-list">
+        <ol className="history-list" ref={listParent}>
           {filtered.map((rec, idx) => (
             <li
               key={rec.id}
