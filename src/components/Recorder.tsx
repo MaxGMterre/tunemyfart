@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { useRecorder } from "../lib/useRecorder";
 import { saveRecording, uploadAudio } from "../lib/supabase";
 import { useAuth } from "../lib/useAuth";
 import { ShareCard } from "./ShareCard";
-import { LabTableDecor } from "./LabTableDecor";
 import { PutoisMascot } from "./PutoisMascot";
 import type { PutoisState } from "./PutoisMascot";
 import {
@@ -20,6 +20,9 @@ import { generateWeaponFromRecording, saveWeapon } from "../lib/weapons";
 import type { Weapon } from "../lib/weapons";
 import { useToast } from "./ui/Toast";
 import { NewWeaponModal } from "./NewWeaponModal";
+import { AmpouleVintage } from "./AmpouleVintage";
+import { VuMeterVintage } from "./VuMeterVintage";
+import { CadranRotatif } from "./CadranRotatif";
 import "./Recorder.css";
 
 // ── Helpers ──────────────────────────────────────────────
@@ -46,6 +49,36 @@ async function triggerHaptic(type: "light" | "heavy" | "victory") {
 }
 
 const HUMEUR_EMOJIS = ["😊", "😤", "😂", "😴", "🤔", "😐", "🥴", "😌"];
+
+// ── TeslaBobineInline ─────────────────────────────────────
+
+function TeslaBobineInline({ isRecording }: { isRecording: boolean }) {
+  return (
+    <div className="tesla-bobine">
+      <svg viewBox="0 0 44 60" width="44" height="60" overflow="visible">
+        {/* Base cylindrique */}
+        <rect x="12" y="48" width="20" height="10" rx="2" fill="#C99A3D" stroke="#9B7328" strokeWidth="1.5" />
+        {/* Spires */}
+        {[0, 1, 2, 3, 4, 5].map((i) => (
+          <ellipse key={i} cx="22" cy={45 - i * 7} rx="10" ry="3"
+            fill="none" stroke="#A67B4B" strokeWidth="2" />
+        ))}
+        {/* Boule sommet */}
+        <circle cx="22" cy="8" r="6" fill="#C99A3D" stroke="#9B7328" strokeWidth="1.5" />
+        <circle cx="20" cy="6" r="2" fill="rgba(255,255,255,0.3)" />
+        {/* Arcs électriques */}
+        {isRecording && (
+          <>
+            <path d="M 22 8 Q 36 2 40 10" fill="none" stroke="#B84EFF" strokeWidth="1.5"
+              strokeLinecap="round" style={{ animation: "arc-flash 4s ease-in-out infinite" }} />
+            <path d="M 22 8 Q 8 0 4 12" fill="none" stroke="#00D4FF" strokeWidth="1.5"
+              strokeLinecap="round" style={{ animation: "arc-flash 4s ease-in-out infinite 2s" }} />
+          </>
+        )}
+      </svg>
+    </div>
+  );
+}
 
 // ── Component ────────────────────────────────────────────
 
@@ -252,9 +285,7 @@ export function Recorder() {
 
   const isRecording = status === "recording";
 
-  // Needle angle: -60° (silence) → +60° (full signal)
-  const needleAngle =
-    ((Math.max(-60, Math.min(0, liveDb)) + 60) / 60) * 120 - 60;
+  // Passed to VuMeterVintage which computes its own angle internally
 
   // Note pop animation key
   useEffect(() => {
@@ -508,233 +539,73 @@ export function Recorder() {
   };
 
   return (
-    <div className="recorder-panel">
-      {/* ── Dark lab instrument frame ── */}
-      <div
-        className={`instrument-frame${
-          isRecording ? " instrument-frame--recording" : ""
-        }`}
-      >
-        {/* Corner screws */}
-        <div className="screw screw--tl" />
-        <div className="screw screw--tr" />
-        <div className="screw screw--bl" />
-        <div className="screw screw--br" />
+    <div className="recorder-tesla">
+      {/* Bobine Tesla décorative */}
+      <TeslaBobineInline isRecording={isRecording} />
 
-        {/* LED indicator row */}
-        <div className="led-row">
-          <div className="led-item">
-            <div className="led led--power" />
-            <span className="led-label">PWR</span>
-          </div>
-          <div className="led-item">
-            <div
-              className={`led led--ready${
-                status === "idle" || status === "done" ? " led--on-ready" : ""
-              }`}
-            />
-            <span className="led-label">RDY</span>
-          </div>
-          <div className="led-item">
-            <div
-              className={`led led--rec${isRecording ? " led--on-rec" : ""}`}
-            />
-            <span className="led-label">REC</span>
-          </div>
-          <div className="led-item">
-            <div
-              className={`led led--sig${liveDb > -40 ? " led--on-sig" : ""}`}
-            />
-            <span className="led-label">SIG</span>
-          </div>
-        </div>
+      {/* Plaque constructeur */}
+      <div className="plaque-constructeur">
+        <p className="plaque-titre">Mesure de Fréquence Acoustique</p>
+        <p className="plaque-sous-titre">Modèle Mk.II — Laboratoire du Pr. Prout</p>
+      </div>
 
-        {/* Oscilloscope screen */}
-        <div className="scope-screen">
-          <canvas
-            ref={canvasRef}
-            className="scope-canvas"
-            width={600}
-            height={120}
-          />
-          <div className="scope-scanlines" />
-          <div className="note-display">
-            <span className="note-value" key={noteKey}>
+      {/* Rangée ampoules */}
+      <div className="ampoules-row">
+        <AmpouleVintage on={true} color="#00FF88" label="POWER" />
+        <AmpouleVintage on={status === "idle" || status === "done"} color="#00D4FF" label="READY" />
+        <AmpouleVintage on={isRecording} color="#C42030" label="REC" pulse />
+        <AmpouleVintage on={liveDb > -40} color="#FFE500" label="SIG" />
+      </div>
+
+      {/* Écran oscilloscope */}
+      <div className="oscilloscope-frame">
+        <canvas
+          ref={canvasRef}
+          className="scope-canvas-tesla"
+          width={600}
+          height={80}
+        />
+        {(liveNote || liveFrequency > 0) && (
+          <div className="oscilloscope-note-overlay">
+            <span className="oscilloscope-note-val" key={noteKey}>
               {liveNote ? `${liveNote.note}${liveNote.octave}` : "—"}
             </span>
             {liveFrequency > 0 && (
-              <span className="note-freq">{liveFrequency.toFixed(0)} Hz</span>
+              <span className="oscilloscope-freq-val">{liveFrequency.toFixed(0)} Hz</span>
             )}
           </div>
-        </div>
-
-        {/* Spectrogram */}
-        <div className="spectrogram-screen">
-          <canvas
-            ref={spectrogramCanvasRef}
-            className="spectrogram-canvas"
-            width={320}
-            height={80}
-          />
-        </div>
-
-        {/* Piano roll */}
-        <div className="piano-roll-screen">
-          <canvas
-            ref={pianoRollCanvasRef}
-            className="piano-roll-canvas"
-            width={320}
-            height={60}
-          />
-        </div>
-
-        {/* VU meter */}
-        <div className="vu-section">
-          <div className="vu-meter">
-            <div className="vu-arc-bg" />
-            <div className="vu-scale-marks">
-              <span className="vu-mark vu-mark--lo">-60</span>
-              <span className="vu-mark vu-mark--mid">-30</span>
-              <span className="vu-mark vu-mark--hi">0</span>
-            </div>
-            <div
-              className="vu-needle"
-              style={{
-                transform: `translateX(-50%) rotate(${needleAngle}deg)`,
-              }}
-            />
-            <div className="vu-pivot" />
-          </div>
-          <span className="vu-label">dB SPL</span>
-        </div>
-
-        {/* Decorative cables */}
-        <svg
-          className="cables-svg"
-          viewBox="0 0 320 90"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <path
-            d="M 15 85 C 70 55, 150 75, 230 45"
-            fill="none"
-            stroke="#111"
-            strokeWidth="7"
-            strokeLinecap="round"
-          />
-          <path
-            d="M 15 85 C 70 55, 150 75, 230 45"
-            fill="none"
-            stroke="#C99A3D"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeDasharray="5 9"
-            opacity="0.5"
-          />
-          <circle cx="15" cy="85" r="5" fill="#C99A3D" opacity="0.7" />
-          <circle cx="230" cy="45" r="5" fill="#C99A3D" opacity="0.7" />
-          <path
-            d="M 260 12 C 285 32, 302 22, 308 52"
-            fill="none"
-            stroke="#111"
-            strokeWidth="5"
-            strokeLinecap="round"
-          />
-          <path
-            d="M 260 12 C 285 32, 302 22, 308 52"
-            fill="none"
-            stroke="#C99A3D"
-            strokeWidth="1"
-            strokeLinecap="round"
-            strokeDasharray="4 7"
-            opacity="0.45"
-          />
-          <circle cx="260" cy="12" r="4" fill="#C99A3D" opacity="0.65" />
-          <circle cx="308" cy="52" r="4" fill="#C99A3D" opacity="0.65" />
-        </svg>
-
-        <div className="instr-nameplate">TUNEMYFART LABS — MK.II</div>
+        )}
+        {status === "idle" && !isRecording && (
+          <div className="oscilloscope-idle">▬▬▬ Prêt ▬▬▬</div>
+        )}
       </div>
 
-      {/* ── Lab table decoration ── */}
-      <div className="lab-table-wrap" aria-hidden="true">
-        <LabTableDecor height={90} />
+      {/* Spectrogram + Piano roll */}
+      <div className="spectrogram-screen">
+        <canvas
+          ref={spectrogramCanvasRef}
+          className="spectrogram-canvas"
+          width={320}
+          height={60}
+        />
+      </div>
+      <div className="piano-roll-screen">
+        <canvas
+          ref={pianoRollCanvasRef}
+          className="piano-roll-canvas"
+          width={320}
+          height={40}
+        />
       </div>
 
-      {/* ── Putois mascot + dialogue ── */}
-      <div className="putois-zone">
-        <div className="putois-anchor">
-          {dialogue && (
-            <ProutDialogue
-              key={dialogue.key}
-              message={dialogue.message}
-              align={dialogue.align}
-              onDismiss={dismiss}
-            />
-          )}
-          <PutoisMascot state={putoisState} size={64} />
-        </div>
+      {/* Instruments row : VU-mètre + cadrans */}
+      <div className="instruments-row">
+        <CadranRotatif label="GAIN" angle={80} />
+        <VuMeterVintage db={liveDb} />
+        <CadranRotatif label="FREQ" angle={200} />
       </div>
 
-      {/* ── Record / Stop buttons ── */}
-      {status === "idle" && (
-        <div className="record-btn-wrap">
-          <div className="long-mode-toggle">
-            <button
-              className={`mode-toggle-btn${longMode ? " active" : ""}`}
-              onClick={() => setLongMode((v) => !v)}
-            >
-              Mode session {longMode ? "ON" : "OFF"}
-            </button>
-            <span className="mode-toggle-hint">
-              {longMode ? "Jusqu'à 5 min" : "30 sec max"}
-            </span>
-          </div>
-          <button
-            className="rec-btn rec-btn-giant"
-            onClick={handleStart}
-            aria-label="Démarrer l'analyse"
-          >
-            <span className="rec-btn-giant-icon">🎙</span>
-            <span className="rec-btn-giant-label">{isRecording ? "Arrêter" : "REC"}</span>
-          </button>
-        </div>
-      )}
-
-      {isRecording && (
-        <div className="record-btn-wrap">
-          {isRecording && (
-            <div className="live-stats-panel">
-              <div className="live-stat">
-                <span className="ls-val">{liveStats.peakDb.toFixed(1)}</span>
-                <span className="ls-lbl">dB pic</span>
-              </div>
-              <div className="live-stat">
-                <span className="ls-val">{liveStats.peakNote ?? "—"}</span>
-                <span className="ls-lbl">note max</span>
-              </div>
-              <div className="live-stat">
-                <span className="ls-val">{liveStats.noteCount}</span>
-                <span className="ls-lbl">événements</span>
-              </div>
-              <div className="live-stat">
-                <span className="ls-val">
-                  {formatTime(liveStats.elapsedMs / 1000)}
-                </span>
-                <span className="ls-lbl">durée</span>
-              </div>
-            </div>
-          )}
-          <button
-            className="rec-btn rec-btn--stop"
-            onClick={handleStop}
-            aria-label="Arrêter l'analyse"
-          >
-            STOP
-          </button>
-        </div>
-      )}
-
+      {/* Status messages */}
       {status === "requesting" && (
         <p className="status-text" role="status">
           Autorisation du microphone en attente…
@@ -751,37 +622,105 @@ export function Recorder() {
         </p>
       )}
 
-      {/* ── Result block ── */}
-      {status === "done" && result && (
-        <div className="result-block">
-          <h3 className="result-title">Rapport d'analyse acoustique</h3>
+      {/* Bouton REC bakélite — idle state */}
+      {status === "idle" && (
+        <>
+          <div className="long-mode-toggle">
+            <button
+              className={`mode-toggle-btn${longMode ? " active" : ""}`}
+              onClick={() => setLongMode((v) => !v)}
+            >
+              Mode session {longMode ? "ON" : "OFF"}
+            </button>
+            <span className="mode-toggle-hint">
+              {longMode ? "Jusqu'à 5 min" : "30 sec max"}
+            </span>
+          </div>
+          <motion.button
+            className="rec-btn-bakelite"
+            onClick={handleStart}
+            aria-label="Démarrer l'analyse"
+            whileTap={{ scale: 0.95 }}
+          >
+            <span className="rec-btn-label">REC</span>
+            <span className="rec-btn-sub">appuyer</span>
+          </motion.button>
+        </>
+      )}
 
-          <div className="result-stats-row">
-            <div className="stat-card">
-              <span className="stat-card-emoji">💥</span>
-              <span className="stat-card-value">{result.dbMax.toFixed(1)}</span>
-              <span className="stat-card-label">dB max</span>
+      {/* Bouton STOP + live stats pendant l'enregistrement */}
+      {isRecording && (
+        <>
+          <div className="live-stats-panel">
+            <div className="live-stat">
+              <span className="ls-val">{liveStats.peakDb.toFixed(1)}</span>
+              <span className="ls-lbl">dB pic</span>
             </div>
-            <div className="stat-card">
-              <span className="stat-card-emoji">⏱️</span>
-              <span className="stat-card-value">
-                {(result.durationMs / 1000).toFixed(2)}
-              </span>
-              <span className="stat-card-label">secondes</span>
+            <div className="live-stat">
+              <span className="ls-val">{liveStats.peakNote ?? "—"}</span>
+              <span className="ls-lbl">note max</span>
             </div>
-            <div className="stat-card">
-              <span className="stat-card-emoji">🎵</span>
-              <span className="stat-card-value">
-                {result.notePrincipale ?? "—"}
+            <div className="live-stat">
+              <span className="ls-val">{liveStats.noteCount}</span>
+              <span className="ls-lbl">événements</span>
+            </div>
+            <div className="live-stat">
+              <span className="ls-val">
+                {formatTime(liveStats.elapsedMs / 1000)}
               </span>
-              <span className="stat-card-label">note</span>
+              <span className="ls-lbl">durée</span>
             </div>
           </div>
+          <motion.button
+            className="rec-btn-bakelite recording"
+            onClick={handleStop}
+            aria-label="Arrêter l'analyse"
+            whileTap={{ scale: 0.95 }}
+          >
+            <span className="rec-btn-label">STOP</span>
+            <span className="rec-btn-sub">{formatTime(liveStats.elapsedMs / 1000)}</span>
+          </motion.button>
+        </>
+      )}
 
-          <div className="result-stats-secondary">
-            <div className="stat-secondary">
-              <span className="stat-label">Événements spectraux</span>
-              <span className="stat-value">{result.sequenceNotes.length}</span>
+      {/* Rapport résultat */}
+      {status === "done" && result && (
+        <motion.div
+          className="rapport-parchemin"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 20 }}
+        >
+          <h3 className="rapport-titre">Rapport d'analyse acoustique</h3>
+
+          <div className="rapport-grid">
+            <div className="rapport-stat">
+              <span className="rapport-stat-icon">⚡</span>
+              <div>
+                <div className="rapport-stat-label">Puissance</div>
+                <div className="rapport-stat-value">{result.dbMax.toFixed(1)} dB</div>
+              </div>
+            </div>
+            <div className="rapport-stat">
+              <span className="rapport-stat-icon">⏱</span>
+              <div>
+                <div className="rapport-stat-label">Durée</div>
+                <div className="rapport-stat-value">{(result.durationMs / 1000).toFixed(1)}s</div>
+              </div>
+            </div>
+            <div className="rapport-stat">
+              <span className="rapport-stat-icon">♪</span>
+              <div>
+                <div className="rapport-stat-label">Note</div>
+                <div className="rapport-stat-value">{result.notePrincipale || "—"}</div>
+              </div>
+            </div>
+            <div className="rapport-stat">
+              <span className="rapport-stat-icon">〜</span>
+              <div>
+                <div className="rapport-stat-label">Notes</div>
+                <div className="rapport-stat-value">{result.sequenceNotes.length}</div>
+              </div>
             </div>
           </div>
 
@@ -817,9 +756,7 @@ export function Recorder() {
               <div
                 className="audio-progress-bar"
                 style={{
-                  width: duration
-                    ? `${(currentTime / duration) * 100}%`
-                    : "0%",
+                  width: duration ? `${(currentTime / duration) * 100}%` : "0%",
                 }}
               />
             </div>
@@ -954,8 +891,23 @@ export function Recorder() {
               Nouvelle analyse
             </button>
           )}
-        </div>
+        </motion.div>
       )}
+
+      {/* Putois mascot + dialogue */}
+      <div className="putois-zone">
+        <div className="putois-anchor">
+          {dialogue && (
+            <ProutDialogue
+              key={dialogue.key}
+              message={dialogue.message}
+              align={dialogue.align}
+              onDismiss={dismiss}
+            />
+          )}
+          <PutoisMascot state={putoisState} size={64} />
+        </div>
+      </div>
 
       {showShare && result && (
         <ShareCard result={result} onClose={() => setShowShare(false)} />

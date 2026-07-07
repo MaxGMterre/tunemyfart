@@ -1,0 +1,22 @@
+.ampoule-wrapper { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.ampoule-body { position: relative; display: flex; align-items: center; justify-content: center; }
+.ampoule-pulse-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid;
+  animation: none;
+  pointer-events: none;
+}
+.ampoule-label {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.45rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #9B7328;
+  background: #C99A3D22;
+  border: 1px solid #9B7328;
+  border-radius: 2px;
+  padding: 1px 4px;
+  white-space: nowrap;
+}

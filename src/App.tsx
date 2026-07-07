@@ -38,6 +38,9 @@ import "./styles/tokens.css";
 import "./components/ui/Button.css";
 import "./components/Auth.css";
 import "./components/Recorder.css";
+import "./components/AmpouleVintage.css";
+import "./components/VuMeterVintage.css";
+import "./components/CadranRotatif.css";
 import "./components/Leaderboard.css";
 import "./components/Missions.css";
 import "./components/ShareCard.css";
@@ -298,6 +301,7 @@ function AppShell() {
               onClick={() => handleTabChange(t)}
               aria-label={TAB_META[t].label}
               aria-current={tab === t ? "page" : undefined}
+              data-tab={t}
             >
               <span className="tab-icon">{TAB_SVGS[t]}</span>
               {TAB_META[t].label}

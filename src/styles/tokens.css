@@ -1,47 +1,70 @@
 :root {
-  /* Palette — instrument scientifique vintage */
-  --color-paper: #FDF6E3;
-  --color-paper-dark: #e8e0cc;
-  --color-ink: #1D1D1F;
-  --color-ink-soft: #4A4E52;
-  --color-brass: #FF6B35;
-  --color-coral: #E63946;
-  --color-mint: #2ecc71;
-  --color-violet: #9b59b6;
-  --color-blue: #3498db;
+  /* ── Palette Tesla × Bois × Laiton ─────────────────────── */
+  --color-bg-main: #E8D9B8;
+  --color-bg-panel: #F0E4C7;
+  --color-bg-panel-dark: #D4C094;
 
-  /* ── Palette cartoon vive ───────────────────────────────── */
-  --color-bg-main: #FDF6E3;
-  --color-bg-panel: #FFEDCC;
-  --color-accent-primary: #FF6B35;
-  --color-accent-secondary: #4ECDC4;
-  --color-accent-tertiary: #FFD93D;
-  --color-accent-danger: #E63946;
-  --color-accent-success: #06D6A0;
-  --color-accent-magic: #C77DFF;
-  --color-text-on-primary: #FFFFFF;
-  --color-border: #1D1D1F;
-  --shadow-cartoon: 4px 4px 0px 0px #1D1D1F;
-  --shadow-cartoon-lg: 6px 6px 0px 0px #1D1D1F;
+  --color-wood-dark: #6B4523;
+  --color-wood-medium: #A67B4B;
 
-  /* Extended palette */
-  --color-sage: #6B8F71;
-  --color-rust: #9B3A2A;
-  --color-sky: #7B9EB8;
-  --color-amber: #E8A857;
-  --color-plum: #6B4E71;
-  /* Ink scale */
-  --color-ink-100: #E8ECF1;
-  --color-ink-200: #C8D0DA;
-  --color-ink-300: #A3B0BF;
-  --color-ink-600: #3D5A73;
-  --color-ink-900: #0F1C2D;
-  /* Paper scale */
-  --color-paper-50: #FDFAF4;
-  --color-paper-100: #F8F2E4;
-  --color-paper-400: #DDD4B8;
+  --color-brass: #C99A3D;
+  --color-brass-bright: #E4B94A;
+  --color-brass-dark: #9B7328;
 
-  /* Typo */
+  --color-red-rhodes: #A02020;
+  --color-red-rhodes-bright: #C42030;
+
+  --color-ink: #2C1810;
+  --color-ink-soft: #4A3628;
+
+  /* ── Accents néon (LEDs, cadrans, écrans) ───────────────── */
+  --color-neon-blue: #00D4FF;
+  --color-neon-violet: #B84EFF;
+  --color-neon-yellow: #FFE500;
+  --color-neon-green: #00FF88;
+  --color-neon-cyan: #00FFF0;
+  --color-neon-pink: #FF3EA5;
+  --color-neon-orange: #FF7A1A;
+
+  /* ── Glows néon ─────────────────────────────────────────── */
+  --glow-blue:   0 0 12px #00D4FF, 0 0 24px rgba(0, 212, 255, 0.4);
+  --glow-violet: 0 0 12px #B84EFF, 0 0 24px rgba(184, 78, 255, 0.4);
+  --glow-yellow: 0 0 12px #FFE500, 0 0 20px rgba(255, 229, 0, 0.4);
+  --glow-green:  0 0 12px #00FF88, 0 0 20px rgba(0, 255, 136, 0.4);
+  --glow-orange: 0 0 12px #FF7A1A, 0 0 20px rgba(255, 122, 26, 0.4);
+  --glow-cyan:   0 0 12px #00FFF0, 0 0 20px rgba(0, 255, 240, 0.4);
+
+  /* ── Ombres cartoon (encre foncée) ──────────────────────── */
+  --shadow-cartoon-sm: 3px 3px 0 0 #2C1810;
+  --shadow-cartoon:    5px 5px 0 0 #2C1810;
+  --shadow-cartoon-lg: 8px 8px 0 0 #2C1810;
+  --color-border: #2C1810;
+
+  /* ── Aliases backward-compat ────────────────────────────── */
+  --color-paper:            #E8D9B8;
+  --color-paper-dark:       #D4C094;
+  --color-accent-primary:   #C99A3D;
+  --color-accent-secondary: #00D4FF;
+  --color-accent-tertiary:  #FFE500;
+  --color-accent-danger:    #A02020;
+  --color-accent-success:   #00FF88;
+  --color-accent-magic:     #B84EFF;
+  --color-text-on-primary:  #F0E4C7;
+  --color-coral:            #C42030;
+  --color-mint:             #00FF88;
+  --color-violet:           #B84EFF;
+  --color-blue:             #00D4FF;
+  --color-amber:            #E4B94A;
+  --color-ink-100: #E8D9B8;
+  --color-ink-200: #D4C094;
+  --color-ink-300: #A67B4B;
+  --color-ink-600: #6B4523;
+  --color-ink-900: #2C1810;
+  --color-paper-50:  #F8F0DC;
+  --color-paper-100: #F0E4C7;
+  --color-paper-400: #D4C094;
+
+  /* ── Typo ───────────────────────────────────────────────── */
   --font-display: "Fraunces", "Georgia", serif;
   --font-mono: "IBM Plex Mono", "Courier New", monospace;
   --font-body: "IBM Plex Sans", system-ui, sans-serif;
@@ -49,34 +72,50 @@
   --radius-panel: 6px;
 }
 
-/* Dark mode overrides */
+/* ── Dark mode : nuit bleue profonde + néons éclatants ───── */
 [data-theme="dark"] {
-  --color-paper: #1a1610;
-  --color-paper-dark: #252018;
-  --color-ink: #e8dfc8;
-  --color-ink-soft: rgba(232, 223, 200, 0.5);
-  --color-brass: #d4aa4a;
-  --color-coral: #e06840;
-  --color-sage: #7AB882;
-  --color-rust: #C04A38;
-  --color-sky: #8BB5CE;
-  --color-amber: #F0BC6A;
-  --color-plum: #8B6A91;
+  --color-bg-main: #070B14;
+  --color-bg-panel: #0D1220;
+  --color-bg-panel-dark: #050810;
+  --color-wood-dark: #0D1220;
+  --color-wood-medium: #121A2E;
+  --color-brass: #E4B94A;
+  --color-brass-bright: #FFD966;
+  --color-brass-dark: #C99A3D;
+  --color-red-rhodes: #C42030;
+  --color-red-rhodes-bright: #E63946;
+  --color-ink: #E8D9B8;
+  --color-ink-soft: rgba(232, 217, 184, 0.6);
+  --color-paper: #070B14;
+  --color-paper-dark: #0D1220;
+  --color-border: #E4B94A;
+  --color-text-on-primary: #070B14;
+  --shadow-cartoon-sm: 3px 3px 0 0 #E4B94A;
+  --shadow-cartoon:    5px 5px 0 0 #E4B94A;
+  --shadow-cartoon-lg: 8px 8px 0 0 #E4B94A;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-paper: #1a1610;
-    --color-paper-dark: #252018;
-    --color-ink: #e8dfc8;
-    --color-ink-soft: rgba(232, 223, 200, 0.5);
-    --color-brass: #d4aa4a;
-    --color-coral: #e06840;
-    --color-sage: #7AB882;
-    --color-rust: #C04A38;
-    --color-sky: #8BB5CE;
-    --color-amber: #F0BC6A;
-    --color-plum: #8B6A91;
+    --color-bg-main: #070B14;
+    --color-bg-panel: #0D1220;
+    --color-bg-panel-dark: #050810;
+    --color-wood-dark: #0D1220;
+    --color-wood-medium: #121A2E;
+    --color-brass: #E4B94A;
+    --color-brass-bright: #FFD966;
+    --color-brass-dark: #C99A3D;
+    --color-red-rhodes: #C42030;
+    --color-red-rhodes-bright: #E63946;
+    --color-ink: #E8D9B8;
+    --color-ink-soft: rgba(232, 217, 184, 0.6);
+    --color-paper: #070B14;
+    --color-paper-dark: #0D1220;
+    --color-border: #E4B94A;
+    --color-text-on-primary: #070B14;
+    --shadow-cartoon-sm: 3px 3px 0 0 #E4B94A;
+    --shadow-cartoon:    5px 5px 0 0 #E4B94A;
+    --shadow-cartoon-lg: 8px 8px 0 0 #E4B94A;
   }
 }
 
@@ -84,12 +123,20 @@
   box-sizing: border-box;
 }
 
+/* ── Scroll horizontal fix ──────────────────────────────── */
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+}
+
 html,
 body,
 #root {
   margin: 0;
   min-height: 100vh;
-  background: var(--color-paper);
+  background: var(--color-bg-main);
   color: var(--color-ink);
   font-family: var(--font-body);
 }
@@ -102,55 +149,84 @@ body {
   max-width: 480px;
   margin: 0 auto;
   height: 100svh;
-  height: 100vh; /* fallback */
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background: var(--color-bg-main);
-  border-left: 1px solid rgba(27, 42, 65, 0.08);
-  border-right: 1px solid rgba(27, 42, 65, 0.08);
+  border-left: 2px solid var(--color-brass-dark);
+  border-right: 2px solid var(--color-brass-dark);
   overflow: hidden;
+  overflow-x: hidden;
 }
 
+/* ── Header Tesla bois/laiton ───────────────────────────── */
 .app-header {
-  padding: 1.25rem 1.25rem 0.75rem;
-  border-bottom: 3px solid var(--color-border);
-  background: var(--color-bg-main);
+  padding: 1rem 1.25rem 0.6rem;
+  border-bottom: 3px solid var(--color-brass-dark);
+  background: linear-gradient(180deg, var(--color-bg-panel) 0%, var(--color-bg-main) 100%);
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
   gap: 0.25rem;
+  position: relative;
+}
+.app-header::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-brass-bright);
+  opacity: 0.6;
+  pointer-events: none;
 }
 .app-header .app-title { flex: 1 1 auto; }
 .app-header .app-subtitle { flex: 0 0 100%; order: 2; }
-.app-header .header-actions { flex-shrink: 0; display: flex; gap: 0.25rem; margin-top: 0.25rem; }
+.app-header .header-actions { flex-shrink: 0; display: flex; gap: 0.4rem; margin-top: 0.25rem; }
 .app-header .search-toggle-btn { flex-shrink: 0; }
 
 .app-title {
   font-family: var(--font-display, 'Fraunces', serif);
   font-size: 1.8rem;
   font-weight: 900;
+  font-style: italic;
   letter-spacing: 0.01em;
   margin: 0;
-  color: var(--color-ink, #1D1D1F);
+  color: var(--color-ink);
+  text-shadow: 1px 1px 0 var(--color-brass-dark);
 }
 
 .app-subtitle {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--color-ink-soft);
-  margin: 0.2rem 0 0.75rem;
+  color: var(--color-brass-dark);
+  margin: 0.1rem 0 0.5rem;
 }
 
+/* ── Tab bar bois foncé avec voyants LED ────────────────── */
 .tab-bar {
   display: flex;
-  border-top: 3px solid #1D1D1F;
-  background: #FDF6E3;
+  position: relative;
+  border-top: 3px solid var(--color-brass-dark);
+  background: var(--color-wood-dark);
   position: sticky;
   bottom: 0;
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
   overflow: visible;
+  z-index: 100;
+}
+.tab-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--color-brass-bright);
+  opacity: 0.5;
 }
 
 .tab-indicator-bar {
@@ -158,7 +234,7 @@ body {
   top: -2px;
   left: 0;
   height: 2px;
-  background: var(--color-coral);
+  background: var(--color-brass-bright);
   transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
   z-index: 1;
@@ -170,19 +246,20 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 0.2rem;
+  padding: 0.55rem 0.2rem 0.4rem;
   background: transparent;
   border: none;
-  border-right: 1px solid rgba(29,29,31,0.12);
+  border-right: 1px solid rgba(201, 154, 61, 0.25);
   cursor: pointer;
   font-family: var(--font-mono, monospace);
-  font-size: 0.55rem;
+  font-size: 0.52rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #4A4E52;
+  color: rgba(201, 154, 61, 0.7);
   transition: background 120ms, color 120ms;
   -webkit-tap-highlight-color: transparent;
-  gap: 0.2rem;
+  gap: 0.15rem;
+  position: relative;
 }
 
 .tab-bar button:last-child { border-right: none; }
@@ -195,36 +272,53 @@ body {
   width: 20px;
 }
 
+/* LED voyant par onglet */
+.tab-bar button::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(201, 154, 61, 0.3);
+  transition: background 120ms, box-shadow 120ms;
+}
+
+.tab-bar button[data-tab="analyser"].active::before   { background: var(--color-neon-green);  box-shadow: var(--glow-green); }
+.tab-bar button[data-tab="classement"].active::before { background: var(--color-neon-yellow); box-shadow: var(--glow-yellow); }
+.tab-bar button[data-tab="missions"].active::before   { background: var(--color-neon-violet); box-shadow: var(--glow-violet); }
+.tab-bar button[data-tab="composer"].active::before   { background: var(--color-neon-cyan);   box-shadow: var(--glow-cyan); }
+.tab-bar button[data-tab="profil"].active::before     { background: var(--color-neon-orange); box-shadow: var(--glow-orange); }
+
 .tab-bar button.active {
-  background: #FF6B35;
-  color: #FFFFFF;
+  background: rgba(201, 154, 61, 0.15);
+  color: var(--color-brass-bright);
   font-weight: 700;
-  box-shadow: inset 0 -3px 0 rgba(0,0,0,0.15);
 }
 
 .tab-bar button:active:not(.active) {
-  background: rgba(255,107,53,0.1);
+  background: rgba(201, 154, 61, 0.08);
 }
 
+/* ── Panel content ──────────────────────────────────────── */
 .panel-content {
   flex: 1;
   min-height: 0;
   padding: 1rem 1.25rem 1.5rem;
   overflow-y: auto;
+  overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
 }
 
-/* ── Animations unifiées (Mission 6a) ───────────────────── */
-/* Timings : 240ms ouverture, 180ms fermeture, cubic-bezier matériel */
+/* ── Animations ─────────────────────────────────────────── */
 :root {
   --anim-enter: 240ms cubic-bezier(0.4, 0, 0.2, 1);
   --anim-leave: 180ms cubic-bezier(0.4, 0, 1, 1);
   --anim-spring: 360ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Tab transition animations removed — handled by Framer Motion AnimatePresence */
-
-/* Cascade animation for list items */
 .mission-card,
 .leaderboard-row,
 .history-entry {
@@ -232,34 +326,28 @@ body {
 }
 
 @keyframes card-cascade {
-  from {
-    opacity: 0;
-    transform: translateX(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(-4px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
-/* ── Cartes cartoon ─────────────────────────────────────── */
+/* ── Cartes parchemin/laiton ────────────────────────────── */
 .card-cartoon {
-  background: #FFEDCC;
-  border: 2.5px solid #1D1D1F;
-  border-radius: 16px;
-  box-shadow: 5px 5px 0px 0px #1D1D1F;
+  background: var(--color-bg-panel);
+  border: 2.5px solid var(--color-border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-cartoon);
   padding: 1.2rem;
   transition: transform 100ms ease, box-shadow 100ms ease;
 }
 .card-cartoon:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 7px 7px 0px 0px #1D1D1F;
+  box-shadow: 7px 7px 0 0 var(--color-border);
 }
-.card-cartoon--primary   { border-top: 5px solid #FF6B35; }
-.card-cartoon--secondary { border-top: 5px solid #4ECDC4; }
-.card-cartoon--tertiary  { border-top: 5px solid #FFD93D; }
+.card-cartoon--primary   { border-top: 5px solid var(--color-brass); }
+.card-cartoon--secondary { border-top: 5px solid var(--color-neon-blue); }
+.card-cartoon--tertiary  { border-top: 5px solid var(--color-neon-yellow); }
 
-/* ── Animations cartoon ─────────────────────────────────── */
+/* ── Keyframes ──────────────────────────────────────────── */
 @keyframes bounce-in {
   0%   { transform: scale(0); opacity: 0; }
   60%  { transform: scale(1.1); opacity: 1; }
@@ -284,60 +372,95 @@ body {
   80%  { transform: translateX(4px); }
 }
 @keyframes rec-pulse {
-  0%,100% { box-shadow: var(--shadow-cartoon-lg), 0 0 0 0 rgba(255,107,53,0.4); }
-  50%      { box-shadow: var(--shadow-cartoon-lg), 0 0 0 12px rgba(255,107,53,0); }
+  0%,100% { box-shadow: var(--shadow-cartoon-lg), 0 0 0 0 rgba(196, 32, 48, 0.5); }
+  50%      { box-shadow: var(--shadow-cartoon-lg), 0 0 0 14px rgba(196, 32, 48, 0); }
 }
 @keyframes subtle-bounce {
   0%,100% { transform: scale(1); }
   50%      { transform: scale(1.03); }
 }
+@keyframes neon-pulse {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0.6; }
+}
+@keyframes filament-flicker {
+  0%,100% { opacity: 1; transform: scaleY(1); }
+  33%      { opacity: 0.85; transform: scaleY(0.98); }
+  66%      { opacity: 0.92; transform: scaleY(1.01); }
+}
+@keyframes arc-flash {
+  0%,90%,100% { opacity: 0; }
+  92%  { opacity: 1; }
+  94%  { opacity: 0.6; }
+  96%  { opacity: 1; }
+  98%  { opacity: 0.3; }
+}
 
 /* ── Scrollbar hiding ───────────────────────────────────── */
-::-webkit-scrollbar {
-  display: none;
-}
-* {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-html,
-body {
+::-webkit-scrollbar { display: none; }
+* { -ms-overflow-style: none; scrollbar-width: none; }
+html, body {
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
 }
 
 /* ── Responsive ─────────────────────────────────────── */
-/* iPhone SE (375px) */
 @media (max-width: 390px) {
   .app-shell { max-width: 100%; }
   .app-title { font-size: 1.3rem; }
-  .tab-bar button { font-size: 0.48rem; padding: 0.5rem 0.05rem; }
-  .panel-content { padding: 0.75rem 1rem 1.25rem; }
+  .tab-bar button { font-size: 0.45rem; padding: 0.5rem 0.05rem 0.35rem; }
+  .panel-content { padding: 0.75rem 0.75rem 1.25rem; }
 }
 
-/* iPad (768px+) */
 @media (min-width: 768px) {
   .app-shell {
     max-width: 600px;
-    border-left: 1px solid rgba(27, 42, 65, 0.12);
-    border-right: 1px solid rgba(27, 42, 65, 0.12);
+    border-left: 2px solid var(--color-brass-dark);
+    border-right: 2px solid var(--color-brass-dark);
   }
 }
 
-/* iPad Pro (1024px+) — 2 column */
 @media (min-width: 1024px) {
   .app-shell { max-width: 900px; }
 }
 
-/* Landscape on mobile — hide tab labels */
 @media (orientation: landscape) and (max-height: 500px) {
   .tab-bar button { padding: 0.4rem 0.1rem; min-height: 36px; }
   .tab-bar button span:not(.tab-icon) { display: none; }
   .app-header { padding: 0.75rem 1.25rem 0.5rem; }
 }
 
-/* View Transitions removed — Framer Motion handles transitions */
-
 /* ── Search toggle & back-to-dashboard ─────────────────── */
-.search-toggle-btn { background: transparent; border: none; cursor: pointer; padding: 0.4rem; color: var(--color-ink-soft); font-size: 1rem; }
-.back-to-dashboard { background: transparent; border: none; font-family: var(--font-mono); font-size: 0.65rem; color: var(--color-ink-soft); cursor: pointer; padding: 0.5rem 1rem; }
+.search-toggle-btn {
+  background: var(--color-bg-panel);
+  border: 2px solid var(--color-brass-dark);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-ink);
+  box-shadow: var(--shadow-cartoon-sm);
+  transition: transform 80ms, box-shadow 80ms;
+}
+.search-toggle-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 0 var(--color-border);
+}
+.back-to-dashboard {
+  background: transparent;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--color-brass-dark);
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+}
+
+/* ── Neon utility classes ───────────────────────────────── */
+.neon-green  { color: var(--color-neon-green);  text-shadow: var(--glow-green); }
+.neon-blue   { color: var(--color-neon-blue);   text-shadow: var(--glow-blue); }
+.neon-violet { color: var(--color-neon-violet); text-shadow: var(--glow-violet); }
+.neon-yellow { color: var(--color-neon-yellow); text-shadow: var(--glow-yellow); }

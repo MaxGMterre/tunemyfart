@@ -1,478 +1,596 @@
-.composer-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.composer-title {
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: var(--color-ink);
-  margin: 0;
-}
-
-.composer-subtitle {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--color-ink-soft);
-  margin: -0.75rem 0 0;
-}
-
-.composer-unlock-hint {
-  background: var(--color-paper-dark);
-  border: 1px solid rgba(27, 42, 65, 0.1);
-  border-left: 3px solid var(--color-brass);
-  border-radius: var(--radius-panel);
-  padding: 0.75rem;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--color-ink-soft);
-}
-
-/* ── Piano ─────────────────────────────────── */
-.piano-wrapper {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.piano-keyboard {
-  display: flex;
-  gap: 4px;
-  min-width: 300px;
-}
-
-.piano-octave-wrap {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.piano-octave {
+/* ── Corps du Rhodes ────────────────── */
+.rhodes-body {
+  background: linear-gradient(180deg, #A67B4B 0%, #6B4523 40%, #4A2E12 100%);
+  border: 5px solid #A02020;
+  border-radius: 20px;
+  box-shadow: 8px 8px 0 0 #2C1810, inset 0 2px 0 rgba(228,185,74,0.3);
+  padding: 1rem 0.75rem 1.5rem;
   position: relative;
-  height: 110px;
-}
-
-.piano-key {
-  position: absolute;
-  border: none;
-  cursor: pointer;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* ── Plaque logo Rhodes ─────────────── */
+.rhodes-logo-plate {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: linear-gradient(90deg, #9B7328, #E4B94A, #9B7328);
+  border: 1.5px solid #6B4523;
+  border-radius: 3px;
+  padding: 3px 8px;
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-size: 0.55rem;
+  font-weight: 900;
+  color: #2C1810;
+  letter-spacing: 0.05em;
+  box-shadow: 2px 2px 0 0 #2C1810;
+}
+
+/* ── Panneau de contrôle ─────────────── */
+.rhodes-panneau {
+  background: linear-gradient(90deg, #9B7328, #C99A3D 40%, #E4B94A 60%, #9B7328);
+  border: 2px solid #6B4523;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  display: flex;
   align-items: center;
-  justify-content: flex-end;
-  padding-bottom: 0.3rem;
-  gap: 0.1rem;
-  border-radius: 0 0 4px 4px;
-  transition: transform 0.08s, opacity 0.15s;
+  gap: 1rem;
+  margin-bottom: 0.25rem;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 3px 3px 0 0 #2C1810;
 }
-
-.piano-key:active {
-  transform: scaleY(0.96) translateY(1px);
-}
-
-.piano-key.playing {
-  opacity: 0.7;
-}
-
-.white-key {
-  height: 100%;
-  background: var(--color-paper);
-  border: 1px solid rgba(27, 42, 65, 0.25);
-  z-index: 1;
-}
-
-.white-key.unlocked {
-  background: #fff;
-  border-color: rgba(27, 42, 65, 0.35);
-}
-
-.white-key.locked {
-  cursor: default;
-  background: var(--color-paper-dark);
-}
-
-.black-key {
-  height: 60%;
-  top: 0;
-  background: var(--color-ink);
-  z-index: 2;
-}
-
-.black-key.locked {
-  cursor: default;
-  background: rgba(27, 42, 65, 0.5);
-}
-
-.key-icon {
-  font-size: 0.55rem;
-  line-height: 1;
-}
-
-.white-key .key-icon {
-  color: var(--color-ink);
-}
-.black-key .key-icon {
-  color: var(--color-paper);
-  font-size: 0.45rem;
-}
-
-.key-label {
-  font-family: var(--font-mono);
-  font-size: 0.4rem;
-  text-transform: uppercase;
-  color: var(--color-ink-soft);
-  letter-spacing: 0.02em;
-}
-
-.piano-octave-label {
-  font-family: var(--font-mono);
-  font-size: 0.55rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--color-ink-soft);
-  text-align: center;
-}
-
-/* ── Record button ─────────────────────────────────── */
-.composer-record-btn {
-  background: rgba(27, 42, 65, 0.15);
-  color: var(--color-ink-soft);
-  border: 1.5px dashed rgba(27, 42, 65, 0.2);
-  border-radius: var(--radius-panel);
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 0.85rem;
-  cursor: not-allowed;
-  min-height: 44px;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
-}
-
-.composer-record-btn.active {
-  background: var(--color-coral);
-  color: #fff;
-  border-color: var(--color-coral);
-  border-style: solid;
+.rhodes-knob {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #C42030, #7B0000);
+  border: 3px solid #C99A3D;
+  box-shadow: 2px 2px 0 0 #2C1810, inset 0 1px 0 rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
 }
-
-/* ── Note grid ─────────────────────────────────── */
-.composer-note-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 0.4rem;
-}
-
-.composer-note-chip {
-  background: var(--color-paper-dark);
-  border: 1px solid rgba(27, 42, 65, 0.1);
-  border-radius: 4px;
-  padding: 0.3rem 0.2rem;
-  font-family: var(--font-mono);
-  font-size: 0.55rem;
+.rhodes-knob-label {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.38rem;
   text-transform: uppercase;
-  color: var(--color-ink-soft);
+  color: #4A3628;
   text-align: center;
+  letter-spacing: 0.06em;
+  margin-top: 2px;
+}
+.rhodes-led {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00D4FF;
+  box-shadow: 0 0 6px #00D4FF, 0 0 12px rgba(0,212,255,0.4);
+  animation: neon-pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.rhodes-plaque-label {
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-size: 0.55rem;
+  color: #2C1810;
+  font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
-.composer-note-chip.collected {
-  border-color: var(--color-brass);
-  color: var(--color-brass);
-  background: rgba(201, 154, 61, 0.08);
-}
-
-/* ── View mode toggle ────────────────────────────── */
-.composer-view-toggle {
+/* ── Vue toggle (Piano / Cercle) ──── */
+.rhodes-view-toggle {
   display: flex;
   gap: 0;
-  border: 1.5px solid rgba(27, 42, 65, 0.2);
+  border: 2px solid #2C1810;
   border-radius: 6px;
   overflow: hidden;
   align-self: flex-start;
+  box-shadow: 2px 2px 0 0 #2C1810;
 }
-
-.composer-view-btn {
-  background: none;
+.rhodes-view-btn {
+  background: rgba(44,24,16,0.15);
   border: none;
-  font-family: var(--font-mono);
+  font-family: "IBM Plex Mono", monospace;
   font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--color-ink-soft);
+  color: #4A3628;
   padding: 0.4rem 0.9rem;
   cursor: pointer;
   transition: background 0.12s, color 0.12s;
   min-height: 36px;
   -webkit-tap-highlight-color: transparent;
 }
-
-.composer-view-btn.active {
-  background: var(--color-ink);
-  color: var(--color-paper);
+.rhodes-view-btn.active {
+  background: #2C1810;
+  color: #E4B94A;
 }
 
-/* ── Circle view ─────────────────────────────────── */
-.composer-circle-wrap {
+/* ── Clavier ────────────────────────── */
+.rhodes-keyboard {
+  position: relative;
+  display: flex;
+  height: 110px;
+  margin: 0.25rem 0;
+  border: 2px solid #2C1810;
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+  background: #2C1810;
+  box-shadow: inset 0 -4px 8px rgba(0,0,0,0.5);
+}
+
+/* Touches blanches */
+.key-white {
+  flex: 1;
+  height: 100%;
+  background: linear-gradient(180deg, #F8F2E4 0%, #E8D9B8 60%, #D4C094 100%);
+  border-right: 1.5px solid #2C1810;
+  position: relative;
+  cursor: pointer;
+  border-radius: 0 0 4px 4px;
+  transition: transform 60ms, background 60ms;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 6px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.key-white:last-child { border-right: none; }
+.key-white:active, .key-white.pressed {
+  background: linear-gradient(180deg, #E8D9B8 0%, #D4C094 60%, #C0A878 100%);
+  transform: translateY(2px);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+.key-white .key-note-label {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.38rem;
+  color: #4A3628;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.key-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #C99A3D;
+  border: 1px solid #9B7328;
+  margin-bottom: 3px;
+}
+.key-locked .key-dot { background: #8A8A8A; border-color: #555; }
+.key-locked { opacity: 0.6; cursor: not-allowed; }
+
+/* Touches noires */
+.key-black {
+  position: absolute;
+  width: 58%;
+  height: 62%;
+  background: linear-gradient(180deg, #1A1208 0%, #2C1810 40%, #0A0806 100%);
+  border: 1.5px solid #2C1810;
+  border-radius: 0 0 4px 4px;
+  top: 0;
+  cursor: pointer;
+  z-index: 2;
+  box-shadow: 2px 3px 0 0 #2C1810, inset 0 1px 0 rgba(255,255,255,0.1);
+  transition: transform 60ms, background 60ms;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 4px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.key-black:active, .key-black.pressed {
+  transform: translateY(2px);
+  box-shadow: 1px 1px 0 0 #2C1810;
+}
+
+/* Hint octave label */
+.rhodes-octave-label {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #C99A3D;
+  text-align: center;
+  margin-top: 2px;
+}
+
+/* ── Octave wrapper ─────────────────── */
+.rhodes-octave-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.rhodes-octave {
+  position: relative;
+  height: 110px;
+  display: flex;
+}
+
+/* ── Cercle chromatique ───────────────── */
+.chromatic-clock {
+  background: radial-gradient(circle, #F8F2E4 0%, #E8D9B8 60%, #D4C094 100%);
+  border: 3px solid #C99A3D;
+  border-radius: 50%;
+  box-shadow: 8px 8px 0 0 #2C1810;
+  position: relative;
+  margin: 0 auto 0.75rem;
+  width: min(220px, 90%);
+  aspect-ratio: 1;
+}
+
+/* Circle view wrapper */
+.rhodes-circle-wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
 }
-
-.circle-collected-hint {
-  font-family: var(--font-mono);
+.rhodes-circle-hint {
+  font-family: "IBM Plex Mono", monospace;
   font-size: 0.58rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--color-ink-soft);
+  color: #C99A3D;
   margin: 0;
 }
-
-.circle-collected-dots {
+.rhodes-circle-dots {
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
   justify-content: center;
   max-width: 200px;
 }
-
-.circle-dot {
+.rhodes-circle-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgba(27, 42, 65, 0.15);
-  border: 1px solid rgba(27, 42, 65, 0.2);
+  background: rgba(44,24,16,0.2);
+  border: 1px solid rgba(44,24,16,0.3);
+}
+.rhodes-circle-dot.collected {
+  background: #C99A3D;
+  border-color: #9B7328;
+  box-shadow: 0 0 4px rgba(201,154,61,0.5);
 }
 
-.circle-dot.collected {
-  background: var(--color-brass);
-  border-color: var(--color-brass);
+/* ── Hint octave débloquage ──────────── */
+.rhodes-unlock-hint {
+  background: rgba(44,24,16,0.25);
+  border: 1px solid rgba(228,185,74,0.3);
+  border-left: 3px solid #E4B94A;
+  border-radius: 6px;
+  padding: 0.6rem 0.75rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.65rem;
+  color: #E4B94A;
 }
 
-/* ── Composition recording ───────────────────────── */
-.composition-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.composition-recording {
+/* ── Enregistrement en cours ──────────── */
+.rhodes-recording-bar {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.65rem 0.85rem;
-  background: rgba(217, 96, 59, 0.06);
-  border: 1.5px solid rgba(217, 96, 59, 0.3);
+  padding: 0.5rem 0.75rem;
+  background: rgba(196,32,48,0.15);
+  border: 1.5px solid rgba(196,32,48,0.5);
   border-radius: 6px;
 }
-
-.composition-timer {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.comp-timer-dot {
+.rhodes-rec-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--color-coral);
+  background: #C42030;
   animation: rec-dot-blink 0.85s ease-in-out infinite;
+  flex-shrink: 0;
 }
-
 @keyframes rec-dot-blink {
   0%, 100% { opacity: 1; }
-  50%       { opacity: 0.25; }
+  50% { opacity: 0.25; }
 }
-
-.comp-timer-value {
-  font-family: var(--font-mono);
+.rhodes-rec-timer {
+  font-family: "IBM Plex Mono", monospace;
   font-size: 0.85rem;
   font-weight: 700;
-  color: var(--color-coral);
+  color: #C42030;
 }
-
-.comp-timer-notes {
-  font-family: var(--font-mono);
+.rhodes-rec-notes {
+  font-family: "IBM Plex Mono", monospace;
   font-size: 0.58rem;
-  color: var(--color-ink-soft);
+  color: #C99A3D;
   text-transform: uppercase;
   letter-spacing: 0.06em;
+  flex: 1;
 }
-
-.composition-stop-btn {
-  background: var(--color-coral);
-  color: white;
+.rhodes-stop-btn {
+  background: #C42030;
+  color: #F0E4C7;
   border: none;
   border-radius: 4px;
-  font-family: var(--font-mono);
+  font-family: "IBM Plex Mono", monospace;
   font-size: 0.65rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  padding: 0.5rem 0.9rem;
+  padding: 0.45rem 0.85rem;
   cursor: pointer;
+  box-shadow: 2px 2px 0 0 #2C1810;
   min-height: 36px;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ── Composition preview ─────────────────────────── */
-.composition-preview {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.75rem;
-  background: rgba(27, 42, 65, 0.03);
-  border: 1px dashed rgba(27, 42, 65, 0.14);
-  border-radius: 4px;
-}
-
-.composition-preview-title {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--color-brass);
-  margin: 0;
-}
-
-.composition-note-sequence {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-}
-
-.comp-note-chip {
-  font-family: var(--font-mono);
-  font-size: 0.55rem;
-  font-weight: 700;
-  padding: 0.2rem 0.4rem;
-  border-radius: 3px;
-  background: var(--color-paper-dark);
-  border: 1px solid rgba(27, 42, 65, 0.15);
-  color: var(--color-ink);
-  text-transform: uppercase;
-}
-
-.comp-note-more {
-  color: var(--color-ink-soft);
-  border-style: dashed;
-}
-
-.composition-actions {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.composition-discard-btn,
-.composition-save-btn {
-  flex: 1;
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 0.55rem;
-  border-radius: 4px;
-  cursor: pointer;
-  min-height: 44px;
-  transition: opacity 0.12s;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.composition-discard-btn {
-  background: var(--color-paper-dark);
-  border: 1.5px solid rgba(27, 42, 65, 0.2);
-  color: var(--color-ink-soft);
-}
-
-.composition-save-btn {
-  background: linear-gradient(180deg, #7a9e82 0%, #6b8f71 100%);
-  border: 2px solid var(--color-brass);
-  color: white;
-  font-weight: 700;
-}
-
-.composition-save-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* ── Saved compositions list ─────────────────────── */
-.compositions-list {
+/* ── Aperçu composition ──────────────── */
+.rhodes-preview {
+  background: rgba(44,24,16,0.25);
+  border: 1px solid rgba(201,154,61,0.3);
+  border-radius: 6px;
+  padding: 0.65rem 0.75rem;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
 }
-
-.compositions-list-title {
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
+.rhodes-preview-title {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.6rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--color-ink-soft);
-  margin: 0 0 0.2rem;
+  letter-spacing: 0.08em;
+  color: #E4B94A;
+  margin: 0;
+}
+.rhodes-note-sequence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+.rhodes-note-chip {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.55rem;
+  font-weight: 700;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  background: rgba(44,24,16,0.4);
+  border: 1px solid #C99A3D;
+  color: #E4B94A;
+  text-transform: uppercase;
+}
+.rhodes-note-chip-more {
+  color: #9B7328;
+  border-color: #6B4523;
+  border-style: dashed;
+}
+.rhodes-preview-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.rhodes-discard-btn {
+  flex: 1;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  min-height: 40px;
+  background: transparent;
+  border: 1.5px solid #9B7328;
+  color: #C99A3D;
+  -webkit-tap-highlight-color: transparent;
+}
+.rhodes-certify-btn {
+  flex: 2;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  min-height: 40px;
+  background: radial-gradient(circle at 35% 35%, #E4B94A, #9B7328);
+  border: 2px solid #2C1810;
+  color: #2C1810;
+  box-shadow: 2px 2px 0 0 #2C1810;
+  -webkit-tap-highlight-color: transparent;
+}
+.rhodes-certify-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.composition-row {
+/* ── Note fantôme animée ──────────────── */
+.note-ghost {
+  position: absolute;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #C99A3D;
+  text-shadow: 0 0 6px #E4B94A;
+  pointer-events: none;
+  animation: note-float 1s ease-out forwards;
+  z-index: 10;
+}
+@keyframes note-float {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-40px); }
+}
+
+/* ── Écran LCD séquenceur ─────────────── */
+.rhodes-lcd {
+  background: #1A2408;
+  border: 2px solid #C99A3D;
+  border-radius: 4px;
+  padding: 0.4rem 0.6rem;
+  margin: 0.25rem 0;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.9rem;
+  letter-spacing: 0.15em;
+  color: #FFB300;
+  text-shadow: 0 0 6px #FF9900, 0 0 12px rgba(255,153,0,0.3);
+  min-height: 32px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.6), 2px 2px 0 0 #2C1810;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.lcd-placeholder { color: rgba(255,179,0,0.3); }
+
+/* ── Boutons bakélite séquenceur ──────── */
+.rhodes-btn-row {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+.rhodes-btn {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  border: 2.5px solid;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 0 #2C1810;
+  transition: transform 60ms, box-shadow 60ms;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 36px;
+}
+.rhodes-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 0 #2C1810; }
+.rhodes-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.rhodes-btn--rec    { background: radial-gradient(circle at 35% 35%, #C42030, #7B0000); border-color: #C99A3D; color: #F0E4C7; }
+.rhodes-btn--rec:disabled { opacity: 0.35; }
+.rhodes-btn--play   { background: radial-gradient(circle at 35% 35%, #E4B94A, #9B7328); border-color: #2C1810; color: #2C1810; }
+.rhodes-btn--save   { background: radial-gradient(circle at 35% 35%, #333, #111); border-color: #C99A3D; color: #F0E4C7; }
+.rhodes-btn--clear  { background: transparent; border-color: #9B7328; color: #9B7328; }
+
+/* ── Grille notes collectées ────────── */
+.rhodes-note-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.3rem;
+}
+.rhodes-note-badge {
+  background: rgba(44,24,16,0.3);
+  border: 1px solid rgba(201,154,61,0.2);
+  border-radius: 4px;
+  padding: 0.25rem 0.15rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.5rem;
+  text-transform: uppercase;
+  color: #9B7328;
+  text-align: center;
+}
+.rhodes-note-badge.collected {
+  border-color: #C99A3D;
+  color: #E4B94A;
+  background: rgba(201,154,61,0.12);
+}
+
+/* ── Compositions sauvegardées ────────── */
+.rhodes-comps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.rhodes-comps-title {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #C99A3D;
+  margin: 0 0 0.15rem;
+}
+.rhodes-comp-row {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  padding: 0.5rem 0.65rem;
-  background: var(--color-paper-dark);
-  border: 1px solid rgba(27, 42, 65, 0.08);
+  padding: 0.45rem 0.6rem;
+  background: rgba(44,24,16,0.3);
+  border: 1px solid rgba(201,154,61,0.2);
   border-radius: 4px;
 }
-
-.composition-row-title {
-  font-family: var(--font-body);
-  font-size: 0.78rem;
-  color: var(--color-ink);
+.rhodes-comp-row-title {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 0.75rem;
+  color: #F8F2E4;
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-.composition-row-meta {
-  font-family: var(--font-mono);
-  font-size: 0.52rem;
+.rhodes-comp-row-meta {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--color-ink-soft);
+  color: #9B7328;
   flex-shrink: 0;
   margin-left: 0.5rem;
 }
 
-/* ── Studio entry button ── */
-
-.composer-studio-btn {
+/* ── Bouton Studio ─────────────────── */
+.rhodes-studio-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
   width: 100%;
-  padding: 0.65rem 1rem;
-  background: rgba(201, 154, 61, 0.1);
-  border: 1px solid rgba(201, 154, 61, 0.45);
+  padding: 0.6rem 1rem;
+  background: rgba(201,154,61,0.1);
+  border: 1px solid rgba(201,154,61,0.45);
   border-radius: 8px;
-  color: var(--color-brass);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  color: #C99A3D;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
+  box-shadow: 2px 2px 0 0 #2C1810;
+}
+.rhodes-studio-btn:hover {
+  background: rgba(201,154,61,0.2);
+  border-color: #C99A3D;
 }
 
-.composer-studio-btn:hover {
-  background: rgba(201, 154, 61, 0.2);
-  border-color: var(--color-brass);
+/* ── Message succès ──────────────────── */
+.rhodes-success-text {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.65rem;
+  color: #C99A3D;
+  text-align: center;
+  letter-spacing: 0.06em;
 }
 
+/* ── Pédales ──────────────────────────── */
+.rhodes-pedales {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+.rhodes-pedale {
+  width: 40px;
+  height: 14px;
+  background: linear-gradient(90deg, #6B4523, #A67B4B, #6B4523);
+  border: 2px solid #2C1810;
+  border-radius: 0 0 4px 4px;
+  border-top: none;
+  box-shadow: 0 4px 0 0 #2C1810;
+}
+
+@keyframes neon-pulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

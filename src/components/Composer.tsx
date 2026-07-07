@@ -65,10 +65,9 @@ function PianoKey({ note, isBlack, unlocked, active, style, onPress, onRelease }
   return (
     <button
       className={[
-        "piano-key",
-        isBlack ? "black-key" : "white-key",
-        unlocked ? "unlocked" : "locked",
-        active ? "playing" : "",
+        isBlack ? "key-black" : "key-white",
+        !unlocked ? "key-locked" : "",
+        active ? "pressed" : "",
       ].filter(Boolean).join(" ")}
       style={style}
       title={`${note} — ${unlocked ? "Jouer" : "Non collectée"}`}
@@ -76,8 +75,8 @@ function PianoKey({ note, isBlack, unlocked, active, style, onPress, onRelease }
       onPointerUp={onRelease}
       onPointerCancel={onRelease}
     >
-      <span className="key-icon">{unlocked ? "▶" : "🔒"}</span>
-      {!isBlack && <span className="key-label">{note}</span>}
+      <div className="key-dot" />
+      {!isBlack && <span className="key-note-label">{note}</span>}
     </button>
   );
 }
@@ -270,102 +269,117 @@ export function Composer() {
       : null;
 
   return (
-    <div className="composer-panel">
+    <div className="rhodes-body">
       {showStudio && <Studio onClose={() => setShowStudio(false)} />}
 
+      {/* Plaque logo */}
+      <div className="rhodes-logo-plate">RHODES / PROUT MODEL</div>
+
+      {/* Panneau de contrôle */}
+      <div className="rhodes-panneau">
+        <div>
+          <div className="rhodes-knob" />
+          <div className="rhodes-knob-label">VOL</div>
+        </div>
+        <div>
+          <div className="rhodes-knob" />
+          <div className="rhodes-knob-label">BASS</div>
+        </div>
+        <div className="rhodes-led" />
+        <div className="rhodes-plaque-label">
+          PROUT ELECTRIC PIANO<br />SUITCASE MODEL
+        </div>
+      </div>
+
+      {/* Bouton Studio */}
       <button
-        className="composer-studio-btn"
+        className="rhodes-studio-btn"
         onClick={() => setShowStudio(true)}
         aria-label="Ouvrir le Studio multi-pistes"
       >
         🎛 Ouvrir le Studio
       </button>
 
-      <p className="composer-subtitle">
-        {collectedNotes.size} / 12 notes au corpus
-      </p>
-
+      {/* Hint notes collectées */}
       {!hasFullOctave && (
-        <div className="composer-unlock-hint">
+        <div className="rhodes-unlock-hint">
           🎹 Collecte les 12 notes chromatiques pour débloquer le mode composition complet
+          &nbsp;({collectedNotes.size}/12)
         </div>
       )}
 
-      {/* View mode toggle */}
-      <div className="composer-view-toggle">
+      {/* Vue toggle (Piano / Cercle) */}
+      <div className="rhodes-view-toggle">
         <button
-          className={`composer-view-btn${viewMode === "piano" ? " active" : ""}`}
+          className={`rhodes-view-btn${viewMode === "piano" ? " active" : ""}`}
           onClick={() => setViewMode("piano")}
         >
           Piano
         </button>
         <button
-          className={`composer-view-btn${viewMode === "circle" ? " active" : ""}`}
+          className={`rhodes-view-btn${viewMode === "circle" ? " active" : ""}`}
           onClick={() => setViewMode("circle")}
         >
           Cercle
         </button>
       </div>
 
-      {/* ── Piano view ── */}
+      {/* ── Vue Piano ── */}
       {viewMode === "piano" && (
-        <div className="piano-wrapper">
-          <div className="piano-keyboard">
-            {OCTAVES.map((octave) => (
-              <div key={octave} className="piano-octave-wrap">
-                <div className="piano-octave">
-                  {WHITE_NOTES.map((note, i) => (
-                    <PianoKey
-                      key={`${note}${octave}`}
-                      note={note}
-                      octave={octave}
-                      isBlack={false}
-                      unlocked={collectedNotes.has(note)}
-                      active={activeNote === `${note}${octave}`}
-                      style={{ left: `${i * WHITE_KEY_PCT}%`, width: `${WHITE_KEY_PCT}%` }}
-                      onPress={() => handlePianoPress(note, octave)}
-                      onRelease={() => {}}
-                    />
-                  ))}
-                  {BLACK_NOTE_POSITIONS.map(({ note, pos }) => (
-                    <PianoKey
-                      key={`${note}${octave}`}
-                      note={note}
-                      octave={octave}
-                      isBlack={true}
-                      unlocked={collectedNotes.has(note)}
-                      active={activeNote === `${note}${octave}`}
-                      style={{ left: `${pos * WHITE_KEY_PCT}%`, width: `${WHITE_KEY_PCT * 0.62}%` }}
-                      onPress={() => handlePianoPress(note, octave)}
-                      onRelease={() => {}}
-                    />
-                  ))}
-                </div>
-                <div className="piano-octave-label">Octave {octave}</div>
+        <div style={{ display: "flex", gap: "4px", overflowX: "auto" }}>
+          {OCTAVES.map((octave) => (
+            <div key={octave} className="rhodes-octave-wrap">
+              <div className="rhodes-octave">
+                {WHITE_NOTES.map((note, i) => (
+                  <PianoKey
+                    key={`${note}${octave}`}
+                    note={note}
+                    octave={octave}
+                    isBlack={false}
+                    unlocked={collectedNotes.has(note)}
+                    active={activeNote === `${note}${octave}`}
+                    style={{ left: `${i * WHITE_KEY_PCT}%`, width: `${WHITE_KEY_PCT}%` }}
+                    onPress={() => handlePianoPress(note, octave)}
+                    onRelease={() => {}}
+                  />
+                ))}
+                {BLACK_NOTE_POSITIONS.map(({ note, pos }) => (
+                  <PianoKey
+                    key={`${note}${octave}`}
+                    note={note}
+                    octave={octave}
+                    isBlack={true}
+                    unlocked={collectedNotes.has(note)}
+                    active={activeNote === `${note}${octave}`}
+                    style={{ left: `${pos * WHITE_KEY_PCT}%`, width: `${WHITE_KEY_PCT * 0.62}%` }}
+                    onPress={() => handlePianoPress(note, octave)}
+                    onRelease={() => {}}
+                  />
+                ))}
               </div>
-            ))}
-          </div>
+              <div className="rhodes-octave-label">Octave {octave}</div>
+            </div>
+          ))}
         </div>
       )}
 
-      {/* ── Circle view ── */}
+      {/* ── Vue Cercle ── */}
       {viewMode === "circle" && (
-        <div className="composer-circle-wrap">
+        <div className="rhodes-circle-wrap">
           <NoteCircle
             size={220}
             activeNote={circleActiveNote}
             onNotePress={handleCirclePress}
             onNoteRelease={handleCircleRelease}
           />
-          {/* Collected overlay legend */}
-          <p className="circle-collected-hint">
+          <p className="rhodes-circle-hint">
             {[...collectedInEnglish].length} / 12 notes collectées
           </p>
-          <div className="circle-collected-dots">
+          <div className="rhodes-circle-dots">
             {CHROMATIC_NOTES.map((n) => (
               <span
                 key={n}
-                className={`circle-dot${collectedInEnglish.has(n) ? " collected" : ""}`}
+                className={`rhodes-circle-dot${collectedInEnglish.has(n) ? " collected" : ""}`}
                 title={n}
               />
             ))}
@@ -373,99 +387,106 @@ export function Composer() {
         </div>
       )}
 
-      {/* ── Composition recording controls ── */}
-      <div className="composition-controls">
-        {!isComposing && compositionNotes.length === 0 && (
+      {/* ── Contrôles composition ── */}
+      {!isComposing && compositionNotes.length === 0 && (
+        <div className="rhodes-btn-row">
           <button
-            className={`composer-record-btn${hasFullOctave ? " active" : ""}`}
+            className="rhodes-btn rhodes-btn--rec"
             disabled={!hasFullOctave}
             onClick={startComposition}
             aria-label="Démarrer l'enregistrement de la composition"
           >
-            🎼 Composer une mélodie
+            ● REC
           </button>
-        )}
+        </div>
+      )}
 
-        {isComposing && (
-          <div className="composition-recording">
-            <div className="composition-timer">
-              <span className="comp-timer-dot" />
-              <span className="comp-timer-value">
-                {(elapsed / 1000).toFixed(1)}s
-              </span>
-              <span className="comp-timer-notes">
-                {compositionNotes.length} note{compositionNotes.length !== 1 ? "s" : ""}
-              </span>
-            </div>
-            <button className="composition-stop-btn" onClick={stopComposition}>
-              ⏹ Arrêter
-            </button>
-          </div>
-        )}
+      {isComposing && (
+        <div className="rhodes-recording-bar">
+          <span className="rhodes-rec-dot" />
+          <span className="rhodes-rec-timer">{(elapsed / 1000).toFixed(1)}s</span>
+          <span className="rhodes-rec-notes">
+            {compositionNotes.length} note{compositionNotes.length !== 1 ? "s" : ""}
+          </span>
+          <button className="rhodes-stop-btn" onClick={stopComposition}>
+            ⏹ Arrêter
+          </button>
+        </div>
+      )}
 
-        {!isComposing && compositionNotes.length > 0 && (
-          <div className="composition-preview">
-            <p className="composition-preview-title">
-              Composition : {compositionNotes.length} notes ·{" "}
-              {formatDuration(elapsed)}
-            </p>
-            <div className="composition-note-sequence">
-              {compositionNotes.slice(0, 16).map((n, i) => (
-                <span key={i} className="comp-note-chip">{n.note}</span>
-              ))}
-              {compositionNotes.length > 16 && (
-                <span className="comp-note-chip comp-note-more">
-                  +{compositionNotes.length - 16}
-                </span>
-              )}
-            </div>
-            <div className="composition-actions">
-              <button className="composition-discard-btn" onClick={discardComposition}>
-                Effacer
-              </button>
-              <button
-                className="composition-save-btn"
-                onClick={saveComp}
-                disabled={saving}
-              >
-                {saving ? "Sauvegarde…" : "Certifier la composition"}
-              </button>
-            </div>
-            {savedMsg && (
-              <p className="success-text" style={{ textAlign: "center" }}>
-                Composition versée au corpus.
-              </p>
+      {!isComposing && compositionNotes.length > 0 && (
+        <div className="rhodes-preview">
+          <p className="rhodes-preview-title">
+            Composition : {compositionNotes.length} notes · {formatDuration(elapsed)}
+          </p>
+          <div className="rhodes-note-sequence">
+            {compositionNotes.slice(0, 16).map((n, i) => (
+              <span key={i} className="rhodes-note-chip">{n.note}</span>
+            ))}
+            {compositionNotes.length > 16 && (
+              <span className="rhodes-note-chip rhodes-note-chip-more">
+                +{compositionNotes.length - 16}
+              </span>
             )}
           </div>
-        )}
+          <div className="rhodes-preview-actions">
+            <button className="rhodes-discard-btn" onClick={discardComposition}>
+              Effacer
+            </button>
+            <button
+              className="rhodes-certify-btn"
+              onClick={saveComp}
+              disabled={saving}
+            >
+              {saving ? "Sauvegarde…" : "Certifier la composition"}
+            </button>
+          </div>
+          {savedMsg && (
+            <p className="rhodes-success-text">Composition versée au corpus.</p>
+          )}
+        </div>
+      )}
+
+      {/* ── Écran LCD séquenceur ── */}
+      <div className="rhodes-lcd">
+        {compositionNotes.length > 0
+          ? compositionNotes.map((n) => n.note).join(" · ")
+          : <span className="lcd-placeholder">♩ ♩ ♩ séquenceur vide ♩ ♩ ♩</span>
+        }
       </div>
 
-      {/* ── Note collection grid ── */}
-      <div className="composer-note-grid">
+      {/* ── Grille notes collectées ── */}
+      <div className="rhodes-note-grid">
         {ALL_NOTES_CHROMATIC.map((note) => (
           <div
             key={note}
-            className={`composer-note-chip${collectedNotes.has(note) ? " collected" : ""}`}
+            className={`rhodes-note-badge${collectedNotes.has(note) ? " collected" : ""}`}
           >
             {collectedNotes.has(note) ? "✓" : "○"} {note}
           </div>
         ))}
       </div>
 
-      {/* ── Recent compositions ── */}
+      {/* ── Compositions récentes ── */}
       {compositions.length > 0 && (
-        <div className="compositions-list">
-          <p className="compositions-list-title">Compositions récentes</p>
+        <div className="rhodes-comps-list">
+          <p className="rhodes-comps-title">Compositions récentes</p>
           {compositions.slice(0, 5).map((c) => (
-            <div key={c.id} className="composition-row">
-              <span className="composition-row-title">{c.title}</span>
-              <span className="composition-row-meta">
+            <div key={c.id} className="rhodes-comp-row">
+              <span className="rhodes-comp-row-title">{c.title}</span>
+              <span className="rhodes-comp-row-meta">
                 {c.notes.length} notes · {formatDuration(c.duration_ms)}
               </span>
             </div>
           ))}
         </div>
       )}
+
+      {/* Pédales décoratives */}
+      <div className="rhodes-pedales">
+        <div className="rhodes-pedale" title="Sustain" />
+        <div className="rhodes-pedale" title="Expression" />
+      </div>
     </div>
   );
 }
