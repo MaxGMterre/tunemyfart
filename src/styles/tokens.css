@@ -218,7 +218,7 @@ body {
   bottom: 0;
   border-top: 3px solid var(--color-brass-dark);
   background: var(--color-wood-dark);
-  padding-top: 0.5rem;
+  padding-top: 0.25rem;
   padding-bottom: env(safe-area-inset-bottom, 0);
   z-index: 100;
 }
@@ -235,7 +235,7 @@ body {
 
 .tab-indicator-bar {
   position: absolute;
-  top: -2px;
+  top: 0;
   left: 0;
   height: 2px;
   background: var(--color-brass-bright);
@@ -250,7 +250,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0.55rem 0.2rem 0.4rem;
+  padding: 0.5rem 0.25rem;
   background: transparent;
   border: none;
   border-right: 1px solid rgba(201, 154, 61, 0.25);
