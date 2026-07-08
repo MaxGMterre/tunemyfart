@@ -55,7 +55,7 @@ const HUMEUR_EMOJIS = ["😊", "😤", "😂", "😴", "🤔", "😐", "🥴", "
 function TeslaBobineInline({ isRecording }: { isRecording: boolean }) {
   return (
     <div className="tesla-bobine">
-      <svg viewBox="0 0 44 60" width="44" height="60" overflow="visible">
+      <svg viewBox="0 0 44 60" width="34" height="46" overflow="visible">
         {/* Base cylindrique */}
         <rect x="12" y="48" width="20" height="10" rx="2" fill="#C99A3D" stroke="#9B7328" strokeWidth="1.5" />
         {/* Spires */}

@@ -20,7 +20,7 @@ export function AmpouleVintage({ on, color, label, pulse }: Props) {
         }
         transition={{ duration: 0.3 }}
       >
-        <svg viewBox="0 0 40 60" width="40" height="60" overflow="visible">
+        <svg viewBox="0 0 40 60" width="32" height="48" overflow="visible">
           {/* Verre */}
           <ellipse
             cx="20"

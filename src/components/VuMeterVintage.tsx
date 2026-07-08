@@ -19,7 +19,7 @@ export function VuMeterVintage({ db }: Props) {
 
   return (
     <div className="vu-meter-wrapper">
-      <svg viewBox="0 0 120 80" width="120" height="80">
+      <svg viewBox="0 0 120 80" width="100" height="67">
         {/* Fond crème */}
         <path d="M 10 70 A 55 55 0 0 1 110 70" fill="#F0E4C7" stroke="#2C1810" strokeWidth="2" />
         {/* Zone verte */}

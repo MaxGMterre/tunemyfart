@@ -8,7 +8,7 @@ interface Props {
 export function CadranRotatif({ label, angle = 135 }: Props) {
   return (
     <div className="cadran-wrapper">
-      <svg viewBox="0 0 36 36" width="36" height="36">
+      <svg viewBox="0 0 36 36" width="29" height="29">
         <defs>
           <radialGradient id="brassGrad" cx="40%" cy="35%">
             <stop offset="0%" stopColor="#E4B94A" />
