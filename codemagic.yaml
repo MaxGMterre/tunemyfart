@@ -3,12 +3,12 @@ workflows:
     name: iOS App Store
     max_build_duration: 120
     environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.tunemyfart.app
+      groups:
+        - app-store-connect
       vars:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
+        BUNDLE_ID: "com.tunemyfart.app"
       node: latest
       xcode: latest
       cocoapods: default
@@ -19,7 +19,16 @@ workflows:
         script: npm run build
       - name: Sync Capacitor iOS
         script: npx cap sync ios
-      - name: Set up code signing
+      - name: Set up keychain
+        script: keychain initialize
+      - name: Fetch signing files
+        script: |
+          app-store-connect fetch-signing-files $BUNDLE_ID \
+            --type IOS_APP_STORE \
+            --create
+      - name: Add certificates to keychain
+        script: keychain add-certificates
+      - name: Set up code signing settings
         script: xcode-project use-profiles
       - name: Build IPA
         script: |
