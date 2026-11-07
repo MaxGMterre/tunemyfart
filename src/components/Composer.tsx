@@ -113,18 +113,23 @@ export function Composer() {
   const [saving, setSaving] = useState(false);
   const [savedMsg, setSavedMsg] = useState(false);
 
-  // Load collected notes
+  // Load collected notes (note_principale + toutes les notes de sequence_notes)
   useEffect(() => {
     if (!user) return;
     supabase
       .from("recordings")
-      .select("note_principale")
+      .select("note_principale, sequence_notes")
       .eq("user_id", user.id)
-      .not("note_principale", "is", null)
       .then(({ data }) => {
-        if (data) {
-          setCollectedNotes(new Set(data.map((r) => r.note_principale as string)));
-        }
+        if (!data) return;
+        const all = new Set<string>();
+        data.forEach((r) => {
+          if (r.note_principale) all.add(r.note_principale);
+          ((r.sequence_notes ?? []) as { note: string }[]).forEach((n) => {
+            if (n.note) all.add(n.note);
+          });
+        });
+        setCollectedNotes(all);
       });
   }, [user]);
 

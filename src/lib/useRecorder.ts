@@ -86,15 +86,18 @@ export function useRecorder(
     const durationMs = performance.now() - startTimeRef.current;
 
     await new Promise<void>((resolve) => {
-      if (!mediaRecorder) return resolve();
-      mediaRecorder.onstop = () => resolve();
+      if (!mediaRecorder || mediaRecorder.state === "inactive") return resolve();
+      const timeout = setTimeout(resolve, 2000);
+      mediaRecorder.onstop = () => { clearTimeout(timeout); resolve(); };
+      try { mediaRecorder.requestData(); } catch {}
       mediaRecorder.stop();
     });
 
     streamRef.current?.getTracks().forEach((t) => t.stop());
     audioCtxRef.current?.close();
 
-    const blob = new Blob(chunksRef.current, { type: "audio/webm" });
+    const mimeType = mediaRecorderRef.current?.mimeType || "audio/webm";
+    const blob = new Blob(chunksRef.current, { type: mimeType });
     const url = URL.createObjectURL(blob);
 
     const dbHistory = dbHistoryRef.current.filter((v) => v > -100);
@@ -272,12 +275,16 @@ export function useRecorder(
       dbHistoryRef.current = [];
       fullBufferRef.current = [];
 
-      const mediaRecorder = new MediaRecorder(stream);
+      const MIME_TYPES = ["audio/mp4", "audio/webm;codecs=opus", "audio/webm", "audio/ogg"];
+      const mimeType = MIME_TYPES.find((t) => MediaRecorder.isTypeSupported(t)) ?? "";
+      const mediaRecorder = mimeType
+        ? new MediaRecorder(stream, { mimeType })
+        : new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
       mediaRecorder.ondataavailable = (e) => {
         if (e.data.size > 0) chunksRef.current.push(e.data);
       };
-      mediaRecorderRef.current = mediaRecorder;
-      mediaRecorder.start();
+      mediaRecorder.start(250); // timeslice 250ms pour iOS
 
       startTimeRef.current = performance.now();
       setStatus("recording");

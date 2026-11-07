@@ -10,6 +10,7 @@ import { Loading } from "./ui/Loading";
 import { EmptyState as EmptyStateSimple } from "./ui/EmptyState";
 import { EmptyState } from "./EmptyState";
 import { ShareCard } from "./ShareCard";
+import { FartEffectsPanel } from "./FartEffectsPanel";
 
 // ── Helpers ────────────────────────────────────────────────
 
@@ -124,6 +125,7 @@ export function History({
   const [noteFilter, setNoteFilter] = useState<string>("all");
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [shareTarget, setShareTarget] = useState<FullRecording | null>(null);
+  const [effectsTarget, setEffectsTarget] = useState<string | null>(null);
   const [playingId, setPlayingId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [listParent] = useAutoAnimate();
@@ -360,6 +362,18 @@ export function History({
                     {playingId === rec.id ? "⏹" : "▶"}
                   </button>
                 )}
+                {rec.audio_url && (
+                  <button
+                    className={`history-action-btn${effectsTarget === rec.id ? " active" : ""}`}
+                    onClick={() =>
+                      setEffectsTarget(effectsTarget === rec.id ? null : rec.id)
+                    }
+                    aria-label="Ouvrir le panneau d'effets"
+                    title="Effets audio"
+                  >
+                    🎛
+                  </button>
+                )}
                 <button
                   className="history-action-btn"
                   onClick={() => setShareTarget(rec)}
@@ -407,6 +421,12 @@ export function History({
                 <p className="history-delete-confirm">
                   Supprimer ce relevé du corpus ?
                 </p>
+              )}
+              {effectsTarget === rec.id && rec.audio_url && (
+                <FartEffectsPanel
+                  audioUrl={rec.audio_url}
+                  onClose={() => setEffectsTarget(null)}
+                />
               )}
             </li>
           ))}

@@ -899,3 +899,122 @@
   30%       { transform: rotate(-0.8deg); }
   60%       { transform: rotate(1.2deg);  }
 }
+
+/* ── Notes parcourues ──────────────────────────────────── */
+.notes-parcourues {
+  margin: 0.75rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.notes-parcourues-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--color-brass);
+  text-transform: uppercase;
+}
+.notes-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+.note-badge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: rgba(201,154,61,0.15);
+  border: 1px solid rgba(201,154,61,0.5);
+  color: var(--color-brass);
+  padding: 0.2rem 0.45rem;
+  border-radius: 4px;
+  position: relative;
+}
+.note-badge-count {
+  font-size: 0.5rem;
+  margin-left: 1px;
+  opacity: 0.75;
+}
+.notes-parcourues-total {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--color-ink-soft);
+}
+
+/* ── Commentaire scientifique ──────────────────────────── */
+.commentaire-sci {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  background: rgba(27,42,65,0.06);
+  border-left: 3px solid var(--color-brass);
+  border-radius: 0 6px 6px 0;
+  padding: 0.6rem 0.75rem;
+  margin: 0.5rem 0 0.75rem;
+}
+.commentaire-sci-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+}
+.commentaire-sci-text {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-style: italic;
+  color: var(--color-ink);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* ── Fiche de terrain ──────────────────────────────────── */
+.terrain-section {
+  margin: 0.75rem 0;
+  border: 1px solid rgba(201,154,61,0.3);
+  border-radius: 8px;
+  padding: 0.75rem;
+  background: var(--color-paper-dark, rgba(242,236,224,0.5));
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.terrain-titre {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-brass);
+}
+.terrain-alim input {
+  margin-top: 0.3rem;
+  width: 100%;
+  background: var(--color-paper, #F2ECE0);
+  border: 1px solid rgba(201,154,61,0.4);
+  border-radius: 4px;
+  padding: 0.45rem 0.6rem;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-ink);
+}
+
+/* ── Footer actions ────────────────────────────────────── */
+.releve-footer-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin: 0.75rem 0 0.5rem;
+}
+.releve-footer-actions .btn-primary,
+.releve-footer-actions .btn-share {
+  flex: 1;
+}
+.btn-share {
+  background: rgba(27,42,65,0.08);
+  border: 1px solid var(--color-ink-soft);
+  border-radius: 6px;
+  padding: 0.55rem 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  cursor: pointer;
+  text-align: center;
+}

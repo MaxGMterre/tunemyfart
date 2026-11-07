@@ -1,7 +1,7 @@
 export const SCREEN_HEADERS = {
   analyser: { title: "L'Anal-yser", subtitle: "Mesure fréquentielle" },
   classement: { title: "Registres", subtitle: "Classement des confrères" },
-  missions: { title: "Programme d'étude", subtitle: "Défis en cours" },
+  missions: { title: "Missions", subtitle: "Défis en cours" },
   profil: { title: "Fiche spécimen", subtitle: "Corpus personnel" },
   composer: { title: "Le Clavier", subtitle: "Compositeur acoustique" },
   corpus: { title: "Corpus", subtitle: "Historique des relevés" },

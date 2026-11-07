@@ -294,6 +294,88 @@ function WaveformSVG({ waveform }: { waveform: number[] }) {
   );
 }
 
+// ── Commentaire scientifique marrant ──────────────────────
+
+const COMMENTS_LONG: string[] = [
+  "Une véritable sonate intestinale. Bach lui-même n'aurait pas fait mieux.",
+  "Endurance record. Le comité scientifique est sans voix — au sens propre.",
+  "Certains composent des symphonies. Vous, vous en produisez.",
+];
+const COMMENTS_SHORT: string[] = [
+  "Furtif, précis, dévastateur. La définition même du pet stratégique.",
+  "Court mais intense. Comme un résumé exécutif de votre système digestif.",
+  "L'art de la concision gazeuse. Remarquable efficacité.",
+];
+const COMMENTS_LOUD: string[] = [
+  "Nos instruments calibrés pour le pire ont quand même tressailli.",
+  "Le sismographe du couloir a enregistré une anomalie. C'était vous.",
+  "Phénoménal. Les voisins ont demandé ce qui s'était passé.",
+];
+const COMMENTS_QUIET: string[] = [
+  "Furtif comme une pensée. L'art de la discrétion gazeuse à son apogée.",
+  "Silence assourdissant. Presque philosophique.",
+  "Le spécimen se sait observé. Admirable retenue.",
+];
+const COMMENTS_MELODIC: string[] = [
+  "Une richesse harmonique rare. C'est du Coltrane intestinal.",
+  "Votre appareil digestif a des aspirations musicales légitimes.",
+  "Cette variété mélodique mérite une transcription pour quatuor à cordes.",
+];
+const COMMENTS_MONO: string[] = [
+  "Monotone mais déterminé. Le minimalisme dans toute sa splendeur.",
+  "Une note, tenue, inflexible. La conviction d'un homme qui a mangé du chou.",
+  "Philip Glass aurait aimé. Une seule note, mais quel engagement.",
+];
+const COMMENTS_DEFAULT: string[] = [
+  "Spécimen de qualité standard. Le corpus enregistre. La science avance.",
+  "Données collectées. L'humanité vous remercie de votre contribution.",
+  "Résultat nominal. Vous êtes dans la moyenne haute des chercheurs associés.",
+];
+
+function pickComment(arr: string[]) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function generateFunnyComment(result: { durationMs: number; dbMax: number; sequenceNotes: { note: string }[] }): string {
+  const uniqueNotes = new Set(result.sequenceNotes.map((n) => n.note)).size;
+  if (result.durationMs > 7000)      return pickComment(COMMENTS_LONG);
+  if (result.durationMs < 600)       return pickComment(COMMENTS_SHORT);
+  if (result.dbMax > -15)            return pickComment(COMMENTS_LOUD);
+  if (result.dbMax < -45)            return pickComment(COMMENTS_QUIET);
+  if (uniqueNotes > 5)               return pickComment(COMMENTS_MELODIC);
+  if (uniqueNotes <= 1 && result.sequenceNotes.length > 2) return pickComment(COMMENTS_MONO);
+  return pickComment(COMMENTS_DEFAULT);
+}
+
+// ── Notes parcourues ───────────────────────────────────────
+
+function NotesParcourues({ notes }: { notes: { note: string; octave: number }[] }) {
+  if (!notes.length) return null;
+
+  // Compte les occurrences, garde l'ordre d'apparition
+  const seen = new Map<string, number>();
+  notes.forEach((n) => {
+    const key = `${n.note}${n.octave}`;
+    seen.set(key, (seen.get(key) ?? 0) + 1);
+  });
+  const unique = Array.from(seen.entries());
+
+  return (
+    <div className="notes-parcourues">
+      <span className="notes-parcourues-label">NOTES PARCOURUES</span>
+      <div className="notes-badges">
+        {unique.map(([key, count]) => (
+          <span key={key} className="note-badge">
+            {key}
+            {count > 1 && <sup className="note-badge-count">×{count}</sup>}
+          </span>
+        ))}
+      </div>
+      <span className="notes-parcourues-total">{unique.length} note{unique.length > 1 ? "s" : ""} unique{unique.length > 1 ? "s" : ""}</span>
+    </div>
+  );
+}
+
 // ── Composant principal ────────────────────────────────────
 
 export function Recorder() {
@@ -701,6 +783,7 @@ export function Recorder() {
         >
           <span className="carte-etiquette">DERNIER RELEVÉ</span>
 
+          {/* Stats */}
           <div className="carte-grille">
             <div className="carte-stat">
               <span className="carte-lbl">NOTE</span>
@@ -720,26 +803,28 @@ export function Recorder() {
             </div>
           </div>
 
+          {/* Notes parcourues */}
+          <NotesParcourues notes={result.sequenceNotes} />
+
+          {/* Commentaire scientifique */}
+          <div className="commentaire-sci">
+            <span className="commentaire-sci-icon">🔬</span>
+            <p className="commentaire-sci-text">{generateFunnyComment(result)}</p>
+          </div>
+
+          {/* Waveform */}
           <div className="carte-waveform">
             <WaveformSVG waveform={result.waveform} />
           </div>
 
           <audio ref={audioRef} src={result.url} preload="metadata" />
 
+          {/* Lecture */}
           <div className="carte-actions">
             <button className="btn-ghost" onClick={togglePlay} aria-label={isPlaying ? "Pause" : "Réécouter"}>
               {isPlaying ? "⏸ Pause" : "▶ Réécouter"}
             </button>
-            <button className="btn-ghost" onClick={() => setShowShare(true)}>Diffuser</button>
-            {!saved ? (
-              <button className="btn-primary" onClick={handleSave} disabled={uploading}>
-                {uploading ? "Envoi…" : "Certifier"}
-              </button>
-            ) : (
-              <span className="success-text">Certifié ✓</span>
-            )}
           </div>
-
           {isPlaying && (
             <div className="audio-progress-sci" onClick={seekTo}>
               <div className="audio-fill" style={{ width: duration ? `${(currentTime / duration) * 100}%` : "0%" }} />
@@ -748,55 +833,76 @@ export function Recorder() {
           )}
           {playError && <p className="error-text">{playError}</p>}
 
-          <details className="tags-details">
-            <summary className="tags-summary">Métadonnées du spécimen</summary>
-            <div className="tags-form">
-              <div className="tags-form-field">
-                <span className="tags-form-label">Humeur</span>
-                <div className="humeur-picker">
-                  {HUMEUR_EMOJIS.map((e) => (
-                    <button key={e}
-                      className={`humeur-btn${humeur === e ? " selected" : ""}`}
-                      onClick={() => setHumeur(humeur === e ? "" : e)}
-                      aria-label={e} aria-pressed={humeur === e}>
-                      {e}
-                    </button>
-                  ))}
+          {/* ── Fiche de terrain ─────────────────────── */}
+          <div className="terrain-section">
+            <span className="terrain-titre">FICHE DE TERRAIN</span>
+
+            <label className="tags-form-field terrain-alim">
+              <span className="tags-form-label">🍽 Consommé avant le relevé</span>
+              <input
+                value={alimentation}
+                onChange={(e) => setAlimentation(e.target.value)}
+                placeholder="ex: chou-fleur, bière, haricots…"
+              />
+            </label>
+
+            <details className="tags-details">
+              <summary className="tags-summary">Autres métadonnées</summary>
+              <div className="tags-form">
+                <div className="tags-form-field">
+                  <span className="tags-form-label">Humeur</span>
+                  <div className="humeur-picker">
+                    {HUMEUR_EMOJIS.map((e) => (
+                      <button key={e}
+                        className={`humeur-btn${humeur === e ? " selected" : ""}`}
+                        onClick={() => setHumeur(humeur === e ? "" : e)}
+                        aria-label={e} aria-pressed={humeur === e}>
+                        {e}
+                      </button>
+                    ))}
+                  </div>
                 </div>
+                <label className="tags-form-field">
+                  Lieu de collecte
+                  <input value={lieu} onChange={(e) => setLieu(e.target.value)} placeholder="ex: salon, bureau" />
+                </label>
+                <label className="tags-form-field">
+                  Signature olfactive
+                  <input value={odeur} onChange={(e) => setOdeur(e.target.value)} placeholder="ex: discret, dévastateur" />
+                </label>
+                <div className="tags-form-field tags-form-field--toggle">
+                  <span className="tags-form-label">En présence de témoins</span>
+                  <button className={`social-toggle${social ? " on" : ""}`}
+                    onClick={() => setSocial((v) => !v)}
+                    role="switch" aria-checked={social} aria-label="En présence de témoins">
+                    <span className="toggle-knob" />
+                  </button>
+                </div>
+                <label className="tags-form-field">
+                  Note du chercheur
+                  <textarea className="chercheur-note-area" value={chercheurNote}
+                    onChange={(e) => setChercheurNote(e.target.value)}
+                    placeholder="Observations libres…" rows={2} />
+                </label>
               </div>
-              <label className="tags-form-field">
-                Alimentation
-                <input value={alimentation} onChange={(e) => setAlimentation(e.target.value)} placeholder="ex: chou-fleur, bière" />
-              </label>
-              <label className="tags-form-field">
-                Lieu de collecte
-                <input value={lieu} onChange={(e) => setLieu(e.target.value)} placeholder="ex: salon, bureau" />
-              </label>
-              <label className="tags-form-field">
-                Signature olfactive
-                <input value={odeur} onChange={(e) => setOdeur(e.target.value)} placeholder="ex: discret, dévastateur" />
-              </label>
-              <div className="tags-form-field tags-form-field--toggle">
-                <span className="tags-form-label">En présence de témoins</span>
-                <button className={`social-toggle${social ? " on" : ""}`}
-                  onClick={() => setSocial((v) => !v)}
-                  role="switch" aria-checked={social} aria-label="En présence de témoins">
-                  <span className="toggle-knob" />
-                </button>
-              </div>
-              <label className="tags-form-field">
-                Note du chercheur
-                <textarea className="chercheur-note-area" value={chercheurNote}
-                  onChange={(e) => setChercheurNote(e.target.value)}
-                  placeholder="Observations libres…" rows={2} />
-              </label>
-              {uploading  && <p className="status-text">Transmission…</p>}
-              {saveError  && <p className="error-text">{saveError}</p>}
-              <button className="save-btn" onClick={handleSave} disabled={uploading}>
-                {uploading ? "Transmission…" : "Certifier le relevé"}
+            </details>
+          </div>
+
+          {/* ── Actions : partager + certifier ───────── */}
+          <div className="releve-footer-actions">
+            <button className="btn-share" onClick={() => setShowShare(true)}>
+              📡 Diffuser en ligne
+            </button>
+            {!saved ? (
+              <button className="btn-primary" onClick={handleSave} disabled={uploading}>
+                {uploading ? "Envoi…" : "✓ Certifier"}
               </button>
-            </div>
-          </details>
+            ) : (
+              <span className="success-text">Certifié ✓</span>
+            )}
+          </div>
+          {uploading  && <p className="status-text">Transmission…</p>}
+          {saveError  && <p className="error-text">{saveError}</p>}
 
           {resetConfirm ? (
             <div className="reset-confirm">

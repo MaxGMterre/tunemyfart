@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Politique de confidentialité — TuneMyFart</title>
+  <meta name="description" content="Politique de confidentialité de TuneMyFart — Privacy Policy" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    /* ── Reset & base ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:            #1A1008;
+      --bg-panel:      #231508;
+      --bg-panel-alt:  #2A1B0A;
+      --text:          #E8DFC8;
+      --text-soft:     rgba(232, 223, 200, 0.65);
+      --accent:        #C99A3D;
+      --accent-bright: #E4B94A;
+      --accent-dark:   #9B7328;
+      --border:        #C99A3D;
+      --shadow:        5px 5px 0 0 #9B7328;
+      --shadow-sm:     3px 3px 0 0 #9B7328;
+
+      --font-display: "Fraunces", "Georgia", serif;
+      --font-mono:    "IBM Plex Mono", "Courier New", monospace;
+      --font-body:    "IBM Plex Sans", system-ui, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.7;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ─────────────────────────────────────────────── */
+    .wrapper {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+    }
+
+    /* ── Header ─────────────────────────────────────────────── */
+    .site-header {
+      border-bottom: 3px solid var(--accent-dark);
+      background: linear-gradient(180deg, var(--bg-panel) 0%, var(--bg) 100%);
+      padding: 2.5rem 1.5rem 1.75rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .site-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 50% 0%, rgba(201, 154, 61, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .site-header::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--accent-bright);
+      opacity: 0.5;
+    }
+
+    .header-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--accent-dark);
+      margin-bottom: 0.6rem;
+    }
+
+    .header-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 6vw, 3.4rem);
+      font-weight: 700;
+      font-style: italic;
+      color: var(--text);
+      text-shadow: 2px 2px 0 var(--accent-dark);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+    }
+
+    .header-title span {
+      color: var(--accent);
+      text-shadow: 2px 2px 0 var(--accent-dark), 0 0 24px rgba(201, 154, 61, 0.35);
+    }
+
+    .header-subtitle {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent-dark);
+      margin-top: 0.75rem;
+    }
+
+    .header-date {
+      display: inline-block;
+      margin-top: 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-soft);
+      letter-spacing: 0.08em;
+      border: 1px solid rgba(201, 154, 61, 0.3);
+      padding: 0.3rem 0.9rem;
+      border-radius: 2px;
+    }
+
+    /* ── Lang nav ───────────────────────────────────────────── */
+    .lang-nav {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      padding: 1.25rem 0 0;
+    }
+
+    .lang-nav a {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-soft);
+      text-decoration: none;
+      padding: 0.35rem 0.85rem;
+      border: 1.5px solid rgba(201, 154, 61, 0.3);
+      border-radius: 2px;
+      transition: color 150ms, border-color 150ms, background 150ms;
+    }
+
+    .lang-nav a:hover {
+      color: var(--accent-bright);
+      border-color: var(--accent);
+      background: rgba(201, 154, 61, 0.08);
+    }
+
+    /* ── Main content ───────────────────────────────────────── */
+    .content {
+      padding-top: 2.5rem;
+    }
+
+    /* ── Section (FR / EN) ──────────────────────────────────── */
+    .policy-section {
+      padding: 2.5rem;
+      background: var(--bg-panel);
+      border: 2px solid rgba(201, 154, 61, 0.25);
+      border-top: 4px solid var(--accent);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .policy-section + .policy-section {
+      margin-top: 2.5rem;
+    }
+
+    /* ── Divider ────────────────────────────────────────────── */
+    .lang-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 2.75rem 0;
+    }
+
+    .lang-divider::before,
+    .lang-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-dark), transparent);
+    }
+
+    .lang-divider-label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--accent-dark);
+      white-space: nowrap;
+      padding: 0.3rem 0.8rem;
+      border: 1px solid rgba(201, 154, 61, 0.35);
+      border-radius: 2px;
+    }
+
+    /* ── Typography ─────────────────────────────────────────── */
+    .section-lang-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      border: 1px solid var(--accent-dark);
+      padding: 0.2rem 0.65rem;
+      border-radius: 2px;
+      margin-bottom: 1.25rem;
+    }
+
+    h1.policy-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 700;
+      font-style: italic;
+      color: var(--text);
+      text-shadow: 1px 1px 0 var(--accent-dark);
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+
+    .policy-lead {
+      font-size: 0.95rem;
+      color: var(--text-soft);
+      margin-bottom: 2rem;
+      border-left: 3px solid var(--accent-dark);
+      padding-left: 1rem;
+      font-style: italic;
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--accent-bright);
+      margin-top: 2rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    h2::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 2px;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    h3 {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-top: 1.4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 0.85rem;
+    }
+
+    ul, ol {
+      padding-left: 1.4rem;
+      margin-bottom: 0.85rem;
+    }
+
+    li {
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+
+    li::marker {
+      color: var(--accent);
+    }
+
+    /* ── Data table ─────────────────────────────────────────── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 1.5rem;
+      font-size: 0.875rem;
+    }
+
+    .data-table th {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      text-align: left;
+      padding: 0.6rem 0.9rem;
+      border-bottom: 2px solid var(--accent-dark);
+      background: rgba(201, 154, 61, 0.07);
+    }
+
+    .data-table td {
+      padding: 0.6rem 0.9rem;
+      border-bottom: 1px solid rgba(201, 154, 61, 0.12);
+      vertical-align: top;
+      color: var(--text);
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .data-table tr:hover td {
+      background: rgba(201, 154, 61, 0.04);
+    }
+
+    .tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.15rem 0.5rem;
+      border-radius: 2px;
+      border: 1px solid;
+    }
+
+    .tag--required  { color: #E63946; border-color: rgba(230, 57, 70, 0.5);  background: rgba(230, 57, 70, 0.08); }
+    .tag--optional  { color: #00FF88; border-color: rgba(0, 255, 136, 0.4); background: rgba(0, 255, 136, 0.06); }
+    .tag--optin     { color: #00D4FF; border-color: rgba(0, 212, 255, 0.4); background: rgba(0, 212, 255, 0.06); }
+
+    /* ── Callout / highlight box ────────────────────────────── */
+    .callout {
+      background: var(--bg-panel-alt);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      font-size: 0.9rem;
+    }
+
+    .callout strong {
+      color: var(--accent-bright);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+
+    /* ── Contact ────────────────────────────────────────────── */
+    .contact-block {
+      margin-top: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--bg-panel-alt);
+      border: 1.5px solid rgba(201, 154, 61, 0.35);
+      border-radius: 6px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .contact-block p {
+      margin-bottom: 0.4rem;
+    }
+
+    a {
+      color: var(--accent-bright);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(228, 185, 74, 0.35);
+      transition: color 150ms, border-color 150ms;
+    }
+
+    a:hover {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      background: rgba(201, 154, 61, 0.1);
+      border: 1px solid rgba(201, 154, 61, 0.2);
+      padding: 0.1em 0.4em;
+      border-radius: 3px;
+      color: var(--accent-bright);
+    }
+
+    /* ── Footer ─────────────────────────────────────────────── */
+    .site-footer {
+      margin-top: 3rem;
+      padding: 1.5rem 0;
+      border-top: 1px solid rgba(201, 154, 61, 0.2);
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-soft);
+    }
+
+    /* ── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .policy-section {
+        padding: 1.5rem 1.25rem;
+      }
+
+      .data-table th,
+      .data-table td {
+        padding: 0.5rem 0.6rem;
+        font-size: 0.8rem;
+      }
+
+      /* Stack table on very small screens */
+      .data-table thead { display: none; }
+      .data-table, .data-table tbody, .data-table tr, .data-table td {
+        display: block;
+        width: 100%;
+      }
+      .data-table tr {
+        border-bottom: 1px solid rgba(201, 154, 61, 0.2);
+        padding: 0.5rem 0;
+      }
+      .data-table td {
+        border: none;
+        padding: 0.2rem 0.6rem;
+      }
+      .data-table td[data-label]::before {
+        content: attr(data-label) " — ";
+        font-family: var(--font-mono);
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+      }
+    }
+
+    /* ── Scroll anchor offset ───────────────────────────────── */
+    [id] { scroll-margin-top: 1.5rem; }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════════════════════════ -->
+  <header class="site-header">
+    <p class="header-eyebrow">Application iOS</p>
+    <h1 class="header-title"><span>TuneMyFart</span></h1>
+    <p class="header-subtitle">Politique de confidentialité &nbsp;·&nbsp; Privacy Policy</p>
+    <span class="header-date">7 novembre 2026 &nbsp;·&nbsp; November 7, 2026</span>
+
+    <nav class="lang-nav" aria-label="Langue / Language">
+      <a href="#fr">Français</a>
+      <a href="#en">English</a>
+    </nav>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════════
+       WRAPPER
+  ══════════════════════════════════════════════════════════ -->
+  <div class="wrapper">
+    <main class="content">
+
+      <!-- ════════════════════════════════════════════
+           SECTION FRANÇAISE
+      ════════════════════════════════════════════ -->
+      <section class="policy-section" id="fr">
+        <span class="section-lang-tag">🇫🇷 Français</span>
+
+        <h1 class="policy-title">Politique de confidentialité</h1>
+        <p class="policy-lead">
+          TuneMyFart est une application d'analyse acoustique humoristique de flatulences.
+          Cette politique explique quelles données nous collectons, pourquoi, et comment vous pouvez
+          les contrôler. Nous nous engageons à la transparence et au respect du RGPD.
+        </p>
+
+        <!-- 1 -->
+        <h2 id="fr-editeur">1. Éditeur de l'application</h2>
+        <p>
+          TuneMyFart est développé et maintenu par un développeur indépendant.
+          Pour toute question relative à vos données personnelles, vous pouvez nous contacter à :
+          <a href="mailto:giraud.maxime@hotmail.fr">giraud.maxime@hotmail.fr</a>
+        </p>
+
+        <!-- 2 -->
+        <h2 id="fr-donnees">2. Données collectées</h2>
+        <p>
+          Voici l'ensemble des données que l'application est susceptible de collecter, leur finalité
+          et leur caractère obligatoire ou facultatif :
+        </p>
+
+        <table class="data-table" aria-label="Données collectées">
+          <thead>
+            <tr>
+              <th>Donnée</th>
+              <th>Finalité</th>
+              <th>Stockage</th>
+              <th>Caractère</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="Donnée"><strong>Microphone</strong><br><small>Accès temps réel</small></td>
+              <td data-label="Finalité">Analyse acoustique des flatulences (fréquences, durée, intensité)</td>
+              <td data-label="Stockage">Non stocké en tant que flux brut — traité localement</td>
+              <td data-label="Caractère"><span class="tag tag--required">Obligatoire</span></td>
+            </tr>
+            <tr>
+              <td data-label="Donnée"><strong>Enregistrements audio</strong></td>
+              <td data-label="Finalité">Archivage et rejeu de vos performances</td>
+              <td data-label="Stockage">Serveurs Supabase, associés à votre compte</td>
+              <td data-label="Caractère"><span class="tag tag--optional">Facultatif</span></td>
+            </tr>
+            <tr>
+              <td data-label="Donnée"><strong>Identifiant utilisateur</strong></td>
+              <td data-label="Finalité">Authentification, liaison des données au compte</td>
+              <td data-label="Stockage">Supabase — non nominatif si compte anonyme</td>
+              <td data-label="Caractère"><span class="tag tag--required">Obligatoire</span></td>
+            </tr>
+            <tr>
+              <td data-label="Donnée"><strong>Données de classement</strong><br><small>db_max, durée, note, pseudonyme</small></td>
+              <td data-label="Finalité">Affichage dans les classements mondiaux et nationaux</td>
+              <td data-label="Stockage">Supabase, visibles publiquement</td>
+              <td data-label="Caractère"><span class="tag tag--optional">Facultatif</span></td>
+            </tr>
+            <tr>
+              <td data-label="Donnée"><strong>Données alimentaires, lieu, odeur</strong></td>
+              <td data-label="Finalité">Enrichissement de vos performances (saisie volontaire)</td>
+              <td data-label="Stockage">Supabase, associées à votre compte</td>
+              <td data-label="Caractère"><span class="tag tag--optional">Facultatif</span></td>
+            </tr>
+            <tr>
+              <td data-label="Donnée"><strong>Analytics</strong></td>
+              <td data-label="Finalité">Amélioration de l'application (analyse interne anonymisée)</td>
+              <td data-label="Stockage">Aucun tracker tiers — traitement interne uniquement</td>
+              <td data-label="Caractère"><span class="tag tag--optin">Opt-in</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- 3 -->
+        <h2 id="fr-micro">3. Accès au microphone</h2>
+        <p>
+          L'accès au microphone est la fonctionnalité centrale de TuneMyFart : sans lui, aucune
+          analyse acoustique n'est possible. Nous n'utilisons jamais le microphone en arrière-plan.
+          L'enregistrement ne se déclenche qu'à votre initiative explicite (appui sur le bouton
+          d'enregistrement). Aucun audio n'est transmis à des tiers.
+        </p>
+
+        <!-- 4 -->
+        <h2 id="fr-stockage">4. Stockage et sous-traitants</h2>
+        <p>
+          Les données sont hébergées sur <strong>Supabase</strong> (infrastructure PostgreSQL + stockage
+          objet), dont les serveurs sont localisés en Europe (région <code>eu-west-1</code> ou équivalent).
+          Supabase est notre unique sous-traitant de données. Aucune donnée n'est transmise à des
+          régies publicitaires, réseaux sociaux ou autres tiers.
+        </p>
+
+        <div class="callout">
+          <strong>Publicité tierce</strong>
+          TuneMyFart ne contient aucune publicité tierce. Vos données ne sont jamais
+          vendues ni partagées à des fins commerciales.
+        </div>
+
+        <!-- 5 -->
+        <h2 id="fr-auth">5. Authentification</h2>
+        <p>
+          Vous pouvez vous inscrire avec une adresse e-mail ou créer un <strong>compte anonyme</strong>.
+          Dans ce dernier cas, aucune information nominative n'est requise — seul un identifiant
+          technique généré aléatoirement est créé. Si vous fournissez une adresse e-mail, elle est
+          stockée de manière sécurisée chez Supabase et utilisée uniquement pour l'authentification.
+        </p>
+
+        <!-- 6 -->
+        <h2 id="fr-classements">6. Classements mondiaux et nationaux</h2>
+        <p>
+          Si vous participez aux classements, les informations suivantes deviennent publiquement
+          accessibles dans l'application :
+        </p>
+        <ul>
+          <li>Votre <strong>pseudonyme</strong> (choisi par vous)</li>
+          <li>Votre score <strong>db_max</strong> (niveau sonore maximal)</li>
+          <li>La <strong>durée</strong> de la flatulence analysée</li>
+          <li>La <strong>note principale</strong> détectée (fréquence dominante)</li>
+        </ul>
+        <p>
+          Votre pays de résidence peut être utilisé pour les classements nationaux, mais n'est
+          pas rendu public individuellement.
+        </p>
+
+        <!-- 7 -->
+        <h2 id="fr-analytics">7. Analytics</h2>
+        <p>
+          Les analytics sont <strong>opt-in uniquement</strong> : vous y consentez explicitement
+          lors de l'onboarding ou depuis les Réglages. Aucun SDK tiers (Firebase, Mixpanel, etc.)
+          n'est intégré. L'analyse est réalisée de manière interne et anonymisée : elle ne permet
+          pas de vous identifier individuellement.
+        </p>
+
+        <!-- 8 -->
+        <h2 id="fr-droits">8. Vos droits (RGPD)</h2>
+        <p>Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez des droits suivants :</p>
+        <ul>
+          <li><strong>Droit d'accès</strong> : obtenir une copie de vos données personnelles</li>
+          <li><strong>Droit de rectification</strong> : corriger des données inexactes</li>
+          <li><strong>Droit à l'effacement</strong> : demander la suppression de vos données</li>
+          <li><strong>Droit à la portabilité</strong> : recevoir vos données dans un format structuré</li>
+          <li><strong>Droit d'opposition</strong> : vous opposer à certains traitements</li>
+          <li><strong>Droit de retirer votre consentement</strong> : notamment pour les analytics</li>
+        </ul>
+
+        <div class="callout">
+          <strong>Suppression du compte</strong>
+          Vous pouvez supprimer votre compte et l'intégralité de vos données directement depuis
+          l'application : <em>Réglages → Supprimer mon compte</em>. La suppression est définitive
+          et intervient dans un délai maximum de 30 jours.
+        </div>
+
+        <p>
+          Pour exercer vos droits ou pour toute question, contactez-nous à :
+          <a href="mailto:giraud.maxime@hotmail.fr">giraud.maxime@hotmail.fr</a>
+        </p>
+        <p>
+          Vous avez également le droit d'introduire une réclamation auprès de la
+          <strong>CNIL</strong> (<a href="https://www.cnil.fr" target="_blank" rel="noopener">www.cnil.fr</a>).
+        </p>
+
+        <!-- 9 -->
+        <h2 id="fr-retention">9. Durée de conservation</h2>
+        <p>
+          Vos données sont conservées tant que votre compte est actif. En cas d'inactivité de
+          plus de 3 ans, nous nous réservons le droit de supprimer les données associées, après
+          notification par e-mail si une adresse est renseignée.
+        </p>
+
+        <!-- 10 -->
+        <h2 id="fr-mineurs">10. Mineurs</h2>
+        <p>
+          TuneMyFart n'est pas destiné aux enfants de moins de 13 ans. Si vous avez connaissance
+          qu'un enfant nous a fourni des données personnelles, veuillez nous contacter afin que
+          nous puissions les supprimer.
+        </p>
+
+        <!-- 11 -->
+        <h2 id="fr-modif">11. Modifications de la présente politique</h2>
+        <p>
+          Nous pouvons mettre à jour cette politique à tout moment. En cas de modification
+          substantielle, une notification sera affichée dans l'application. La date de dernière
+          mise à jour figure en en-tête de ce document.
+        </p>
+
+        <!-- Contact -->
+        <div class="contact-block">
+          <h3>Contact</h3>
+          <p><strong>TuneMyFart</strong></p>
+          <p>
+            Pour toute question ou demande relative à vos données personnelles :<br>
+            <a href="mailto:giraud.maxime@hotmail.fr">giraud.maxime@hotmail.fr</a>
+          </p>
+          <p style="font-size:0.85rem; color: var(--text-soft); margin-top:0.75rem;">
+            Mise à jour : 7 novembre 2026
+          </p>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════
+           DIVISEUR
+      ════════════════════════════════════════════ -->
+      <div class="lang-divider" role="separator" aria-hidden="true">
+        <span class="lang-divider-label">English version below</span>
+      </div>
+
+      <!-- ════════════════════════════════════════════
+           ENGLISH SECTION
+      ════════════════════════════════════════════ -->
+      <section class="policy-section" id="en">
+        <span class="section-lang-tag">🇬🇧 English</span>
+
+        <h1 class="policy-title">Privacy Policy</h1>
+        <p class="policy-lead">
+          TuneMyFart is a humorous acoustic flatulence analysis app.
+          This policy explains what data we collect, why, and how you can control it.
+          We are committed to transparency and GDPR compliance.
+        </p>
+
+        <!-- 1 -->
+        <h2 id="en-publisher">1. Publisher</h2>
+        <p>
+          TuneMyFart is developed and maintained by an independent developer.
+          For any questions regarding your personal data, please contact us at:
+          <a href="mailto:giraud.maxime@hotmail.fr">giraud.maxime@hotmail.fr</a>
+        </p>
+
+        <!-- 2 -->
+        <h2 id="en-data">2. Data We Collect</h2>
+        <p>
+          The following table lists all data the application may collect, its purpose,
+          where it is stored, and whether it is mandatory or optional:
+        </p>
+
+        <table class="data-table" aria-label="Data collected">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Purpose</th>
+              <th>Storage</th>
+              <th>Nature</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="Data"><strong>Microphone</strong><br><small>Real-time access</small></td>
+              <td data-label="Purpose">Acoustic analysis (frequencies, duration, intensity)</td>
+              <td data-label="Storage">Not stored as a raw stream — processed locally</td>
+              <td data-label="Nature"><span class="tag tag--required">Required</span></td>
+            </tr>
+            <tr>
+              <td data-label="Data"><strong>Audio recordings</strong></td>
+              <td data-label="Purpose">Archiving and replaying your performances</td>
+              <td data-label="Storage">Supabase servers, linked to your account</td>
+              <td data-label="Nature"><span class="tag tag--optional">Optional</span></td>
+            </tr>
+            <tr>
+              <td data-label="Data"><strong>User identifier</strong></td>
+              <td data-label="Purpose">Authentication, linking data to your account</td>
+              <td data-label="Storage">Supabase — not tied to a real identity if anonymous</td>
+              <td data-label="Nature"><span class="tag tag--required">Required</span></td>
+            </tr>
+            <tr>
+              <td data-label="Data"><strong>Leaderboard data</strong><br><small>db_max, duration, note, username</small></td>
+              <td data-label="Purpose">Display on global and national leaderboards</td>
+              <td data-label="Storage">Supabase, publicly visible</td>
+              <td data-label="Nature"><span class="tag tag--optional">Optional</span></td>
+            </tr>
+            <tr>
+              <td data-label="Data"><strong>Food, location, smell data</strong></td>
+              <td data-label="Purpose">Enriching your performance entries (voluntary input)</td>
+              <td data-label="Storage">Supabase, linked to your account</td>
+              <td data-label="Nature"><span class="tag tag--optional">Optional</span></td>
+            </tr>
+            <tr>
+              <td data-label="Data"><strong>Analytics</strong></td>
+              <td data-label="Purpose">App improvement (anonymized internal analysis)</td>
+              <td data-label="Storage">No third-party tracker — internal processing only</td>
+              <td data-label="Nature"><span class="tag tag--optin">Opt-in</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- 3 -->
+        <h2 id="en-microphone">3. Microphone Access</h2>
+        <p>
+          Microphone access is the core feature of TuneMyFart: without it, no acoustic analysis
+          is possible. We never use the microphone in the background. Recording is only triggered
+          by your explicit action (pressing the record button). No audio is ever transmitted to
+          third parties.
+        </p>
+
+        <!-- 4 -->
+        <h2 id="en-storage">4. Storage and Sub-processors</h2>
+        <p>
+          Data is hosted on <strong>Supabase</strong> (PostgreSQL infrastructure + object storage),
+          with servers located in Europe. Supabase is our sole data sub-processor. No data is
+          transmitted to advertising networks, social media platforms, or other third parties.
+        </p>
+
+        <div class="callout">
+          <strong>No third-party advertising</strong>
+          TuneMyFart contains no third-party advertising. Your data is never sold or
+          shared for commercial purposes.
+        </div>
+
+        <!-- 5 -->
+        <h2 id="en-auth">5. Authentication</h2>
+        <p>
+          You may sign up with an email address or create an <strong>anonymous account</strong>.
+          In the latter case, no identifying information is required — only a randomly generated
+          technical identifier is created. If you provide an email address, it is stored securely
+          on Supabase and used solely for authentication purposes.
+        </p>
+
+        <!-- 6 -->
+        <h2 id="en-leaderboards">6. Global and National Leaderboards</h2>
+        <p>
+          If you participate in leaderboards, the following information becomes publicly visible
+          within the app:
+        </p>
+        <ul>
+          <li>Your <strong>username</strong> (chosen by you)</li>
+          <li>Your <strong>db_max</strong> score (peak sound level)</li>
+          <li>The <strong>duration</strong> of the analyzed event</li>
+          <li>The <strong>dominant note</strong> detected (pitch)</li>
+        </ul>
+        <p>
+          Your country of residence may be used for national rankings, but is not disclosed
+          individually.
+        </p>
+
+        <!-- 7 -->
+        <h2 id="en-analytics">7. Analytics</h2>
+        <p>
+          Analytics are <strong>opt-in only</strong>: you explicitly consent during onboarding
+          or from the Settings menu. No third-party SDK (Firebase, Mixpanel, etc.) is integrated.
+          Analysis is handled internally and is fully anonymized — it cannot be used to identify
+          you individually.
+        </p>
+
+        <!-- 8 -->
+        <h2 id="en-rights">8. Your Rights (GDPR)</h2>
+        <p>
+          Under the General Data Protection Regulation (GDPR), you have the following rights:
+        </p>
+        <ul>
+          <li><strong>Right of access</strong> — obtain a copy of your personal data</li>
+          <li><strong>Right of rectification</strong> — correct inaccurate data</li>
+          <li><strong>Right to erasure</strong> — request deletion of your data</li>
+          <li><strong>Right to data portability</strong> — receive your data in a structured format</li>
+          <li><strong>Right to object</strong> — object to certain types of processing</li>
+          <li><strong>Right to withdraw consent</strong> — in particular for analytics</li>
+        </ul>
+
+        <div class="callout">
+          <strong>Account deletion</strong>
+          You can delete your account and all associated data directly from the app:
+          <em>Settings → Delete my account</em>. Deletion is permanent and completed
+          within a maximum of 30 days.
+        </div>
+
+        <p>
+          To exercise your rights or for any questions, contact us at:
+          <a href="mailto:giraud.maxime@hotmail.fr">giraud.maxime@hotmail.fr</a>
+        </p>
+        <p>
+          You also have the right to lodge a complaint with your national data protection
+          authority (e.g. the ICO in the UK, the CNIL in France).
+        </p>
+
+        <!-- 9 -->
+        <h2 id="en-retention">9. Data Retention</h2>
+        <p>
+          Your data is retained for as long as your account is active. In the event of
+          inactivity exceeding 3 years, we reserve the right to delete associated data,
+          after notification by email if an address is on file.
+        </p>
+
+        <!-- 10 -->
+        <h2 id="en-minors">10. Minors</h2>
+        <p>
+          TuneMyFart is not intended for children under the age of 13. If you become
+          aware that a child has provided us with personal data, please contact us so
+          that we can delete it promptly.
+        </p>
+
+        <!-- 11 -->
+        <h2 id="en-changes">11. Changes to This Policy</h2>
+        <p>
+          We may update this policy at any time. For material changes, a notification
+          will be displayed within the app. The date of the latest update is shown
+          at the top of this document.
+        </p>
+
+        <!-- Contact -->
+        <div class="contact-block">
+          <h3>Contact</h3>
+          <p><strong>TuneMyFart</strong></p>
+          <p>
+            For any questions or requests regarding your personal data:<br>
+            <a href="mailto:giraud.maxime@hotmail.fr">giraud.maxime@hotmail.fr</a>
+          </p>
+          <p style="font-size:0.85rem; color: var(--text-soft); margin-top:0.75rem;">
+            Last updated: November 7, 2026
+          </p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ══════════════════════════════════════════════════════════
+         FOOTER
+    ══════════════════════════════════════════════════════════ -->
+    <footer class="site-footer">
+      <p>&copy; 2026 TuneMyFart &nbsp;·&nbsp; Tous droits réservés / All rights reserved</p>
+      <p style="margin-top:0.4rem;">
+        <a href="mailto:giraud.maxime@hotmail.fr" style="border-bottom-color: rgba(228,185,74,0.2);">giraud.maxime@hotmail.fr</a>
+      </p>
+    </footer>
+
+  </div><!-- /.wrapper -->
+
+</body>
+</html>

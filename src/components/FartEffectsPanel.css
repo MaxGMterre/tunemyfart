@@ -1,0 +1,151 @@
+/* ── FartEffectsPanel ─────────────────────────────────────── */
+
+.fep-panel {
+  margin-top: 12px;
+  padding: 12px 14px 14px;
+  background: var(--color-paper-dark, #111827);
+  border: 1.5px solid #C99A3D;
+  border-radius: 6px;
+  font-family: "JetBrains Mono", "Fira Mono", "Courier New", monospace;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Header */
+.fep-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fep-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #C99A3D;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.fep-close-btn {
+  background: transparent;
+  border: 1px solid rgba(201, 154, 61, 0.4);
+  border-radius: 4px;
+  color: #C99A3D;
+  cursor: pointer;
+  font-size: 0.75rem;
+  line-height: 1;
+  padding: 2px 6px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.fep-close-btn:hover {
+  background: rgba(201, 154, 61, 0.15);
+  color: #E0B05A;
+}
+
+/* Canvas visualizer */
+.fep-canvas {
+  width: 100%;
+  max-width: 300px;
+  height: 60px;
+  display: block;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(201, 154, 61, 0.2);
+  align-self: center;
+}
+
+/* Play / Stop button */
+.fep-play-btn {
+  align-self: center;
+  background: transparent;
+  border: 1.5px solid #C99A3D;
+  border-radius: 50%;
+  color: #C99A3D;
+  cursor: pointer;
+  font-size: 1.1rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.fep-play-btn:hover {
+  background: rgba(201, 154, 61, 0.18);
+  color: #E0B05A;
+}
+
+.fep-play-btn--active {
+  background: rgba(224, 104, 64, 0.2);
+  border-color: #E06840;
+  color: #E06840;
+}
+
+/* Sliders section */
+.fep-sliders {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fep-slider-row {
+  display: grid;
+  grid-template-columns: 72px 1fr 44px;
+  align-items: center;
+  gap: 8px;
+  cursor: default;
+}
+
+.fep-slider-label {
+  font-size: 0.72rem;
+  color: rgba(201, 154, 61, 0.85);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  user-select: none;
+}
+
+.fep-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(201, 154, 61, 0.25);
+  outline: none;
+  cursor: pointer;
+}
+
+.fep-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #C99A3D;
+  cursor: pointer;
+  border: 2px solid #111827;
+  transition: background 0.15s;
+}
+
+.fep-slider::-webkit-slider-thumb:hover {
+  background: #E0B05A;
+}
+
+.fep-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #C99A3D;
+  cursor: pointer;
+  border: 2px solid #111827;
+}
+
+.fep-slider-value {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.55);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}

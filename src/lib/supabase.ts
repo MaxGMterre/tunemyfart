@@ -47,10 +47,11 @@ export async function saveRecording(payload: RecordingPayload) {
 // Upload audio blob to Supabase Storage bucket "recordings"
 // Returns the public URL, or throws on failure.
 export async function uploadAudio(blob: Blob, userId: string): Promise<string> {
-  const filename = `${userId}/${Date.now()}.webm`;
+  const ext = blob.type.includes("mp4") ? "mp4" : blob.type.includes("ogg") ? "ogg" : "webm";
+  const filename = `${userId}/${Date.now()}.${ext}`;
   const { error } = await supabase.storage
     .from("recordings")
-    .upload(filename, blob, { contentType: "audio/webm", upsert: false });
+    .upload(filename, blob, { contentType: blob.type || "audio/webm", upsert: false });
   if (error) throw error;
   const { data } = supabase.storage.from("recordings").getPublicUrl(filename);
   return data.publicUrl;
