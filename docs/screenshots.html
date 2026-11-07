@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TuneMyFart — Mockups App Store</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #1B2A41;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 48px 32px 64px;
+      min-height: 100vh;
+    }
+
+    h1.page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 42px;
+      color: #C99A3D;
+      text-align: center;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+    }
+    p.page-subtitle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #7a8fa8;
+      text-align: center;
+      margin-bottom: 48px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .slides-row {
+      display: flex;
+      flex-direction: row;
+      gap: 32px;
+      overflow-x: auto;
+      align-items: flex-start;
+      padding-bottom: 24px;
+    }
+
+    .slide {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .slide-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 22px;
+      color: #C99A3D;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    /* ---- PHONE FRAME ---- */
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      border-radius: 44px;
+      background: linear-gradient(145deg, #4a4a4a, #2a2a2a, #1a1a1a, #3a3a3a);
+      padding: 3px;
+      box-shadow:
+        0 0 0 1px #555,
+        0 30px 80px rgba(0,0,0,0.7),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .phone-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 41px;
+      background: #000;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Dynamic Island */
+    .dynamic-island {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 34px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 10;
+    }
+
+    /* Status bar */
+    .status-bar {
+      height: 54px;
+      background: transparent;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0 24px 8px;
+      position: relative;
+      z-index: 5;
+      flex-shrink: 0;
+    }
+    .status-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .status-icons svg { fill: #fff; }
+
+    /* ==================== SCREEN 1 ==================== */
+    .screen-1 {
+      background: #F2ECE0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .s1-header {
+      background: linear-gradient(180deg, #2a1a0a 0%, #3d2510 60%, #4a2e15 100%);
+      padding: 12px 20px 14px;
+      flex-shrink: 0;
+      border-bottom: 2px solid #C99A3D;
+    }
+    .s1-header-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 32px;
+      color: #C99A3D;
+      text-align: center;
+      letter-spacing: 2px;
+      text-shadow: 0 0 12px rgba(201,154,61,0.6);
+    }
+
+    .s1-plaque {
+      background: linear-gradient(135deg, #C99A3D, #a07a2e, #d4aa50, #8a6520);
+      margin: 10px 16px;
+      border-radius: 6px;
+      padding: 8px 12px;
+      text-align: center;
+      border: 1px solid #8a6520;
+      flex-shrink: 0;
+    }
+    .s1-plaque-line1 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: #1B2A41;
+      letter-spacing: 2px;
+    }
+    .s1-plaque-line2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      color: #2a1a0a;
+      letter-spacing: 1px;
+      margin-top: 2px;
+      opacity: 0.85;
+    }
+
+    .s1-leds {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      padding: 6px 0;
+      flex-shrink: 0;
+    }
+    .led-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+    .led-bulb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid rgba(0,0,0,0.3);
+    }
+    .led-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7px;
+      color: #4a3520;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+    .led-green  { background: #22ff44; box-shadow: 0 0 8px #22ff44, 0 0 16px rgba(34,255,68,0.4); }
+    .led-blue   { background: #44aaff; box-shadow: 0 0 8px #44aaff, 0 0 16px rgba(68,170,255,0.4); }
+    .led-red-led{ background: #ff2222; box-shadow: 0 0 8px #ff2222, 0 0 16px rgba(255,34,34,0.4); }
+    .led-yellow { background: #ffcc00; box-shadow: 0 0 8px #ffcc00, 0 0 16px rgba(255,204,0,0.4); }
+
+    .s1-scope {
+      margin: 0 16px 8px;
+      background: #0a1a0a;
+      border: 2px solid #1a3a1a;
+      border-radius: 8px;
+      height: 110px;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .s1-scope-scanline {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,255,0,0.03) 2px,
+        rgba(0,255,0,0.03) 4px
+      );
+    }
+
+    .s1-gauges {
+      display: flex;
+      gap: 10px;
+      margin: 0 16px 8px;
+      flex-shrink: 0;
+    }
+    .gauge-box {
+      flex: 1;
+      background: #2a1a0a;
+      border: 1px solid #C99A3D;
+      border-radius: 6px;
+      padding: 6px 8px;
+    }
+    .gauge-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7px;
+      color: #C99A3D;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .vu-meter {
+      display: flex;
+      gap: 2px;
+      align-items: flex-end;
+      height: 28px;
+    }
+    .vu-bar {
+      width: 5px;
+      border-radius: 1px;
+    }
+
+    .freq-arc {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 38px;
+    }
+
+    .s1-rec-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      margin-bottom: 6px;
+    }
+    .rec-circle {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #ff5544, #cc1100, #880000);
+      border: 3px solid #ff3322;
+      box-shadow:
+        0 0 0 6px rgba(255,50,34,0.2),
+        0 0 20px rgba(255,50,34,0.4),
+        0 4px 12px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 2px;
+    }
+    .rec-status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      color: #4a3520;
+      letter-spacing: 1px;
+      text-align: center;
+    }
+
+    .tab-bar {
+      height: 72px;
+      background: linear-gradient(180deg, #2a1a0a, #1a0d05);
+      border-top: 1px solid #C99A3D;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 8px;
+      flex-shrink: 0;
+    }
+    .tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      flex: 1;
+    }
+    .tab-icon { width: 24px; height: 24px; }
+    .tab-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7px;
+      color: #7a5a30;
+      letter-spacing: 0.5px;
+    }
+    .tab-item.active .tab-name { color: #C99A3D; }
+
+    /* ==================== SCREEN 2 ==================== */
+    .screen-2 {
+      background: #F2ECE0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .s2-header {
+      background: linear-gradient(180deg, #2a1a0a, #3d2510);
+      padding: 10px 20px 12px;
+      border-bottom: 2px solid #C99A3D;
+      flex-shrink: 0;
+    }
+    .s2-header-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 26px;
+      color: #C99A3D;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+    .s2-header-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: #8a6520;
+      text-align: center;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .s2-scroll {
+      flex: 1;
+      overflow: hidden;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .result-card {
+      background: #fff;
+      border: 1px solid #C99A3D;
+      border-radius: 10px;
+      padding: 10px 12px;
+      position: relative;
+    }
+    .result-card-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: #C99A3D;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      border-bottom: 1px solid #e8dcc8;
+      padding-bottom: 4px;
+    }
+    .result-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .stat-item { display: flex; flex-direction: column; gap: 1px; }
+    .stat-key {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7px;
+      color: #8a7060;
+      letter-spacing: 1px;
+    }
+    .stat-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #1B2A41;
+      line-height: 1;
+    }
+
+    .badges-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .note-badge {
+      background: linear-gradient(135deg, #C99A3D, #a07a2e);
+      border-radius: 20px;
+      padding: 3px 10px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .note-badge-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: 14px;
+      color: #fff;
+    }
+    .note-badge-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .comment-box {
+      background: #f8f3ea;
+      border-left: 3px solid #C99A3D;
+      border-radius: 0 6px 6px 0;
+      padding: 7px 10px;
+    }
+    .comment-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 13px;
+      color: #2a1a0a;
+      line-height: 1.4;
+    }
+
+    .waveform-box {
+      background: #0a1a0a;
+      border: 1px solid #1a3a1a;
+      border-radius: 6px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      gap: 8px;
+    }
+    .play-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #C99A3D;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 10px;
+      color: #1B2A41;
+    }
+
+    .field-box {
+      background: #fff;
+      border: 1px solid #ddd0b8;
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+    .field-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7px;
+      color: #C99A3D;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .field-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: #4a3520;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+    .field-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+      color: #1B2A41;
+    }
+
+    .action-btns {
+      display: flex;
+      gap: 6px;
+    }
+    .action-btn {
+      flex: 1;
+      background: linear-gradient(135deg, #C99A3D, #a07a2e);
+      border-radius: 8px;
+      padding: 7px 6px;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+    .action-btn.secondary {
+      background: #1B2A41;
+    }
+
+    /* ==================== SCREEN 3 ==================== */
+    .screen-3 {
+      background: #F2ECE0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .s3-header {
+      background: linear-gradient(180deg, #2a1a0a, #3d2510);
+      padding: 10px 20px 12px;
+      border-bottom: 2px solid #C99A3D;
+      flex-shrink: 0;
+    }
+    .s3-header-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 28px;
+      color: #C99A3D;
+      text-align: center;
+    }
+    .s3-header-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: #8a6520;
+      text-align: center;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .scope-switcher {
+      display: flex;
+      margin: 10px 14px 0;
+      background: #e4dcc8;
+      border-radius: 20px;
+      padding: 2px;
+      flex-shrink: 0;
+    }
+    .scope-opt {
+      flex: 1;
+      text-align: center;
+      padding: 5px 0;
+      border-radius: 18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: #7a5a30;
+      letter-spacing: 0.5px;
+    }
+    .scope-opt.active {
+      background: #C99A3D;
+      color: #fff;
+    }
+
+    .podium-row {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 8px;
+      padding: 10px 14px 8px;
+      flex-shrink: 0;
+    }
+    .podium-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .podium-medal {
+      font-size: 22px;
+      line-height: 1;
+    }
+    .podium-pseudo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: #2a1a0a;
+      font-weight: 600;
+    }
+    .podium-score {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: #C99A3D;
+    }
+    .podium-block-1 { width: 70px; height: 50px; background: linear-gradient(180deg, #C99A3D, #a07a2e); border-radius: 4px 4px 0 0; display: flex; align-items: center; justify-content: center; }
+    .podium-block-2 { width: 60px; height: 36px; background: linear-gradient(180deg, #aaa, #777); border-radius: 4px 4px 0 0; display: flex; align-items: center; justify-content: center; }
+    .podium-block-3 { width: 60px; height: 26px; background: linear-gradient(180deg, #cd7f32, #9a5f22); border-radius: 4px 4px 0 0; display: flex; align-items: center; justify-content: center; }
+    .podium-num { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 18px; color: #fff; }
+
+    .ranking-table {
+      flex: 1;
+      overflow: hidden;
+      padding: 0 14px;
+    }
+    .ranking-header {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 8px;
+      background: #2a1a0a;
+      border-radius: 4px 4px 0 0;
+    }
+    .ranking-header span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7px;
+      color: #C99A3D;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .ranking-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 8px;
+      border-bottom: 1px solid #e4dcc8;
+      background: #fff;
+    }
+    .ranking-row:last-child { border-bottom: none; }
+    .rank-pos {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      color: #7a5a30;
+      width: 24px;
+    }
+    .rank-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: #1B2A41;
+      flex: 1;
+      padding: 0 6px;
+    }
+    .rank-score {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #C99A3D;
+    }
+    .rank-flag { font-size: 12px; }
+
+    /* ==================== SCREEN 4 ==================== */
+    .screen-4 {
+      background: #F2ECE0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .s4-header {
+      background: linear-gradient(180deg, #2a1a0a, #3d2510);
+      padding: 10px 20px 12px;
+      border-bottom: 2px solid #C99A3D;
+      flex-shrink: 0;
+    }
+    .s4-header-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 28px;
+      color: #C99A3D;
+      text-align: center;
+    }
+    .s4-header-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: #8a6520;
+      text-align: center;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .daily-banner {
+      margin: 10px 14px 0;
+      background: linear-gradient(135deg, #1B2A41, #2a3d55);
+      border: 1px solid #C99A3D;
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .daily-banner-icon {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+    .daily-banner-text { flex: 1; }
+    .daily-banner-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7px;
+      color: #C99A3D;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .daily-banner-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 16px;
+      color: #fff;
+      margin-bottom: 3px;
+    }
+    .daily-banner-xp {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: #C99A3D;
+      font-weight: 700;
+    }
+    .daily-btn {
+      background: rgba(201,154,61,0.2);
+      border: 1px solid #C99A3D;
+      border-radius: 20px;
+      padding: 5px 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: #C99A3D;
+      flex-shrink: 0;
+    }
+
+    .missions-list {
+      flex: 1;
+      overflow: hidden;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .mission-card {
+      background: #fff;
+      border: 1px solid #ddd0b8;
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    .mission-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .mission-icon { font-size: 22px; flex-shrink: 0; }
+    .mission-info { flex: 1; }
+    .mission-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #1B2A41;
+      margin-bottom: 1px;
+    }
+    .mission-desc {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      color: #7a5a30;
+      letter-spacing: 0.3px;
+    }
+    .mission-xp {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: #C99A3D;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .mission-progress-bar {
+      height: 6px;
+      background: #e8dcc8;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .mission-progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #C99A3D, #d4aa50);
+    }
+    .mission-progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3px;
+    }
+    .mission-progress-label span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7px;
+      color: #7a5a30;
+    }
+
+    /* ==================== SCREEN 5 ==================== */
+    .screen-5 {
+      background: #F2ECE0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .s5-header {
+      background: linear-gradient(180deg, #2a1a0a, #3d2510);
+      padding: 10px 20px 12px;
+      border-bottom: 2px solid #C99A3D;
+      flex-shrink: 0;
+    }
+    .s5-header-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 28px;
+      color: #C99A3D;
+      text-align: center;
+    }
+    .s5-header-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: #8a6520;
+      text-align: center;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .s5-plaque {
+      background: linear-gradient(135deg, #C99A3D, #a07a2e, #d4aa50);
+      margin: 10px 16px 6px;
+      border-radius: 6px;
+      padding: 6px 12px;
+      text-align: center;
+      border: 1px solid #8a6520;
+      flex-shrink: 0;
+    }
+    .s5-plaque-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      color: #1B2A41;
+      letter-spacing: 2px;
+    }
+
+    .piano-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 6px 10px 0;
+      overflow: hidden;
+    }
+
+    .piano-keys {
+      position: relative;
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      height: 120px;
+      flex-shrink: 0;
+    }
+    .white-key {
+      width: 24px;
+      height: 110px;
+      background: linear-gradient(180deg, #fff 0%, #f0ead8 100%);
+      border: 1px solid #bbb;
+      border-radius: 0 0 5px 5px;
+      position: relative;
+      margin: 0 1px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 5px;
+      flex-shrink: 0;
+    }
+    .white-key.collected {
+      background: linear-gradient(180deg, #fff9e8 0%, #f5e8c0 100%);
+    }
+    .white-key.collected::after {
+      content: '';
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #C99A3D;
+      box-shadow: 0 0 6px rgba(201,154,61,0.6);
+    }
+    .key-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 6px;
+      color: #7a5a30;
+      font-weight: 700;
+    }
+    .black-key {
+      width: 16px;
+      height: 68px;
+      background: linear-gradient(180deg, #2a2a2a, #1a1a1a);
+      border-radius: 0 0 4px 4px;
+      position: absolute;
+      z-index: 2;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+    }
+    .black-key.collected {
+      background: linear-gradient(180deg, #4a3010, #3a2008);
+      border: 1px solid #C99A3D;
+    }
+
+    .chromatic-circle-wrapper {
+      flex-shrink: 0;
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .chromatic-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7px;
+      color: #7a5a30;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .studio-btn {
+      margin: 8px 20px;
+      background: linear-gradient(135deg, #1B2A41, #2a3d55);
+      border: 1px solid #C99A3D;
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .studio-btn-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #C99A3D;
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
+
+    /* ==================== APP STORE INFO ==================== */
+    .appstore-section {
+      margin-top: 56px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid #C99A3D;
+      border-radius: 12px;
+      padding: 32px 36px;
+      max-width: 820px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .appstore-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 28px;
+      color: #C99A3D;
+      margin-bottom: 16px;
+      letter-spacing: 1px;
+    }
+    .format-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .format-card {
+      background: rgba(201,154,61,0.08);
+      border: 1px solid rgba(201,154,61,0.3);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .format-size {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #C99A3D;
+      margin-bottom: 4px;
+    }
+    .format-model {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: #7a8fa8;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    .format-px {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #fff;
+      font-weight: 600;
+    }
+    .appstore-instruction {
+      background: rgba(27,42,65,0.6);
+      border-left: 3px solid #C99A3D;
+      border-radius: 0 6px 6px 0;
+      padding: 12px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: #c0cdd8;
+      line-height: 1.6;
+      letter-spacing: 0.3px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1 class="page-title">TuneMyFart — Mockups App Store</h1>
+  <p class="page-subtitle">Laboratoire d'Analyse Bioacoustique · Est. 1897 · Mk.II</p>
+
+  <div class="slides-row">
+
+    <!-- ===== SLIDE 1 — L'ANAL-YSER ===== -->
+    <div class="slide">
+      <div class="phone-frame">
+        <div class="phone-inner">
+          <div class="dynamic-island"></div>
+
+          <!-- Status Bar -->
+          <div class="status-bar" style="background: #2a1a0a;">
+            <span class="status-time" style="color:#C99A3D;">09:41</span>
+            <div class="status-icons">
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="#C99A3D"><rect x="0" y="4" width="3" height="8" rx="1"/><rect x="4" y="2.5" width="3" height="9.5" rx="1"/><rect x="8" y="1" width="3" height="11" rx="1"/><rect x="12" y="0" width="3" height="12" rx="1"/></svg>
+              <svg width="16" height="12" viewBox="0 0 24 12" fill="#C99A3D"><path d="M1 4C3.5 1.5 7 0 12 0s8.5 1.5 11 4l-2 2C19 4 15.8 2.5 12 2.5S5 4 3 6L1 4z"/><path d="M5 7.5C6.8 5.7 9.2 4.5 12 4.5s5.2 1.2 7 3L17 9.5C15.5 8 13.9 7 12 7s-3.5 1-5 2.5L5 7.5z"/><circle cx="12" cy="12" r="2"/></svg>
+              <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="#C99A3D"/><rect x="2" y="2" width="16" height="8" rx="2" fill="#C99A3D"/><path d="M23 4v4a2 2 0 000-4z" fill="#C99A3D"/></svg>
+            </div>
+          </div>
+
+          <!-- Screen 1 Content -->
+          <div class="screen-1">
+            <div class="s1-header">
+              <div class="s1-header-title">L'Anal-yser</div>
+            </div>
+
+            <div class="s1-plaque">
+              <div class="s1-plaque-line1">L'ANAL-YSER</div>
+              <div class="s1-plaque-line2">OUTIL D'ANALYSE DE FRÉQUENCE BIOACOUSTIQUE</div>
+              <div class="s1-plaque-line2">MODÈLE MK.II · LABORATOIRE PROUT · EST. 1897</div>
+            </div>
+
+            <!-- LEDs -->
+            <div class="s1-leds">
+              <div class="led-item">
+                <div class="led-bulb led-green"></div>
+                <div class="led-label">POWER</div>
+              </div>
+              <div class="led-item">
+                <div class="led-bulb led-blue"></div>
+                <div class="led-label">READY</div>
+              </div>
+              <div class="led-item">
+                <div class="led-bulb led-red-led"></div>
+                <div class="led-label">REC</div>
+              </div>
+              <div class="led-item">
+                <div class="led-bulb led-yellow"></div>
+                <div class="led-label">SIG</div>
+              </div>
+            </div>
+
+            <!-- Oscilloscope -->
+            <div class="s1-scope">
+              <div class="s1-scope-scanline"></div>
+              <svg width="100%" height="100%" viewBox="0 0 358 110" preserveAspectRatio="none">
+                <!-- Grid -->
+                <line x1="0" y1="55" x2="358" y2="55" stroke="rgba(0,255,0,0.15)" stroke-width="1"/>
+                <line x1="0" y1="27" x2="358" y2="27" stroke="rgba(0,255,0,0.08)" stroke-width="0.5"/>
+                <line x1="0" y1="82" x2="358" y2="82" stroke="rgba(0,255,0,0.08)" stroke-width="0.5"/>
+                <line x1="89" y1="0" x2="89" y2="110" stroke="rgba(0,255,0,0.08)" stroke-width="0.5"/>
+                <line x1="179" y1="0" x2="179" y2="110" stroke="rgba(0,255,0,0.08)" stroke-width="0.5"/>
+                <line x1="269" y1="0" x2="269" y2="110" stroke="rgba(0,255,0,0.08)" stroke-width="0.5"/>
+                <!-- Waveform -->
+                <path d="M 0 55 C 15 55 20 20 35 20 S 55 90 70 90 S 90 20 105 20 S 125 90 140 90 S 160 20 175 20 S 195 90 210 90 S 230 20 245 20 S 265 90 280 90 S 300 20 315 20 S 340 55 358 55"
+                      fill="none" stroke="#00ff44" stroke-width="2" stroke-linecap="round"
+                      filter="url(#glow)"/>
+                <defs>
+                  <filter id="glow">
+                    <feGaussianBlur stdDeviation="2" result="blur"/>
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                </defs>
+              </svg>
+            </div>
+
+            <!-- Gauges -->
+            <div class="s1-gauges">
+              <div class="gauge-box">
+                <div class="gauge-label">VU-mètre</div>
+                <div class="vu-meter">
+                  <div class="vu-bar" style="height:12px;background:#22ff44;"></div>
+                  <div class="vu-bar" style="height:18px;background:#22ff44;"></div>
+                  <div class="vu-bar" style="height:24px;background:#22ff44;"></div>
+                  <div class="vu-bar" style="height:20px;background:#aaff22;"></div>
+                  <div class="vu-bar" style="height:16px;background:#ffcc00;"></div>
+                  <div class="vu-bar" style="height:10px;background:#ffcc00;"></div>
+                  <div class="vu-bar" style="height:6px;background:#ff4400;"></div>
+                  <div class="vu-bar" style="height:3px;background:#ff2200;"></div>
+                </div>
+              </div>
+              <div class="gauge-box">
+                <div class="gauge-label">Fréquence</div>
+                <div class="freq-arc">
+                  <svg viewBox="0 0 80 46" width="80" height="46">
+                    <path d="M 8 42 A 36 36 0 0 1 72 42" fill="none" stroke="#3a2a10" stroke-width="6" stroke-linecap="round"/>
+                    <path d="M 8 42 A 36 36 0 0 1 48 10" fill="none" stroke="#C99A3D" stroke-width="6" stroke-linecap="round"/>
+                    <line x1="40" y1="42" x2="38" y2="14" stroke="#ff4422" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="40" cy="42" r="3" fill="#C99A3D"/>
+                    <text x="8" y="46" font-family="monospace" font-size="7" fill="#8a6520">Lo</text>
+                    <text x="66" y="46" font-family="monospace" font-size="7" fill="#8a6520">Hi</text>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- REC Button -->
+            <div class="s1-rec-btn">
+              <div class="rec-circle">REC</div>
+              <div class="rec-status">PRÊT — APPUYER POUR DÉBUTER L'ANALYSE</div>
+            </div>
+
+            <!-- Tab Bar -->
+            <div class="tab-bar">
+              <!-- Anal-yser (active) -->
+              <div class="tab-item active">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="12" cy="12" r="8" stroke="#C99A3D" stroke-width="1.5"/>
+                  <path d="M 4 12 Q 7 6 10 12 Q 13 18 16 12 Q 19 6 20 12" fill="none" stroke="#C99A3D" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <span class="tab-name">Anal-yser</span>
+              </div>
+              <!-- Registres -->
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="3" y="14" width="4" height="7" rx="1" stroke="#7a5a30" stroke-width="1.5"/>
+                  <rect x="10" y="9" width="4" height="12" rx="1" stroke="#7a5a30" stroke-width="1.5"/>
+                  <rect x="17" y="4" width="4" height="17" rx="1" stroke="#7a5a30" stroke-width="1.5"/>
+                </svg>
+                <span class="tab-name">Registres</span>
+              </div>
+              <!-- Missions -->
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" stroke="#7a5a30" stroke-width="1.5" stroke-linejoin="round"/>
+                </svg>
+                <span class="tab-name">Missions</span>
+              </div>
+              <!-- Clavier -->
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2" y="6" width="20" height="13" rx="2" stroke="#7a5a30" stroke-width="1.5"/>
+                  <line x1="6" y1="6" x2="6" y2="19" stroke="#7a5a30" stroke-width="1"/>
+                  <line x1="10" y1="6" x2="10" y2="19" stroke="#7a5a30" stroke-width="1"/>
+                  <line x1="14" y1="6" x2="14" y2="19" stroke="#7a5a30" stroke-width="1"/>
+                  <line x1="18" y1="6" x2="18" y2="19" stroke="#7a5a30" stroke-width="1"/>
+                  <rect x="4" y="6" width="4" height="8" rx="1" fill="#7a5a30"/>
+                  <rect x="12" y="6" width="4" height="8" rx="1" fill="#7a5a30"/>
+                </svg>
+                <span class="tab-name">Clavier</span>
+              </div>
+              <!-- Spécimen -->
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2h-2" stroke="#7a5a30" stroke-width="1.5"/>
+                  <rect x="9" y="1" width="6" height="4" rx="1" stroke="#7a5a30" stroke-width="1.5"/>
+                  <line x1="7" y1="10" x2="17" y2="10" stroke="#7a5a30" stroke-width="1.5"/>
+                  <line x1="7" y1="14" x2="17" y2="14" stroke="#7a5a30" stroke-width="1.5"/>
+                  <line x1="7" y1="18" x2="13" y2="18" stroke="#7a5a30" stroke-width="1.5"/>
+                </svg>
+                <span class="tab-name">Spécimen</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-label">01 — L'Anal-yser</div>
+    </div>
+
+    <!-- ===== SLIDE 2 — RÉSULTAT D'ANALYSE ===== -->
+    <div class="slide">
+      <div class="phone-frame">
+        <div class="phone-inner">
+          <div class="dynamic-island"></div>
+
+          <div class="status-bar" style="background: #2a1a0a;">
+            <span class="status-time" style="color:#C99A3D;">09:41</span>
+            <div class="status-icons">
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="#C99A3D"><rect x="0" y="4" width="3" height="8" rx="1"/><rect x="4" y="2.5" width="3" height="9.5" rx="1"/><rect x="8" y="1" width="3" height="11" rx="1"/><rect x="12" y="0" width="3" height="12" rx="1"/></svg>
+              <svg width="16" height="12" viewBox="0 0 24 12" fill="#C99A3D"><path d="M1 4C3.5 1.5 7 0 12 0s8.5 1.5 11 4l-2 2C19 4 15.8 2.5 12 2.5S5 4 3 6L1 4z"/><path d="M5 7.5C6.8 5.7 9.2 4.5 12 4.5s5.2 1.2 7 3L17 9.5C15.5 8 13.9 7 12 7s-3.5 1-5 2.5L5 7.5z"/><circle cx="12" cy="12" r="2"/></svg>
+              <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="#C99A3D"/><rect x="2" y="2" width="16" height="8" rx="2" fill="#C99A3D"/><path d="M23 4v4a2 2 0 000-4z" fill="#C99A3D"/></svg>
+            </div>
+          </div>
+
+          <div class="screen-2">
+            <div class="s2-header">
+              <div class="s2-header-title">Résultat d'Analyse</div>
+              <div class="s2-header-sub">Relevé #0247 · 07.11.1897</div>
+            </div>
+
+            <div class="s2-scroll">
+              <!-- Result card -->
+              <div class="result-card">
+                <div class="result-card-title">DERNIER RELEVÉ</div>
+                <div class="result-stats">
+                  <div class="stat-item">
+                    <div class="stat-key">NOTE</div>
+                    <div class="stat-val" style="color:#C99A3D;">La♯</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-key">dB MAX</div>
+                    <div class="stat-val">-18.3</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-key">DURÉE</div>
+                    <div class="stat-val">2.4s</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-key">ÉVÉNEM.</div>
+                    <div class="stat-val">7</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Badges notes -->
+              <div class="badges-row">
+                <div class="note-badge">
+                  <span class="note-badge-name">La♯</span>
+                  <span class="note-badge-count">×2</span>
+                </div>
+                <div class="note-badge">
+                  <span class="note-badge-name">Sol</span>
+                  <span class="note-badge-count">×3</span>
+                </div>
+                <div class="note-badge">
+                  <span class="note-badge-name">Fa♯</span>
+                  <span class="note-badge-count">×2</span>
+                </div>
+              </div>
+
+              <!-- Commentaire -->
+              <div class="comment-box">
+                <div class="comment-text">🔬 Une richesse harmonique rare. C'est du Coltrane intestinal.</div>
+              </div>
+
+              <!-- Waveform -->
+              <div class="waveform-box">
+                <div class="play-btn">▶</div>
+                <svg flex="1" width="260" height="34" viewBox="0 0 260 34">
+                  <path d="M 0 17 Q 10 17 15 10 T 30 24 T 45 8 T 60 26 T 75 12 T 90 22 T 105 9 T 120 25 T 135 14 T 150 20 T 165 10 T 180 24 T 195 15 T 210 21 T 225 11 T 240 23 T 255 17 T 260 17"
+                        fill="none" stroke="#22ff44" stroke-width="1.5" opacity="0.9"/>
+                </svg>
+              </div>
+
+              <!-- Fiche terrain -->
+              <div class="field-box">
+                <div class="field-title">FICHE DE TERRAIN</div>
+                <div class="field-label">Alimentation</div>
+                <div class="field-value">Bière, Choucroute</div>
+              </div>
+
+              <!-- Action buttons -->
+              <div class="action-btns">
+                <div class="action-btn">📡 Diffuser en ligne</div>
+                <div class="action-btn secondary">✓ Certifier</div>
+              </div>
+            </div>
+
+            <!-- Tab Bar -->
+            <div class="tab-bar">
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#7a5a30" stroke-width="1.5"/><path d="M 4 12 Q 7 6 10 12 Q 13 18 16 12 Q 19 6 20 12" fill="none" stroke="#7a5a30" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <span class="tab-name">Anal-yser</span>
+              </div>
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="14" width="4" height="7" rx="1" stroke="#7a5a30" stroke-width="1.5"/><rect x="10" y="9" width="4" height="12" rx="1" stroke="#7a5a30" stroke-width="1.5"/><rect x="17" y="4" width="4" height="17" rx="1" stroke="#7a5a30" stroke-width="1.5"/></svg>
+                <span class="tab-name">Registres</span>
+              </div>
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" stroke="#7a5a30" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                <span class="tab-name">Missions</span>
+              </div>
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><rect x="2" y="6" width="20" height="13" rx="2" stroke="#7a5a30" stroke-width="1.5"/><line x1="6" y1="6" x2="6" y2="19" stroke="#7a5a30" stroke-width="1"/><line x1="10" y1="6" x2="10" y2="19" stroke="#7a5a30" stroke-width="1"/><line x1="14" y1="6" x2="14" y2="19" stroke="#7a5a30" stroke-width="1"/><line x1="18" y1="6" x2="18" y2="19" stroke="#7a5a30" stroke-width="1"/><rect x="4" y="6" width="4" height="8" rx="1" fill="#7a5a30"/><rect x="12" y="6" width="4" height="8" rx="1" fill="#7a5a30"/></svg>
+                <span class="tab-name">Clavier</span>
+              </div>
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><path d="M9 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2h-2" stroke="#7a5a30" stroke-width="1.5"/><rect x="9" y="1" width="6" height="4" rx="1" stroke="#7a5a30" stroke-width="1.5"/><line x1="7" y1="10" x2="17" y2="10" stroke="#7a5a30" stroke-width="1.5"/><line x1="7" y1="14" x2="17" y2="14" stroke="#7a5a30" stroke-width="1.5"/><line x1="7" y1="18" x2="13" y2="18" stroke="#7a5a30" stroke-width="1.5"/></svg>
+                <span class="tab-name">Spécimen</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-label">02 — Résultat d'analyse</div>
+    </div>
+
+    <!-- ===== SLIDE 3 — REGISTRES ===== -->
+    <div class="slide">
+      <div class="phone-frame">
+        <div class="phone-inner">
+          <div class="dynamic-island"></div>
+
+          <div class="status-bar" style="background: #2a1a0a;">
+            <span class="status-time" style="color:#C99A3D;">09:41</span>
+            <div class="status-icons">
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="#C99A3D"><rect x="0" y="4" width="3" height="8" rx="1"/><rect x="4" y="2.5" width="3" height="9.5" rx="1"/><rect x="8" y="1" width="3" height="11" rx="1"/><rect x="12" y="0" width="3" height="12" rx="1"/></svg>
+              <svg width="16" height="12" viewBox="0 0 24 12" fill="#C99A3D"><path d="M1 4C3.5 1.5 7 0 12 0s8.5 1.5 11 4l-2 2C19 4 15.8 2.5 12 2.5S5 4 3 6L1 4z"/><path d="M5 7.5C6.8 5.7 9.2 4.5 12 4.5s5.2 1.2 7 3L17 9.5C15.5 8 13.9 7 12 7s-3.5 1-5 2.5L5 7.5z"/><circle cx="12" cy="12" r="2"/></svg>
+              <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="#C99A3D"/><rect x="2" y="2" width="16" height="8" rx="2" fill="#C99A3D"/><path d="M23 4v4a2 2 0 000-4z" fill="#C99A3D"/></svg>
+            </div>
+          </div>
+
+          <div class="screen-3">
+            <div class="s3-header">
+              <div class="s3-header-title">Registres</div>
+              <div class="s3-header-sub">Classement des confrères</div>
+            </div>
+
+            <div class="scope-switcher">
+              <div class="scope-opt">Mondial</div>
+              <div class="scope-opt active">National</div>
+              <div class="scope-opt">Amis</div>
+            </div>
+
+            <!-- Podium -->
+            <div class="podium-row">
+              <!-- 2nd -->
+              <div class="podium-item">
+                <div class="podium-medal">🥈</div>
+                <div class="podium-pseudo">ProfProut42</div>
+                <div class="podium-score">-14.2 dB</div>
+                <div class="podium-block-2"><span class="podium-num">2</span></div>
+              </div>
+              <!-- 1st -->
+              <div class="podium-item">
+                <div class="podium-medal">🥇</div>
+                <div class="podium-pseudo">GazBaron75</div>
+                <div class="podium-score">-11.8 dB</div>
+                <div class="podium-block-1"><span class="podium-num">1</span></div>
+              </div>
+              <!-- 3rd -->
+              <div class="podium-item">
+                <div class="podium-medal">🥉</div>
+                <div class="podium-pseudo">VentMaître</div>
+                <div class="podium-score">-16.5 dB</div>
+                <div class="podium-block-3"><span class="podium-num">3</span></div>
+              </div>
+            </div>
+
+            <!-- Ranking table -->
+            <div class="ranking-table">
+              <div class="ranking-header">
+                <span>#</span>
+                <span style="flex:1;padding:0 6px;">Confrère</span>
+                <span>Score</span>
+              </div>
+              <div class="ranking-row">
+                <span class="rank-pos">4</span>
+                <span class="rank-name">🇫🇷 CornettePhD</span>
+                <span class="rank-score">-18.0 dB</span>
+              </div>
+              <div class="ranking-row" style="background:#fdf8f0;">
+                <span class="rank-pos" style="color:#C99A3D;font-weight:900;">5</span>
+                <span class="rank-name" style="color:#C99A3D;font-weight:700;">🇫🇷 Vous</span>
+                <span class="rank-score">-18.3 dB</span>
+              </div>
+              <div class="ranking-row">
+                <span class="rank-pos">6</span>
+                <span class="rank-name">🇧🇪 FlatulOctet</span>
+                <span class="rank-score">-19.1 dB</span>
+              </div>
+              <div class="ranking-row">
+                <span class="rank-pos">7</span>
+                <span class="rank-name">🇨🇭 MusiqueFond</span>
+                <span class="rank-score">-21.4 dB</span>
+              </div>
+              <div class="ranking-row">
+                <span class="rank-pos">8</span>
+                <span class="rank-name">🇫🇷 BassoonBelly</span>
+                <span class="rank-score">-23.8 dB</span>
+              </div>
+            </div>
+
+            <!-- Tab Bar -->
+            <div class="tab-bar">
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#7a5a30" stroke-width="1.5"/><path d="M 4 12 Q 7 6 10 12 Q 13 18 16 12 Q 19 6 20 12" fill="none" stroke="#7a5a30" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <span class="tab-name">Anal-yser</span>
+              </div>
+              <div class="tab-item active">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="14" width="4" height="7" rx="1" stroke="#C99A3D" stroke-width="1.5"/><rect x="10" y="9" width="4" height="12" rx="1" stroke="#C99A3D" stroke-width="1.5"/><rect x="17" y="4" width="4" height="17" rx="1" stroke="#C99A3D" stroke-width="1.5"/></svg>
+                <span class="tab-name" style="color:#C99A3D;">Registres</span>
+              </div>
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" stroke="#7a5a30" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                <span class="tab-name">Missions</span>
+              </div>
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><rect x="2" y="6" width="20" height="13" rx="2" stroke="#7a5a30" stroke-width="1.5"/><line x1="6" y1="6" x2="6" y2="19" stroke="#7a5a30" stroke-width="1"/><line x1="10" y1="6" x2="10" y2="19" stroke="#7a5a30" stroke-width="1"/><line x1="14" y1="6" x2="14" y2="19" stroke="#7a5a30" stroke-width="1"/><line x1="18" y1="6" x2="18" y2="19" stroke="#7a5a30" stroke-width="1"/><rect x="4" y="6" width="4" height="8" rx="1" fill="#7a5a30"/><rect x="12" y="6" width="4" height="8" rx="1" fill="#7a5a30"/></svg>
+                <span class="tab-name">Clavier</span>
+              </div>
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><path d="M9 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2h-2" stroke="#7a5a30" stroke-width="1.5"/><rect x="9" y="1" width="6" height="4" rx="1" stroke="#7a5a30" stroke-width="1.5"/><line x1="7" y1="10" x2="17" y2="10" stroke="#7a5a30" stroke-width="1.5"/><line x1="7" y1="14" x2="17" y2="14" stroke="#7a5a30" stroke-width="1.5"/><line x1="7" y1="18" x2="13" y2="18" stroke="#7a5a30" stroke-width="1.5"/></svg>
+                <span class="tab-name">Spécimen</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-label">03 — Registres</div>
+    </div>
+
+    <!-- ===== SLIDE 4 — MISSIONS ===== -->
+    <div class="slide">
+      <div class="phone-frame">
+        <div class="phone-inner">
+          <div class="dynamic-island"></div>
+
+          <div class="status-bar" style="background: #2a1a0a;">
+            <span class="status-time" style="color:#C99A3D;">09:41</span>
+            <div class="status-icons">
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="#C99A3D"><rect x="0" y="4" width="3" height="8" rx="1"/><rect x="4" y="2.5" width="3" height="9.5" rx="1"/><rect x="8" y="1" width="3" height="11" rx="1"/><rect x="12" y="0" width="3" height="12" rx="1"/></svg>
+              <svg width="16" height="12" viewBox="0 0 24 12" fill="#C99A3D"><path d="M1 4C3.5 1.5 7 0 12 0s8.5 1.5 11 4l-2 2C19 4 15.8 2.5 12 2.5S5 4 3 6L1 4z"/><path d="M5 7.5C6.8 5.7 9.2 4.5 12 4.5s5.2 1.2 7 3L17 9.5C15.5 8 13.9 7 12 7s-3.5 1-5 2.5L5 7.5z"/><circle cx="12" cy="12" r="2"/></svg>
+              <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="#C99A3D"/><rect x="2" y="2" width="16" height="8" rx="2" fill="#C99A3D"/><path d="M23 4v4a2 2 0 000-4z" fill="#C99A3D"/></svg>
+            </div>
+          </div>
+
+          <div class="screen-4">
+            <div class="s4-header">
+              <div class="s4-header-title">Missions</div>
+              <div class="s4-header-sub">Défis en cours</div>
+            </div>
+
+            <!-- Daily banner -->
+            <div class="daily-banner">
+              <div class="daily-banner-icon">⚗️</div>
+              <div class="daily-banner-text">
+                <div class="daily-banner-label">Défi du Jour</div>
+                <div class="daily-banner-title">Produire une note Fa♯</div>
+                <div class="daily-banner-xp">+15 XP</div>
+              </div>
+              <div class="daily-btn">En cours…</div>
+            </div>
+
+            <!-- Missions -->
+            <div class="missions-list">
+
+              <div class="mission-card">
+                <div class="mission-top">
+                  <div class="mission-icon">🎵</div>
+                  <div class="mission-info">
+                    <div class="mission-name">Collectionneur de notes</div>
+                    <div class="mission-desc">Collecter 7 notes distinctes</div>
+                  </div>
+                  <div class="mission-xp">+25 XP</div>
+                </div>
+                <div class="mission-progress-bar">
+                  <div class="mission-progress-fill" style="width:71%;"></div>
+                </div>
+                <div class="mission-progress-label">
+                  <span>5/7 notes</span>
+                  <span>71%</span>
+                </div>
+              </div>
+
+              <div class="mission-card">
+                <div class="mission-top">
+                  <div class="mission-icon">💨</div>
+                  <div class="mission-info">
+                    <div class="mission-name">Grand Souffle</div>
+                    <div class="mission-desc">Dépasser 3.0s de durée</div>
+                  </div>
+                  <div class="mission-xp">+40 XP</div>
+                </div>
+                <div class="mission-progress-bar">
+                  <div class="mission-progress-fill" style="width:80%;background:linear-gradient(90deg,#D9603B,#e87050);"></div>
+                </div>
+                <div class="mission-progress-label">
+                  <span>2.4s / 3.0s</span>
+                  <span>80%</span>
+                </div>
+              </div>
+
+              <div class="mission-card">
+                <div class="mission-top">
+                  <div class="mission-icon">🏆</div>
+                  <div class="mission-info">
+                    <div class="mission-name">Expert Harmonique</div>
+                    <div class="mission-desc">Atteindre 50 analyses totales</div>
+                  </div>
+                  <div class="mission-xp">+100 XP</div>
+                </div>
+                <div class="mission-progress-bar">
+                  <div class="mission-progress-fill" style="width:47%;"></div>
+                </div>
+                <div class="mission-progress-label">
+                  <span>23/50 analyses</span>
+                  <span>47%</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Tab Bar -->
+            <div class="tab-bar">
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#7a5a30" stroke-width="1.5"/><path d="M 4 12 Q 7 6 10 12 Q 13 18 16 12 Q 19 6 20 12" fill="none" stroke="#7a5a30" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <span class="tab-name">Anal-yser</span>
+              </div>
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="14" width="4" height="7" rx="1" stroke="#7a5a30" stroke-width="1.5"/><rect x="10" y="9" width="4" height="12" rx="1" stroke="#7a5a30" stroke-width="1.5"/><rect x="17" y="4" width="4" height="17" rx="1" stroke="#7a5a30" stroke-width="1.5"/></svg>
+                <span class="tab-name">Registres</span>
+              </div>
+              <div class="tab-item active">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" stroke="#C99A3D" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                <span class="tab-name" style="color:#C99A3D;">Missions</span>
+              </div>
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><rect x="2" y="6" width="20" height="13" rx="2" stroke="#7a5a30" stroke-width="1.5"/><line x1="6" y1="6" x2="6" y2="19" stroke="#7a5a30" stroke-width="1"/><line x1="10" y1="6" x2="10" y2="19" stroke="#7a5a30" stroke-width="1"/><line x1="14" y1="6" x2="14" y2="19" stroke="#7a5a30" stroke-width="1"/><line x1="18" y1="6" x2="18" y2="19" stroke="#7a5a30" stroke-width="1"/><rect x="4" y="6" width="4" height="8" rx="1" fill="#7a5a30"/><rect x="12" y="6" width="4" height="8" rx="1" fill="#7a5a30"/></svg>
+                <span class="tab-name">Clavier</span>
+              </div>
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><path d="M9 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2h-2" stroke="#7a5a30" stroke-width="1.5"/><rect x="9" y="1" width="6" height="4" rx="1" stroke="#7a5a30" stroke-width="1.5"/><line x1="7" y1="10" x2="17" y2="10" stroke="#7a5a30" stroke-width="1.5"/><line x1="7" y1="14" x2="17" y2="14" stroke="#7a5a30" stroke-width="1.5"/><line x1="7" y1="18" x2="13" y2="18" stroke="#7a5a30" stroke-width="1.5"/></svg>
+                <span class="tab-name">Spécimen</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-label">04 — Missions</div>
+    </div>
+
+    <!-- ===== SLIDE 5 — LE CLAVIER ===== -->
+    <div class="slide">
+      <div class="phone-frame">
+        <div class="phone-inner">
+          <div class="dynamic-island"></div>
+
+          <div class="status-bar" style="background: #2a1a0a;">
+            <span class="status-time" style="color:#C99A3D;">09:41</span>
+            <div class="status-icons">
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="#C99A3D"><rect x="0" y="4" width="3" height="8" rx="1"/><rect x="4" y="2.5" width="3" height="9.5" rx="1"/><rect x="8" y="1" width="3" height="11" rx="1"/><rect x="12" y="0" width="3" height="12" rx="1"/></svg>
+              <svg width="16" height="12" viewBox="0 0 24 12" fill="#C99A3D"><path d="M1 4C3.5 1.5 7 0 12 0s8.5 1.5 11 4l-2 2C19 4 15.8 2.5 12 2.5S5 4 3 6L1 4z"/><path d="M5 7.5C6.8 5.7 9.2 4.5 12 4.5s5.2 1.2 7 3L17 9.5C15.5 8 13.9 7 12 7s-3.5 1-5 2.5L5 7.5z"/><circle cx="12" cy="12" r="2"/></svg>
+              <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="#C99A3D"/><rect x="2" y="2" width="16" height="8" rx="2" fill="#C99A3D"/><path d="M23 4v4a2 2 0 000-4z" fill="#C99A3D"/></svg>
+            </div>
+          </div>
+
+          <div class="screen-5">
+            <div class="s5-header">
+              <div class="s5-header-title">Le Clavier</div>
+              <div class="s5-header-sub">Collection chromatique</div>
+            </div>
+
+            <div class="s5-plaque">
+              <div class="s5-plaque-text">RHODES / PROUT MODEL · MK.II</div>
+            </div>
+
+            <!-- Piano -->
+            <div class="piano-wrapper">
+              <!-- White + black keys via SVG for precision -->
+              <svg viewBox="0 0 362 130" width="362" height="130" style="flex-shrink:0;overflow:visible;">
+                <!-- White keys octave 1: C D E F G A B -->
+                <!-- Key width=24, gap=2 → step=26 -->
+                <!-- Octave 1 starts at x=1 -->
+                <rect x="1"   y="0" width="24" height="110" rx="0 0 5 5" fill="url(#wkey)" stroke="#bbb" stroke-width="1" rx="4"/>
+                <rect x="27"  y="0" width="24" height="110" rx="4" fill="url(#wkey)" stroke="#bbb" stroke-width="1"/>
+                <rect x="53"  y="0" width="24" height="110" rx="4" fill="url(#wkey_col)" stroke="#C99A3D" stroke-width="1"/>
+                <rect x="79"  y="0" width="24" height="110" rx="4" fill="url(#wkey)" stroke="#bbb" stroke-width="1"/>
+                <rect x="105" y="0" width="24" height="110" rx="4" fill="url(#wkey)" stroke="#bbb" stroke-width="1"/>
+                <rect x="131" y="0" width="24" height="110" rx="4" fill="url(#wkey_col)" stroke="#C99A3D" stroke-width="1"/>
+                <rect x="157" y="0" width="24" height="110" rx="4" fill="url(#wkey_col)" stroke="#C99A3D" stroke-width="1"/>
+                <!-- Octave 2 starts at x=183 -->
+                <rect x="183" y="0" width="24" height="110" rx="4" fill="url(#wkey)" stroke="#bbb" stroke-width="1"/>
+                <rect x="209" y="0" width="24" height="110" rx="4" fill="url(#wkey_col)" stroke="#C99A3D" stroke-width="1"/>
+                <rect x="235" y="0" width="24" height="110" rx="4" fill="url(#wkey)" stroke="#bbb" stroke-width="1"/>
+                <rect x="261" y="0" width="24" height="110" rx="4" fill="url(#wkey_col)" stroke="#C99A3D" stroke-width="1"/>
+                <rect x="287" y="0" width="24" height="110" rx="4" fill="url(#wkey)" stroke="#bbb" stroke-width="1"/>
+                <rect x="313" y="0" width="24" height="110" rx="4" fill="url(#wkey)" stroke="#bbb" stroke-width="1"/>
+                <rect x="339" y="0" width="24" height="110" rx="4" fill="url(#wkey)" stroke="#bbb" stroke-width="1"/>
+
+                <!-- Black keys octave 1: C# Eb F# G# Bb -->
+                <rect x="18"  y="0" width="16" height="68" rx="3" fill="url(#bkey_col)" stroke="#C99A3D" stroke-width="0.5"/>
+                <rect x="44"  y="0" width="16" height="68" rx="3" fill="url(#bkey)" stroke="#222" stroke-width="0.5"/>
+                <!-- no black between E and F -->
+                <rect x="92"  y="0" width="16" height="68" rx="3" fill="url(#bkey)" stroke="#222" stroke-width="0.5"/>
+                <rect x="118" y="0" width="16" height="68" rx="3" fill="url(#bkey)" stroke="#222" stroke-width="0.5"/>
+                <rect x="144" y="0" width="16" height="68" rx="3" fill="url(#bkey_col)" stroke="#C99A3D" stroke-width="0.5"/>
+                <!-- Octave 2 black keys -->
+                <rect x="200" y="0" width="16" height="68" rx="3" fill="url(#bkey)" stroke="#222" stroke-width="0.5"/>
+                <rect x="226" y="0" width="16" height="68" rx="3" fill="url(#bkey)" stroke="#222" stroke-width="0.5"/>
+                <rect x="274" y="0" width="16" height="68" rx="3" fill="url(#bkey_col)" stroke="#C99A3D" stroke-width="0.5"/>
+                <rect x="300" y="0" width="16" height="68" rx="3" fill="url(#bkey)" stroke="#222" stroke-width="0.5"/>
+                <rect x="326" y="0" width="16" height="68" rx="3" fill="url(#bkey)" stroke="#222" stroke-width="0.5"/>
+
+                <!-- Note dots on collected white keys -->
+                <circle cx="65"  cy="96" r="5" fill="#C99A3D" opacity="0.9"/>
+                <circle cx="143" cy="96" r="5" fill="#C99A3D" opacity="0.9"/>
+                <circle cx="169" cy="96" r="5" fill="#C99A3D" opacity="0.9"/>
+                <circle cx="221" cy="96" r="5" fill="#C99A3D" opacity="0.9"/>
+                <circle cx="273" cy="96" r="5" fill="#C99A3D" opacity="0.9"/>
+
+                <!-- Gold dots on collected black keys -->
+                <circle cx="26"  cy="58" r="4" fill="#C99A3D" opacity="0.95"/>
+                <circle cx="152" cy="58" r="4" fill="#C99A3D" opacity="0.95"/>
+                <circle cx="282" cy="58" r="4" fill="#C99A3D" opacity="0.95"/>
+
+                <!-- Key labels for white keys -->
+                <text x="13"  y="123" text-anchor="middle" font-family="monospace" font-size="7" fill="#7a5a30">Do</text>
+                <text x="39"  y="123" text-anchor="middle" font-family="monospace" font-size="7" fill="#7a5a30">Ré</text>
+                <text x="65"  y="123" text-anchor="middle" font-family="monospace" font-size="7" fill="#C99A3D">Mi</text>
+                <text x="91"  y="123" text-anchor="middle" font-family="monospace" font-size="7" fill="#7a5a30">Fa</text>
+                <text x="117" y="123" text-anchor="middle" font-family="monospace" font-size="7" fill="#7a5a30">Sol</text>
+                <text x="143" y="123" text-anchor="middle" font-family="monospace" font-size="7" fill="#C99A3D">La</text>
+                <text x="169" y="123" text-anchor="middle" font-family="monospace" font-size="7" fill="#C99A3D">Si</text>
+                <text x="195" y="123" text-anchor="middle" font-family="monospace" font-size="7" fill="#7a5a30">Do</text>
+                <text x="221" y="123" text-anchor="middle" font-family="monospace" font-size="7" fill="#C99A3D">Ré</text>
+                <text x="247" y="123" text-anchor="middle" font-family="monospace" font-size="7" fill="#7a5a30">Mi</text>
+                <text x="273" y="123" text-anchor="middle" font-family="monospace" font-size="7" fill="#C99A3D">Fa</text>
+                <text x="299" y="123" text-anchor="middle" font-family="monospace" font-size="7" fill="#7a5a30">Sol</text>
+                <text x="325" y="123" text-anchor="middle" font-family="monospace" font-size="7" fill="#7a5a30">La</text>
+                <text x="351" y="123" text-anchor="middle" font-family="monospace" font-size="7" fill="#7a5a30">Si</text>
+
+                <defs>
+                  <linearGradient id="wkey" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#ffffff"/>
+                    <stop offset="100%" stop-color="#f0ead8"/>
+                  </linearGradient>
+                  <linearGradient id="wkey_col" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#fff9e8"/>
+                    <stop offset="100%" stop-color="#f5e8c0"/>
+                  </linearGradient>
+                  <linearGradient id="bkey" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#2a2a2a"/>
+                    <stop offset="100%" stop-color="#111111"/>
+                  </linearGradient>
+                  <linearGradient id="bkey_col" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#4a3010"/>
+                    <stop offset="100%" stop-color="#2a1a06"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+
+              <!-- Chromatic circle -->
+              <div class="chromatic-circle-wrapper">
+                <div class="chromatic-label">Cercle chromatique</div>
+                <svg viewBox="0 0 200 200" width="180" height="180">
+                  <!-- Notes: C C# D Eb E F F# G G# A Bb B -->
+                  <!-- 12 segments -->
+                  <defs>
+                    <filter id="glow2">
+                      <feGaussianBlur stdDeviation="3" result="b"/>
+                      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                    </filter>
+                  </defs>
+                  <!-- Background circle -->
+                  <circle cx="100" cy="100" r="88" fill="#f8f3ea" stroke="#e0d4b8" stroke-width="1"/>
+
+                  <!-- 12 note wedge labels — manually placed at 30° intervals -->
+                  <!-- collected: Do(C)=no, C#=yes, D=no, Eb=no, E=yes(Mi), F=no, F#=yes(Fa#), G=no, G#=no, A=yes(La), Bb=yes(La#), B=yes(Si) -->
+
+                  <!-- C — Do — 90° top -->
+                  <text x="100" y="22" text-anchor="middle" font-family="monospace" font-size="10" fill="#7a5a30" font-weight="600">Do</text>
+                  <!-- C# — Do# — 60° -->
+                  <text x="143" y="35" text-anchor="middle" font-family="monospace" font-size="10" fill="#C99A3D" font-weight="700" filter="url(#glow2)">Do♯</text>
+                  <!-- D — Ré — 30° -->
+                  <text x="174" y="68" text-anchor="middle" font-family="monospace" font-size="10" fill="#7a5a30" font-weight="600">Ré</text>
+                  <!-- Eb — Mib — 0° -->
+                  <text x="184" y="104" text-anchor="middle" font-family="monospace" font-size="10" fill="#7a5a30" font-weight="600">Mib</text>
+                  <!-- E — Mi — 330° -->
+                  <text x="174" y="140" text-anchor="middle" font-family="monospace" font-size="10" fill="#C99A3D" font-weight="700" filter="url(#glow2)">Mi</text>
+                  <!-- F — Fa — 300° -->
+                  <text x="143" y="168" text-anchor="middle" font-family="monospace" font-size="10" fill="#7a5a30" font-weight="600">Fa</text>
+                  <!-- F# — Fa# — 270° bottom -->
+                  <text x="100" y="184" text-anchor="middle" font-family="monospace" font-size="10" fill="#C99A3D" font-weight="700" filter="url(#glow2)">Fa♯</text>
+                  <!-- G — Sol — 240° -->
+                  <text x="58" y="168" text-anchor="middle" font-family="monospace" font-size="10" fill="#7a5a30" font-weight="600">Sol</text>
+                  <!-- G# — Sol# — 210° -->
+                  <text x="27" y="140" text-anchor="middle" font-family="monospace" font-size="10" fill="#7a5a30" font-weight="600">Sol♯</text>
+                  <!-- A — La — 180° -->
+                  <text x="18" y="104" text-anchor="middle" font-family="monospace" font-size="10" fill="#C99A3D" font-weight="700" filter="url(#glow2)">La</text>
+                  <!-- Bb — La# — 150° -->
+                  <text x="27" y="68" text-anchor="middle" font-family="monospace" font-size="10" fill="#C99A3D" font-weight="700" filter="url(#glow2)">La♯</text>
+                  <!-- B — Si — 120° -->
+                  <text x="58" y="35" text-anchor="middle" font-family="monospace" font-size="10" fill="#C99A3D" font-weight="700" filter="url(#glow2)">Si</text>
+
+                  <!-- Center -->
+                  <circle cx="100" cy="100" r="30" fill="#f2ece0" stroke="#e0d4b8" stroke-width="1"/>
+                  <text x="100" y="97" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-style="italic" font-size="10" fill="#C99A3D">7/12</text>
+                  <text x="100" y="109" text-anchor="middle" font-family="monospace" font-size="7" fill="#7a5a30">notes</text>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Studio button -->
+            <div class="studio-btn">
+              <div class="studio-btn-text">🎛 Ouvrir le Studio</div>
+            </div>
+
+            <!-- Tab Bar -->
+            <div class="tab-bar">
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#7a5a30" stroke-width="1.5"/><path d="M 4 12 Q 7 6 10 12 Q 13 18 16 12 Q 19 6 20 12" fill="none" stroke="#7a5a30" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <span class="tab-name">Anal-yser</span>
+              </div>
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="14" width="4" height="7" rx="1" stroke="#7a5a30" stroke-width="1.5"/><rect x="10" y="9" width="4" height="12" rx="1" stroke="#7a5a30" stroke-width="1.5"/><rect x="17" y="4" width="4" height="17" rx="1" stroke="#7a5a30" stroke-width="1.5"/></svg>
+                <span class="tab-name">Registres</span>
+              </div>
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" stroke="#7a5a30" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                <span class="tab-name">Missions</span>
+              </div>
+              <div class="tab-item active">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><rect x="2" y="6" width="20" height="13" rx="2" stroke="#C99A3D" stroke-width="1.5"/><line x1="6" y1="6" x2="6" y2="19" stroke="#C99A3D" stroke-width="1"/><line x1="10" y1="6" x2="10" y2="19" stroke="#C99A3D" stroke-width="1"/><line x1="14" y1="6" x2="14" y2="19" stroke="#C99A3D" stroke-width="1"/><line x1="18" y1="6" x2="18" y2="19" stroke="#C99A3D" stroke-width="1"/><rect x="4" y="6" width="4" height="8" rx="1" fill="#C99A3D"/><rect x="12" y="6" width="4" height="8" rx="1" fill="#C99A3D"/></svg>
+                <span class="tab-name" style="color:#C99A3D;">Clavier</span>
+              </div>
+              <div class="tab-item">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><path d="M9 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2h-2" stroke="#7a5a30" stroke-width="1.5"/><rect x="9" y="1" width="6" height="4" rx="1" stroke="#7a5a30" stroke-width="1.5"/><line x1="7" y1="10" x2="17" y2="10" stroke="#7a5a30" stroke-width="1.5"/><line x1="7" y1="14" x2="17" y2="14" stroke="#7a5a30" stroke-width="1.5"/><line x1="7" y1="18" x2="13" y2="18" stroke="#7a5a30" stroke-width="1.5"/></svg>
+                <span class="tab-name">Spécimen</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-label">05 — Le Clavier</div>
+    </div>
+
+  </div><!-- .slides-row -->
+
+
+  <!-- ===== APP STORE INFO SECTION ===== -->
+  <div class="appstore-section">
+    <div class="appstore-title">Formats requis App Store</div>
+    <div class="format-grid">
+      <div class="format-card">
+        <div class="format-size">6.7"</div>
+        <div class="format-model">iPhone 15 Pro Max</div>
+        <div class="format-px">1290 × 2796 px</div>
+      </div>
+      <div class="format-card">
+        <div class="format-size">6.5"</div>
+        <div class="format-model">iPhone 11 Pro Max</div>
+        <div class="format-px">1284 × 2778 px</div>
+      </div>
+      <div class="format-card">
+        <div class="format-size">5.5"</div>
+        <div class="format-model">iPhone 8 Plus</div>
+        <div class="format-px">1242 × 2208 px</div>
+      </div>
+    </div>
+    <div class="appstore-instruction">
+      Ouvre cette page dans Safari, zoom à 100%, puis prends une capture via le Simulateur iOS au bon format.<br/><br/>
+      Conseil : configure le Simulateur (Device &gt; iPhone 15 Pro Max / 11 Pro Max / 8 Plus), active "Screenshot at Scale" dans Product &gt; Scheme, puis Cmd+S pour chaque slide.
+    </div>
+  </div>
+
+</body>
+</html>
