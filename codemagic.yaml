@@ -38,12 +38,8 @@ workflows:
         script: xcode-project use-profiles
       - name: Increment build number
         script: |
-          BUILD_NUMBER=$(app-store-connect get-latest-build-number $BUNDLE_ID \
-            --issuer-id $APP_STORE_CONNECT_ISSUER_ID \
-            --key-id $APP_STORE_CONNECT_KEY_IDENTIFIER \
-            --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" 2>/dev/null || echo "0")
-          NEW_BUILD=$((BUILD_NUMBER + 1))
-          cd ios/App && agvtool new-version -all $NEW_BUILD
+          BUILD_NUMBER=$(date +%Y%m%d%H%M)
+          cd ios/App && agvtool new-version -all $BUILD_NUMBER
       - name: Build IPA
         script: |
           xcode-project build-ipa \
