@@ -9,6 +9,8 @@ workflows:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
         BUNDLE_ID: "com.tunemyfart.app"
+        APP_STORE_CONNECT_ISSUER_ID: "7d7004f5-56bc-42a4-bf6b-60527cece53d"
+        APP_STORE_CONNECT_KEY_IDENTIFIER: "G9U4FDB6ZP"
       node: latest
       xcode: latest
       cocoapods: default
