@@ -39,7 +39,7 @@ workflows:
       - name: Increment build number
         script: |
           BUILD_NUMBER=$(date +%Y%m%d%H%M)
-          cd ios/App && agvtool new-version -all $BUILD_NUMBER
+          sed -i '' "s/CURRENT_PROJECT_VERSION = .*;/CURRENT_PROJECT_VERSION = $BUILD_NUMBER;/g" ios/App/App.xcodeproj/project.pbxproj
       - name: Build IPA
         script: |
           xcode-project build-ipa \
